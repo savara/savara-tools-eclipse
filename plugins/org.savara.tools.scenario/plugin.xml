@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+  <extension
+    point = "org.eclipse.ui.newWizards">
+    <category
+      id = "org.savara.Wizard.category.ID"
+      name="Savara">
+    </category>
+    <wizard
+      id = "org.savara.tools.scenario.designer.editor.ScenarioModelWizardID"
+      name = "Scenario"
+      class = "org.savara.tools.scenario.designer.editor.NewScenarioWizard"
+      category = "org.savara.Wizard.category.ID"
+      icon = "icons/full/obj16/ScenarioFile.gif">
+      <description>Create a new Scenario</description>
+      <selection class = "org.eclipse.core.resources.IResource" />
+    </wizard>
+  </extension>
+  <extension point = "org.eclipse.ui.editors">
+    <editor
+          class="org.savara.tools.scenario.designer.editor.ScenarioDesigner"
+          icon="icons/full/obj16/ScenarioFile.gif"
+          contributorClass="org.savara.tools.scenario.designer.editor.DesignerActionBarContributor"
+          name="Scenario Designer"
+          id="org.savara.tools.scenario.designer.ScenarioDesignerID"
+          extensions="scr">
+    </editor>
+   </extension>
+
+  <extension point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
+      <propertyContributor
+            contributorId="org.savara.tools.scenario.designer.ScenarioDesignerID"
+            typeMapper="org.savara.tools.designer.editor.properties.TypeMapper">
+      	<propertyCategory category="Savara"/>
+      </propertyContributor>
+  </extension>
+
+  <extension point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
+      <propertyTabs contributorId="org.savara.tools.scenario.designer.ScenarioDesignerID">
+         <propertyTab
+            category="Savara"
+               id="org.savara.tools.scenario.designer.ScenarioDesignerID.GeneralTab"
+            label="General"/>
+         <propertyTab
+            afterTab="org.pi4soa.scenario.designer.ScenarioDesignerID.GeneralTab"
+            category="Savara"
+               id="org.savara.tools.scenario.designer.ScenarioDesignerID.AdvancedTab"
+            label="Advanced"/>
+         <propertyTab
+            afterTab="org.savara.tools.scenario.designer.ScenarioDesignerID.AdvancedTab"
+            category="Savara"
+               id="org.savara.tools.scenario.designer.ScenarioDesignerID.AllTab"
+            label="All"/>
+      </propertyTabs>
+   </extension>      
+
+   <extension point="org.eclipse.ui.views.properties.tabbed.propertySections">
+      <propertySections contributorId="org.savara.tools.scenario.designer.ScenarioDesignerID">
+         <propertySection
+               class="org.savara.tools.designer.editor.properties.AllPropertySheetSection"
+               enablesFor="1"
+               id="org.savara.tools.scenario.scenario.AllSection"
+               tab="org.savara.tools.scenario.designer.ScenarioDesignerID.AllTab">
+            <input type="org.savara.scenario.model.Scenario"/>
+            <input type="org.savara.scenario.model.Event"/>
+            <input type="org.savara.scenario.model.Link"/>
+            <input type="org.savara.scenario.model.Role"/>
+         </propertySection>
+      </propertySections>
+   </extension>
+
+  <extension
+        point="org.eclipse.ui.preferencePages">
+     <page
+           category="org.savara.tools.preferences.SavaraPreferencePage"
+           class="org.savara.tools.scenario.designer.eclipse.preferences.ScenarioPreferencePage"
+           id="org.savara.tools.scenario.designer.eclipse.preferences.ScenarioPreferencePage"
+           name="Scenario">
+     </page>
+  </extension>
+  <extension
+        point="org.eclipse.core.runtime.preferences">
+     <initializer
+           class="org.savara.tools.scenario.designer.preferences.PreferenceInitializer">
+     </initializer>
+  </extension>
+
+</plugin>

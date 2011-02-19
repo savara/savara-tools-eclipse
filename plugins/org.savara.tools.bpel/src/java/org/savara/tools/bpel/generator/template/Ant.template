@@ -1,0 +1,44 @@
+<project name="%PROJECT%" basedir="." default="deploy" >
+   <property name="build.dir" value="${basedir}/target" />
+   <property name="classes" value="${build.dir}/classes" />
+   <property name="lib" value="src/lib" />
+   <property name="src" value="src/java" />
+   <property name="conf" value="src/conf" />
+	
+   <path id="compile-classpath">
+      <fileset dir="${lib}" includes="*.jar" />
+   </path>
+   
+   <target name="init" depends="clean">
+      <mkdir dir="${build.dir}" />
+   </target>
+   
+   <target name="clean">
+      <delete dir="${build.dir}" />
+   </target>
+
+   <target name="compile" depends="init">
+        <mkdir dir="${classes}" />
+	<javac srcdir="${src}" destdir="${classes}" debug="true" deprecation="true">
+	   <classpath refid="compile-classpath" />			
+	</javac>
+        <copy todir="${classes}">
+           <fileset dir="${conf}" includes="**/*.xml"/>
+        </copy>
+   </target>
+   
+   <target name="esbjar" depends="compile">
+        <jar destfile="${build.dir}/${ant.project.name}.esb">
+                   <fileset dir="${classes}" />
+                   <fileset dir="${build.dir}" includes="*.jar,*.war"/>
+                   <fileset dir="${classes}" includes="deployment.xml"/>
+                   <fileset dir="${classes}" includes="META-INF/**" />
+                   <fileset dir="${lib}" includes="*.jar"/>
+        </jar>
+    </target>
+
+    <target name="deploy" depends="esbjar">
+    	<copy todir="${org.jboss.esb.server.deploy.dir}"
+            file="${build.dir}/${ant.project.name}.esb"/>	
+    </target>
+</project>

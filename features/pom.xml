@@ -1,0 +1,21 @@
+<project
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.savara.tools</groupId>
+	<artifactId>features</artifactId>
+	<version>2.0.0.20110218-M1</version>
+	<packaging>pom</packaging>
+	<name>Savara::Tools::Features</name>
+
+	<parent>
+		<groupId>org.savara</groupId>
+		<artifactId>tools</artifactId>
+		<version>2.0.0.20110218-M1</version>
+	</parent>
+
+	<modules>
+		<module>org.savara.tools.feature</module>
+	</modules>
+</project>
+	
+

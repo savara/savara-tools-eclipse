@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: SAVARA Tools WSDL Plug-in
+Bundle-SymbolicName: org.savara.tools.wsdl;singleton:=true
+Bundle-Version: 2.0.0.20110218-M1
+Bundle-Activator: org.savara.tools.wsdl.osgi.Activator
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: www.savara.org
+Require-Bundle: javax.wsdl;visibility:=reexport,
+ org.savara.contract,
+ org.apache.commons.logging,
+ org.scribble.common,
+ org.eclipse.core.resources,
+ org.eclipse.jface,
+ org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.scribble.protocol,
+ org.savara.wsdl,
+ org.savara.protocol
+Bundle-ActivationPolicy: lazy

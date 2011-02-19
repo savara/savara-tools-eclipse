@@ -1,0 +1,3 @@
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:template match="/">
+The Service destination is <xsl:if test="validator/destination/@name != ''" >'<xsl:value-of select="validator/destination/@name" />' </xsl:if><xsl:if test="validator/destination/@name = ''" >'undefined' </xsl:if> [Type=<xsl:value-of select="validator/destination/@type"/>] [Dynamic Reply-To Destination=<xsl:value-of select="validator/destination/@dynamicReplyTo"/>]</xsl:template></xsl:stylesheet>

@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: SAVARA Tools BPMN Plug-in
+Bundle-SymbolicName: org.savara.tools.bpmn;singleton:=true
+Bundle-Version: 2.0.0.20110218-M1
+Bundle-Activator: org.savara.tools.bpmn.eclipse.Activator
+Bundle-Vendor: www.savara.org
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.pi4soa.service,
+ org.pi4soa.cdl,
+ org.eclipse.stp.bpmn,
+ org.eclipse.gmf.runtime.notation,
+ org.eclipse.core.resources,
+ org.pi4soa.common
+Eclipse-LazyStart: true
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
