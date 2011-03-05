@@ -4,6 +4,7 @@ import org.apache.commons.logging.*;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -30,6 +31,30 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+
+		// Make sure any bundles, associated with scribble, are started (excluding
+		// the designer itself)
+		// TODO: This should may be in a more general Eclipse plugin, but currently
+		// there is no tools core
+		Bundle[] bundles=context.getBundles();
+
+		for (int i=0; i < bundles.length; i++) {
+			Bundle bundle=bundles[i];
+			
+			if (bundle != null) {
+				if ((bundle.getSymbolicName().startsWith("org.scribble.") &&
+						bundle.getSymbolicName().endsWith("designer") == false) ||
+						(bundle.getSymbolicName().startsWith("org.savara.") &&
+						bundle.getSymbolicName().startsWith(PLUGIN_ID) == false)) {
+				
+					//if (bundle.getState() == Bundle.RESOLVED) {
+						logger.debug("Pre-empt bundle start: "+bundle);
+						bundle.start();
+					//}
+				}
+			}
+		}
+
 	}
 
 	/*
