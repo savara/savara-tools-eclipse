@@ -38,6 +38,7 @@
 		<module>features</module>
 		<module>tests</module>
 		<module>site</module>
+		<module>site-all</module>
 	</modules>
 
   <build>
@@ -114,7 +115,7 @@
 	    </repository>
 		<repository>
 			<id>pi4soa</id>
-			<url>http://download.jboss.org/jbosstools/builds/staging/jbosstools-pi4soa-3.1_trunk/all/repo/</url>
+			<url>http://download.jboss.org/jbosstools/builds/staging/jbosstools-pi4soa-3.1_stable_branch/all/repo/</url>
 			<layout>p2</layout>
 			<snapshots>
 				<enabled>true</enabled>
