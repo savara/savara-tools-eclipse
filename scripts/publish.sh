@@ -26,7 +26,8 @@ SRCSNAME="${JOB_NAME}-Sources-${ZIPSUFFIX}.zip"
 SUFFNAME="-Update-${ZIPSUFFIX}.zip"
 
 DESTINATION="savara@filemgmt.jboss.org:/downloads_htdocs/savara/tmp"
-RSYNC_OPTIONS="-arzv --protocol=28 --delete"
+RSYNC_OPTIONS="-arzq --delete"
+#RSYNC_OPTIONS="-arzv --protocol=28 --delete"
 
 # cleanup from last time
 rm -fr ${WORKSPACE}/results; mkdir -p ${STAGINGDIR}
