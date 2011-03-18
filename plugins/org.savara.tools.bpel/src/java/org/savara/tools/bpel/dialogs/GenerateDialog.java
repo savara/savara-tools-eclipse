@@ -24,6 +24,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
+import org.savara.contract.model.Contract;
+import org.savara.protocol.contract.generator.ContractGenerator;
+import org.savara.protocol.contract.generator.ContractGeneratorFactory;
 import org.savara.protocol.util.ProtocolServices;
 import org.savara.tools.bpel.generator.*;
 import org.scribble.common.logging.CachedJournal;
@@ -35,6 +38,13 @@ import org.scribble.protocol.model.*;
  * artefacts.
  */
 public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
+
+	private static Log logger = LogFactory.getLog(GenerateDialog.class);
+
+	private IFile m_file=null;
+	private ProtocolModel m_protocolModel=null;
+	private java.util.List<Button> m_roleButtons=new java.util.Vector<Button>();
+	private java.util.List<Text> m_projectNames=new java.util.Vector<Text>();
 
 	/**
 	 * This is the constructor for the generate dialog.
@@ -120,52 +130,69 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 		if (m_protocolModel != null) {
 			java.util.List<Role> roles=m_protocolModel.getProtocol().getRoles();
 
+			ContractGenerator cg=ContractGeneratorFactory.getContractGenerator();
+			
 			for (int i=0; i < roles.size(); i++) {
+				Role role=roles.get(i);
+				boolean f_server=true;
 				
-				Button button=new Button(group, SWT.CHECK);
-				button.setText(roles.get(i).getName());
-				button.setSelection(true);
-				
-				gd = new GridData();
-				gd.horizontalSpan = 2;
-				gd.widthHint = 150;
-				button.setLayoutData(gd);
-				
-				m_roleButtons.add(button);
-				
-				button.addSelectionListener(new SelectionListener() {
-					public void widgetDefaultSelected(SelectionEvent e) {
-						widgetSelected(e);
+				if (cg != null) {
+					Contract c=cg.generate(m_protocolModel.getProtocol(),
+							null, role, new CachedJournal());
+					
+					if (c != null && c.getInterfaces().size() == 0) {
+						f_server = false;
+						if (logger.isDebugEnabled()) {
+							logger.debug("Role "+role+" is not a service");
+						}
 					}
-
-					public void widgetSelected(SelectionEvent e) {
-						checkStatus();
-					}
-				});
-				
-				Text projectName=new Text(group, SWT.NONE);
-				
-				String prjName=roles.get(i).getName();
-				
-				if (m_protocolModel.getProtocol() != null) {
-					prjName = m_protocolModel.getProtocol().getName()+"-"+prjName;
 				}
-				
-				projectName.setText(prjName);
-				
-				gd = new GridData();
-				gd.horizontalSpan = 2;
-				gd.widthHint = 300;
-				projectName.setLayoutData(gd);
-				
-				m_projectNames.add(projectName);
 
-				projectName.addModifyListener(new ModifyListener() {					
-					public void modifyText(ModifyEvent e) {
-						checkStatus();
+				if (f_server) {
+					Button button=new Button(group, SWT.CHECK);
+					button.setText(roles.get(i).getName());
+					button.setSelection(true);
+					
+					gd = new GridData();
+					gd.horizontalSpan = 2;
+					gd.widthHint = 195;
+					button.setLayoutData(gd);
+					
+					m_roleButtons.add(button);
+					
+					button.addSelectionListener(new SelectionListener() {
+						public void widgetDefaultSelected(SelectionEvent e) {
+							widgetSelected(e);
+						}
+	
+						public void widgetSelected(SelectionEvent e) {
+							checkStatus();
+						}
+					});
+					
+					Text projectName=new Text(group, SWT.NONE);
+					
+					String prjName=roles.get(i).getName();
+					
+					if (m_protocolModel.getProtocol() != null) {
+						prjName = m_protocolModel.getProtocol().getName()+"-"+prjName;
 					}
-				});
-				
+					
+					projectName.setText(prjName);
+					
+					gd = new GridData();
+					gd.horizontalSpan = 2;
+					gd.widthHint = 300;
+					projectName.setLayoutData(gd);
+					
+					m_projectNames.add(projectName);
+	
+					projectName.addModifyListener(new ModifyListener() {					
+						public void modifyText(ModifyEvent e) {
+							checkStatus();
+						}
+					});
+				}
 			}
 		}
 
@@ -324,11 +351,4 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 		
 		logger.error(mesg, ex);
 	}
-
-	private static Log logger = LogFactory.getLog(GenerateDialog.class);
-
-	private IFile m_file=null;
-	private ProtocolModel m_protocolModel=null;
-	private java.util.List<Button> m_roleButtons=new java.util.Vector<Button>();
-	private java.util.List<Text> m_projectNames=new java.util.Vector<Text>();
 }
