@@ -109,8 +109,9 @@ public class GenerateAction implements IObjectActionDelegate {
 		Contract contract=null;
 		ContractGenerator cg=ContractGeneratorFactory.getContractGenerator();
 		
+		CachedJournal journal=new CachedJournal();
+
 		if (cg != null) {
-			CachedJournal journal=new CachedJournal();
 			contract=cg.generate(pm.getProtocol(), null, role, journal);
 		}
 		
@@ -125,7 +126,7 @@ public class GenerateAction implements IObjectActionDelegate {
 
 			// Generate definition
 			java.util.List<javax.wsdl.Definition> defns=generator.generate(contract,
-						new SOAPDocLitWSDLBinding());
+						new SOAPDocLitWSDLBinding(), journal);
 		
 			// Check if contract has atleast one message exchange pattern
 			boolean f_hasMEP=false;

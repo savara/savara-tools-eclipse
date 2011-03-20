@@ -351,7 +351,7 @@ public class Generator {
 			
 			// Generate definition
 			java.util.List<javax.wsdl.Definition> defns=generator.generate(contract,
-									new SOAPDocLitWSDLBinding());
+									new SOAPDocLitWSDLBinding(), journal);
 			
 			// Check if contract has atleast one message exchange pattern
 			boolean f_hasMEP=false;
