@@ -114,7 +114,7 @@
 	    </repository>
 		<repository>
 			<id>pi4soa</id>
-			<url>http://download.jboss.org/jbosstools/builds/staging/jbosstools-pi4soa-3.1_stable_branch/all/repo/</url>
+			<url>http://download.jboss.org/jbosstools/builds/staging/pi4soa-3.1.x/all/repo/</url>
 			<layout>p2</layout>
 			<snapshots>
 				<enabled>true</enabled>

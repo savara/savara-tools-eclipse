@@ -26,6 +26,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
@@ -41,6 +42,7 @@ import org.savara.contract.model.Namespace;
 import org.savara.protocol.contract.generator.ContractGenerator;
 import org.savara.protocol.contract.generator.ContractGeneratorFactory;
 import org.savara.protocol.util.ProtocolServices;
+import org.savara.tools.common.logging.JournalDialog;
 import org.savara.tools.wsdl.util.XMLUtils;
 import org.savara.wsdl.generator.WSDLGeneratorFactory;
 import org.savara.wsdl.generator.soap.SOAPDocLitWSDLBinding;
@@ -82,15 +84,17 @@ public class GenerateAction implements IObjectActionDelegate {
 	 * @param res The file
 	 */
 	protected void generateWSDL(IFile res) {		
-		Journal journal=new CachedJournal();
+		JournalDialog journal=new JournalDialog(Display.getCurrent().getActiveShell());
 		
 		try {
 			ProtocolModel model = ProtocolServices.getParserManager().parse(res.getFileExtension(),
 								res.getContents(), journal, null);
 			
+			journal.show();
+			
 			if (model == null) {
 				logger.error("Unable to load model used to generate the WSDL definition");
-				warn("The model has errors so cannot be used to generate WSDL definitions");
+				//warn("The model has errors so cannot be used to generate WSDL definitions");
 			} else {
 				java.util.List<Role> roles=model.getRoles();
 				
@@ -109,10 +113,12 @@ public class GenerateAction implements IObjectActionDelegate {
 		Contract contract=null;
 		ContractGenerator cg=ContractGeneratorFactory.getContractGenerator();
 		
-		CachedJournal journal=new CachedJournal();
+		JournalDialog journal=new JournalDialog(Display.getCurrent().getActiveShell());
 
 		if (cg != null) {
 			contract=cg.generate(pm.getProtocol(), null, role, journal);
+			
+			journal.show();
 		}
 		
 		if (contract != null) {
@@ -251,6 +257,8 @@ public class GenerateAction implements IObjectActionDelegate {
 					wsdlFile.setContents(new java.io.ByteArrayInputStream(b), true, false,
 								new org.eclipse.core.runtime.NullProgressMonitor());
 				}
+				
+				journal.show();
 			}
 		}
 	}

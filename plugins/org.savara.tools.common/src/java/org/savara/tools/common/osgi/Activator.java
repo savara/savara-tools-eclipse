@@ -62,7 +62,7 @@ public class Activator extends AbstractUIPlugin {
 				if ((bundle.getSymbolicName().startsWith("org.scribble.") &&
 						bundle.getSymbolicName().endsWith("designer") == false) ||
 						(bundle.getSymbolicName().startsWith("org.savara.") &&
-						bundle.getSymbolicName().startsWith(PLUGIN_ID) == false)) {
+						bundle.getSymbolicName().startsWith("org.savara.tools.") == false)) {
 				
 					//if (bundle.getState() == Bundle.RESOLVED) {
 						logger.debug("Pre-empt bundle start: "+bundle);
