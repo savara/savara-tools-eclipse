@@ -83,7 +83,6 @@ public class ViewSupport {
 		
 		if (ret == null && link.getSource() != null) {
 			String operation=((MessageEvent)link.getSource()).getOperationName();
-			String messageType=((MessageEvent)link.getSource()).getType();
 			String faultName=((MessageEvent)link.getSource()).getFaultName();
 			
 			String label="";
@@ -92,8 +91,17 @@ public class ViewSupport {
 				label += operation;
 			}
 			
-			if (messageType != null) {
-				label += "("+messageType+")";
+			if (((MessageEvent)link.getSource()).getParameter().size() > 0) {
+				label += "(";
+					
+				for (int i=0; i < ((MessageEvent)link.getSource()).getParameter().size(); i++) {
+					if (i > 0) {
+						label += ",";
+					}
+					label += ((MessageEvent)link.getSource()).getParameter().get(i).getType();
+				}
+				
+				label += ")";
 			}
 			
 			if (faultName != null) {

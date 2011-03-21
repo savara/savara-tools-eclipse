@@ -92,11 +92,20 @@ public class CreateLinksTool {
 					if (isSame(me.getOperationName(),
 							send.getOperationName()) &&
 						isSame(me.getFaultName(),
-							send.getFaultName()) &&
-						isSame(me.getType(),
-							send.getType())) {
+							send.getFaultName())) {
 						
-						ret = me;
+						boolean f_matchParameters=(me.getParameter().size() == 
+									send.getParameter().size());
+						
+						for (int j=0; f_matchParameters &&
+									j < me.getParameter().size(); j++) {
+							f_matchParameters = me.getParameter().get(j).getType().equals(
+									send.getParameter().get(j).getType());
+						}
+						
+						if (f_matchParameters) {
+							ret = me;
+						}
 					}
 				}
 			}

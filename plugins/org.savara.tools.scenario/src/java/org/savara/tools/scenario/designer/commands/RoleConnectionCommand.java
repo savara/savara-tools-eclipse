@@ -91,12 +91,15 @@ public class RoleConnectionCommand extends Command {
 						((MessageEvent)source).isErrorExpected());
 				m_targetEvent.setFaultName(
 						((MessageEvent)source).getFaultName());
-				m_targetEvent.setType(
-						((MessageEvent)source).getType());
 				m_targetEvent.setOperationName(
 						((MessageEvent)source).getOperationName());
-				m_targetEvent.setValue(
-						((MessageEvent)source).getValue());
+				
+				for (Parameter p : ((MessageEvent)source).getParameter()) {
+					Parameter tp=new Parameter();
+					tp.setType(p.getType());
+					tp.setValue(p.getValue());
+					m_targetEvent.getParameter().add(tp);
+				}
 			}
 			
 			m_link.setTarget(m_targetEvent);
