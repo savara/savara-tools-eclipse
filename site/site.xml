@@ -6,9 +6,17 @@
    <feature url="features/org.savara.tools.feature_0.0.0.jar" id="org.savara.tools.feature" version="0.0.0">
       <category name="Savara"/>
    </feature>
+   <feature url="features/org.pi4soa.core.feature_0.0.0.jar" id="org.pi4soa.core.feature" version="0.0.0">
+      <category name="Savara Dependencies"/>
+   </feature>
    <category-def name="Savara" label="Savara">
       <description>
          Savara Tools update site
+      </description>
+   </category-def>
+   <category-def name="Savara Dependencies" label="Savara Dependencies">
+      <description>
+         Savara Tool Dependencies update site
       </description>
    </category-def>
 </site>
