@@ -23,7 +23,8 @@ Require-Bundle: org.eclipse.ui,
  org.savara.wsdl,
  org.savara.bpel,
  org.savara.protocol,
- org.savara.common
+ org.savara.common,
+ org.savara.tools.common
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: www.savara.org

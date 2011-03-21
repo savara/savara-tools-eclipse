@@ -44,6 +44,7 @@ import org.savara.contract.model.Namespace;
 import org.savara.protocol.contract.generator.ContractGenerator;
 import org.savara.protocol.contract.generator.ContractGeneratorFactory;
 import org.savara.protocol.util.ProtocolServices;
+import org.savara.tools.common.logging.JournalDialog;
 import org.savara.wsdl.generator.WSDLGeneratorFactory;
 import org.savara.wsdl.generator.soap.SOAPDocLitWSDLBinding;
 import org.scribble.common.logging.CachedJournal;
@@ -53,6 +54,7 @@ import org.scribble.protocol.DefaultProtocolContext;
 import org.scribble.protocol.model.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jst.common.project.facet.WtpUtils;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 import org.eclipse.wst.common.project.facet.core.IProjectFacet;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
@@ -171,58 +173,7 @@ public class Generator {
 						m_protocolModel);
 		}
 		
-		/*
-		// Project to role
-		org.scribble.projector.ProtocolProjector projector=
-			(org.scribble.projector.Projector)
-			RegistryFactory.getRegistry().getExtension(
-					org.scribble.projector.Projector.class, null);
-
-		if (projector != null) {
-			Role role=new Role(localRole.getLocatedRole());
-			
-			// Transfer contract details (if defined) from local model
-			// reference to role
-			if (localRole.getProperties().containsKey(org.savara.contract.model.Contract.class.getName())) {
-				role.getProperties().put(org.savara.contract.model.Contract.class.getName(),
-								localRole.getProperties().get(org.savara.contract.model.Contract.class.getName()));
-			}
-			
-			ModelReference srcRef=
-				new ModelReference(ConversationNotation.NOTATION_CODE);
-			
-			Model localModel=projector.project(srcRef, m_protocolModel,
-					localRole.getSubDefinitionPath(), role,
-					new DefaultModelListener());
-			
-			if (localModel instanceof ProtocolModel &&
-					((ProtocolModel)localModel).getProtocol() != null) {
-				ProtocolModel lcm=(ProtocolModel)localModel;
-				
-				ModelReference targetRef=
-					new ModelReference(BPELNotation.NOTATION_CODE);
-				
-				DefaultBPELLanguageModel target=
-					new DefaultBPELLanguageModel(targetRef);
-				
-				ModelGenerator generator=(ModelGenerator)
-					RegistryFactory.getRegistry().getExtension(
-							ModelGenerator.class, null);
-				
-				if (generator != null) {
-					generator.generate(targetRef, role, target,
-								lcm);
-					
-					generateRoleProject(projectName, role,
-								target.getBPELProcess(), lcm, target, cdmResource);
-				} else {
-					logger.error("Unable to find model generator");
-				}
-			}
-		}
-		*/
-		
-		CachedJournal journal=new CachedJournal();
+		JournalDialog journal=new JournalDialog(Display.getCurrent().getActiveShell());
 		
 		// TODO: SAVARA-169 (and related to SAVARA-168)
 		// Currently necessary to generate contracts from global model and
@@ -260,6 +211,8 @@ public class Generator {
 								journal);
 			}
 		}
+		
+		journal.show();
 	}
 	
 	protected void generateRoleProject(String projectName, Role role,

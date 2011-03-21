@@ -45,6 +45,7 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 	private ProtocolModel m_protocolModel=null;
 	private java.util.List<Button> m_roleButtons=new java.util.Vector<Button>();
 	private java.util.List<Text> m_projectNames=new java.util.Vector<Text>();
+	private java.util.List<Role> m_roles=new java.util.Vector<Role>();
 
 	/**
 	 * This is the constructor for the generate dialog.
@@ -149,6 +150,8 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 				}
 
 				if (f_server) {
+					m_roles.add(role);
+					
 					Button button=new Button(group, SWT.CHECK);
 					button.setText(roles.get(i).getName());
 					button.setSelection(true);
@@ -318,12 +321,10 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 		try {
 			Generator generator=new Generator(m_file);
 			
-			java.util.List<Role> roles=m_protocolModel.getProtocol().getRoles();
-			
-			for (int i=0; i < roles.size(); i++) {
+			for (int i=0; i < m_roles.size(); i++) {
 				
 				if (m_roleButtons.get(i).getSelection()) {
-					generator.generateRole(roles.get(i),
+					generator.generateRole(m_roles.get(i),
 							m_projectNames.get(i).getText(), m_file);
 				}
 			}
