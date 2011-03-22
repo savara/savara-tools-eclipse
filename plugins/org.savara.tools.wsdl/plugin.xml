@@ -28,5 +28,11 @@
      </action> 
     </objectContribution>
   </extension>
+  <extension
+        point="org.savara.tools.common.generation.Generator">
+     <generator
+           class="org.savara.tools.wsdl.generator.WSDLGeneratorImpl">
+     </generator>
+  </extension>
 
 </plugin>

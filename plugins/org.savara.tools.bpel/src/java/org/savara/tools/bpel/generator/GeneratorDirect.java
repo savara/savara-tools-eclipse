@@ -64,7 +64,7 @@ import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
  * This class provides the mechanism for generating JBossESB
  * service artefacts.
  */
-public class Generator {
+public class GeneratorDirect {
 
 	private static final String PROCESS_EVENTS_LABEL = "process-events";
 	private static final String SCHEMA_LOCATION_ATTR = "schemaLocation";
@@ -93,7 +93,7 @@ public class Generator {
 	private static final String XMLNS_PLNK = "xmlns:plnk";	
 	private static final String BPEL_PATH = "bpelContent";
 
-	private static Log logger = LogFactory.getLog(Generator.class);
+	private static Log logger = LogFactory.getLog(GeneratorDirect.class);
 
 	private IFile m_file=null;
 	private ProtocolModel m_protocolModel=null;
@@ -102,7 +102,7 @@ public class Generator {
 	 * This is the constructor for the generator.
 	 * 
 	 */
-	public Generator(IFile file) {
+	public GeneratorDirect(IFile file) {
 		m_file = file;
 		
 		initialize(m_file);

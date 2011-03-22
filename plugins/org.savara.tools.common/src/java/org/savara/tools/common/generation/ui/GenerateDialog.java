@@ -15,10 +15,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.tools.bpel.dialogs;
+package org.savara.tools.common.generation.ui;
+
+import java.util.Collections;
+import java.util.Comparator;
 
 import org.apache.commons.logging.*;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
@@ -28,7 +36,10 @@ import org.savara.contract.model.Contract;
 import org.savara.protocol.contract.generator.ContractGenerator;
 import org.savara.protocol.contract.generator.ContractGeneratorFactory;
 import org.savara.protocol.util.ProtocolServices;
-import org.savara.tools.bpel.generator.*;
+//import org.savara.tools.common.generation.Generator;
+import org.savara.tools.common.ArtifactType;
+import org.savara.tools.common.generation.Generator;
+import org.savara.tools.common.logging.JournalDialog;
 import org.scribble.common.logging.CachedJournal;
 import org.scribble.common.logging.Journal;
 import org.scribble.protocol.model.*;
@@ -43,21 +54,91 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 
 	private IFile m_file=null;
 	private ProtocolModel m_protocolModel=null;
+	private ArtifactType m_artifactType=null;
 	private java.util.List<Button> m_roleButtons=new java.util.Vector<Button>();
 	private java.util.List<Text> m_projectNames=new java.util.Vector<Text>();
+	private java.util.List<Combo> m_roleArtifactTypes=new java.util.Vector<Combo>();
 	private java.util.List<Role> m_roles=new java.util.Vector<Role>();
+	
+	private static java.util.Map<String,Generator> m_generatorMap=new java.util.HashMap<String,Generator>();
+	private java.util.List<Generator> m_generators=null;
+	
+	static {
+		
+		try {
+			// Initialize list of generators
+			IExtensionRegistry registry = Platform.getExtensionRegistry();
+			IExtensionPoint point = registry.getExtensionPoint("org.savara.tools.common.generation.Generator");
+	
+			if (point != null) {
+				IExtension[] extensions = point.getExtensions();
+				
+				for (int i = 0; i < extensions.length; i++) {
+					for (int j=0; j < extensions[i].getConfigurationElements().length; j++) {
+						
+						if (extensions[i].getConfigurationElements()[j].getName().equals("generator")) {
+							IConfigurationElement elem=extensions[i].getConfigurationElements()[j];
+							
+							try {
+								Object am=elem.createExecutableExtension("class");	
+								
+								if (am instanceof Generator) {
+									GenerateDialog.addGenerator((Generator)am);
+								} else {
+									logger.error("Failed to load generator: "+am);
+								}
+							} catch(Exception e) {
+								logger.error("Failed to load generator", e);
+							}
+						}
+					}
+				}
+			}
+		} catch(Throwable t) {
+			// Ignore classes not found, so can be used outside Eclipse
+		}
+	}	
 
 	/**
 	 * This is the constructor for the generate dialog.
 	 * 
 	 * @param shell The shell
 	 */
-	public GenerateDialog(Shell shell, IFile file) {
+	public GenerateDialog(Shell shell, IFile file, ArtifactType artifactType) {
 		super(shell);
 		
 		m_file = file;
+		m_artifactType = artifactType;
 		
 		initialize(m_file);
+	}
+	
+	public static void addGenerator(Generator generator) {
+		m_generatorMap.put(generator.getName(), generator);
+	}
+	
+	protected String getArtifactLabel() {
+		if (m_artifactType == ArtifactType.ServiceContract) {
+			return("Contract Type");
+		} else if (m_artifactType == ArtifactType.ServiceImplementation) {
+			return("Service Type");
+		}
+		return("Unknown");
+	}
+	
+	protected void initializeGeneratorList() {
+		m_generators = new java.util.Vector<Generator>();
+		for (Generator gen : m_generatorMap.values()) {
+			if (gen.getArtifactType() == m_artifactType) {
+				m_generators.add(gen);
+			}
+		}
+		
+		Collections.sort(m_generators, new Comparator<Generator>() {
+			public int compare(Generator arg0, Generator arg1) {
+				return(arg0.getName().compareTo(arg1.getName()));
+			}			
+		});
 	}
 	
 	/**
@@ -74,11 +155,11 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 								res.getContents(), journal, null);
 			
 			if (m_protocolModel == null) {
-				logger.error("Unable to load model used to generate the BPEL process");
+				logger.error("Unable to load model");
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
-			logger.error("Failed to generate BPEL process", e);
+			logger.error("Failed to parse model", e);
 		}
 	}
 	
@@ -89,6 +170,8 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 	 * @return The control containing the dialog components
 	 */
 	protected Control createDialogArea(Composite parent) {
+		
+		initializeGeneratorList();
 		
 		Composite composite=(Composite)super.createDialogArea(parent);
 		
@@ -103,12 +186,12 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 		gd=new GridData();
 		gd.horizontalAlignment = SWT.FILL;
 		gd.horizontalSpan = 1;
-		gd.widthHint = 530;
+		gd.widthHint = (m_artifactType == ArtifactType.ServiceImplementation ? 680 : 380);
 		gd.grabExcessHorizontalSpace = true;
 		group.setLayoutData(gd);
 		
 		layout = new GridLayout();
-		layout.numColumns = 4;
+		layout.numColumns = (m_artifactType == ArtifactType.ServiceImplementation ? 6 : 4);
 		group.setLayout(layout);
 
 		// Labels
@@ -120,12 +203,22 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 		gd.widthHint = 150;
 		label.setLayoutData(gd);
 
+		if (m_artifactType == ArtifactType.ServiceImplementation) {
+			label = new Label(group, SWT.NONE);
+			label.setText("Project Name");
+			
+			gd = new GridData();
+			gd.horizontalSpan = 2;
+			gd.widthHint = 300;
+			label.setLayoutData(gd);
+		}
+		
 		label = new Label(group, SWT.NONE);
-		label.setText("Project Name");
+		label.setText(getArtifactLabel());
 		
 		gd = new GridData();
 		gd.horizontalSpan = 2;
-		gd.widthHint = 300;
+		gd.widthHint = 150;
 		label.setLayoutData(gd);
 
 		if (m_protocolModel != null) {
@@ -173,28 +266,45 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 						}
 					});
 					
-					Text projectName=new Text(group, SWT.NONE);
-					
-					String prjName=roles.get(i).getName();
-					
-					if (m_protocolModel.getProtocol() != null) {
-						prjName = m_protocolModel.getProtocol().getName()+"-"+prjName;
+					if (m_artifactType == ArtifactType.ServiceImplementation) {
+						Text projectName=new Text(group, SWT.NONE);
+						
+						String prjName=roles.get(i).getName();
+						
+						if (m_protocolModel.getProtocol() != null) {
+							prjName = m_protocolModel.getProtocol().getName()+"-"+prjName;
+						}
+						
+						projectName.setText(prjName);
+						
+						gd = new GridData();
+						gd.horizontalSpan = 2;
+						gd.widthHint = 300;
+						projectName.setLayoutData(gd);
+						
+						m_projectNames.add(projectName);
+		
+						projectName.addModifyListener(new ModifyListener() {					
+							public void modifyText(ModifyEvent e) {
+								checkStatus();
+							}
+						});
 					}
 					
-					projectName.setText(prjName);
+					Combo genType=new Combo(group, SWT.NONE|SWT.READ_ONLY);
+					for (Generator gen : m_generators) {
+						genType.add(gen.getName());
+					}
+					if (m_generators.size() > 0) {
+						genType.select(0);
+					}
 					
 					gd = new GridData();
 					gd.horizontalSpan = 2;
-					gd.widthHint = 300;
-					projectName.setLayoutData(gd);
+					gd.widthHint = 150;
+					genType.setLayoutData(gd);
 					
-					m_projectNames.add(projectName);
-	
-					projectName.addModifyListener(new ModifyListener() {					
-						public void modifyText(ModifyEvent e) {
-							checkStatus();
-						}
-					});
+					m_roleArtifactTypes.add(genType);
 				}
 			}
 		}
@@ -262,25 +372,32 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 		for (int i=0; i < m_roleButtons.size(); i++) {
 			if (m_roleButtons.get(i).getSelection()) {
 				selected++;
-				
-				m_projectNames.get(i).setEnabled(true);
-				
-				// Check project name
-				String projectName=m_projectNames.get(i).getText();
-				
-				if (isProjectNameValid(projectName) == false) {
-					f_error = true;
 					
-					m_projectNames.get(i).setBackground(
-							Display.getCurrent().getSystemColor(SWT.COLOR_RED));
-				} else {
+				if (m_artifactType == ArtifactType.ServiceImplementation) {
+					m_projectNames.get(i).setEnabled(true);
+					
+					// Check project name
+					String projectName=m_projectNames.get(i).getText();
+					
+					if (isProjectNameValid(projectName) == false) {
+						f_error = true;
+						
+						m_projectNames.get(i).setBackground(
+								Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+					} else {
+						m_projectNames.get(i).setBackground(
+								Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+					}
+				}
+
+				m_roleArtifactTypes.get(i).setEnabled(true);
+			} else {
+				if (m_artifactType == ArtifactType.ServiceImplementation) {
+					m_projectNames.get(i).setEnabled(false);
 					m_projectNames.get(i).setBackground(
 							Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 				}
-			} else {
-				m_projectNames.get(i).setEnabled(false);
-				m_projectNames.get(i).setBackground(
-						Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+				m_roleArtifactTypes.get(i).setEnabled(false);
 			}
 		}
 		
@@ -319,19 +436,36 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 	public void okPressed() {
 		
 		try {
-			GeneratorDirect generator=new GeneratorDirect(m_file);
+			JournalDialog journal=new JournalDialog(Display.getCurrent().getActiveShell());			
 			
 			for (int i=0; i < m_roles.size(); i++) {
 				
 				if (m_roleButtons.get(i).getSelection()) {
-					generator.generateRole(m_roles.get(i),
-							m_projectNames.get(i).getText(), m_file);
+					
+					// Get generator
+					Combo combo=m_roleArtifactTypes.get(i);
+					
+					int index=combo.getSelectionIndex();
+					
+					if (index >= 0) {
+						Generator generator=m_generators.get(index);
+						String projectName=null;
+						
+						if (m_projectNames.size() > 0) {
+							projectName = m_projectNames.get(i).getText();
+						}
+						
+						generator.generate(m_protocolModel, m_roles.get(i),
+								projectName, m_file, journal);
+					}
 				}
 			}
 			
+			journal.show();
+			
 			super.okPressed();
 		} catch(Exception e) {
-			error("Failed to generate BPEL artefacts", e);
+			error("Failed to generate artifacts", e);
 		}
 	}
 	
@@ -343,7 +477,7 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 	 */
 	public void error(String mesg, Exception ex) {
 		
-		org.savara.tools.bpel.osgi.Activator.logError(mesg, ex);
+		org.savara.tools.common.osgi.Activator.logError(mesg, ex);
 		
 		MessageBox mbox=new MessageBox(getShell(),
 				SWT.ICON_ERROR|SWT.OK);
