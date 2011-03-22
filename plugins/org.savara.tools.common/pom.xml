@@ -19,6 +19,21 @@
 			<artifactId>org.scribble.common</artifactId> 
 			<version>${scribble.version}</version>
  		</dependency>
+ 		<dependency>
+ 			<groupId>org.scribble.bundles</groupId>
+			<artifactId>org.scribble.protocol</artifactId> 
+			<version>${scribble.version}</version>
+ 		</dependency>
+ 		<dependency>
+ 			<groupId>org.scribble.bundles</groupId>
+			<artifactId>org.scribble.protocol.parser</artifactId> 
+			<version>${scribble.version}</version>
+ 		</dependency>
+ 		<dependency>
+ 			<groupId>org.savara.bundles</groupId>
+			<artifactId>org.savara.protocol</artifactId> 
+			<version>${savara.core.version}</version>
+ 		</dependency>
  	</dependencies>
   
 </project>
