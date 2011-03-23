@@ -15,6 +15,7 @@ Require-Bundle: javax.wsdl;visibility:=reexport,
  org.eclipse.ui,
  org.eclipse.core.runtime,
  org.scribble.protocol,
+ org.savara.common,
  org.savara.wsdl,
  org.savara.protocol,
  org.savara.tools.common
