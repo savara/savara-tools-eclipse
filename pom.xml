@@ -82,22 +82,6 @@
     </plugins>
   </build>
 
-
-<!-- No need for distribution details as there are no artifacts to publish
-	<distributionManagement>
-	    <repository>
-	      <id>jboss-releases-repository</id>
-	      <name>JBoss Releases Repository</name>
-	      <url>https://repository.jboss.org/nexus/service/local/staging/deploy/maven2/</url>
-	    </repository>
-	    <snapshotRepository>
-	      <id>jboss-snapshots-repository</id>
-	      <name>JBoss Snapshots Repository</name>
-	      <url>https://repository.jboss.org/nexus/content/repositories/snapshots/</url>
-	    </snapshotRepository>
-	</distributionManagement>
--->
-
 	<repositories>
 	    <repository>
 	        <id>jboss-developer-repository-group</id>
@@ -123,19 +107,6 @@
 				<enabled>true</enabled>
 			</releases>
 		</repository>
-<!--
-		<repository>
-			<id>scribble</id>
-			<url>http://download.jboss.org/jbosstools/builds/staging/scribble/all/</url>
-			<layout>p2</layout>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
--->
 		<repository>
 			<id>eclipse-helios</id>
 			<url>http://download.eclipse.org/releases/helios</url>
