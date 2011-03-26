@@ -32,10 +32,10 @@ import org.savara.scenario.model.ReceiveEvent;
 import org.savara.scenario.model.Role;
 import org.savara.scenario.model.SendEvent;
 import org.savara.scenario.model.TimeElapsedEvent;
+import org.savara.scenario.model.Link;
 import org.savara.tools.scenario.designer.DesignerImages;
 import org.savara.tools.scenario.designer.model.ModelCreationFactory;
 import org.eclipse.gef.palette.ConnectionCreationToolEntry;
-import org.eclipse.swt.widgets.Link;
 
 /**
  * This class implements the palette root for the designer.

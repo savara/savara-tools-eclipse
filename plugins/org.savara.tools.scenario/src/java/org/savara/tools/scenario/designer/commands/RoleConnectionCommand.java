@@ -19,6 +19,8 @@
  */
 package org.savara.tools.scenario.designer.commands;
 
+import java.util.UUID;
+
 import org.eclipse.gef.commands.Command;
 import org.savara.scenario.model.*;
 import org.savara.tools.scenario.designer.model.*;
@@ -28,11 +30,37 @@ import org.savara.tools.scenario.designer.model.*;
  */
 public class RoleConnectionCommand extends Command {
 
+    private static final String ConnectionCommand_Label = "connect participants";
+	private static final String ConnectionCommand_Description =
+		"participant connection command";
+			
+	// Connection are made from an output to an input port
+	protected Object source;
+	private Object m_sourceParent=null;
+	protected Role target;
+	private Object m_targetParent=null;
+	
+	private int m_sourceIndex=-1;
+	private int m_targetIndex=-1;
+	
+	private MessageEvent m_sourceEvent=null;
+	private MessageEvent m_targetEvent=null;
+	
+	// Selected edge. It can be given to the command or 
+	// created by the command itself.
+	protected Link m_link=null;
+
+	private Scenario m_scenario=null;
+	
 	/**
 	 * Creates a ConnectionCommand
 	 */
 	public RoleConnectionCommand() {
 		super(ConnectionCommand_Label);
+	}
+	
+	public void setScenario(Scenario scenario) {	
+		m_scenario = scenario;
 	}
 
 	/* (non-Javadoc)
@@ -57,25 +85,28 @@ public class RoleConnectionCommand extends Command {
 	 */
 	public void execute() {
 		// It is a delete connection command
-		/*
 		if (source == null && target == null) {
 
 			// Deletion of the connection is actually handled by
 			// the component policy, but left in as a placeholder
 			// in case required
+			/*
 			if (m_messageLink != null &&
 					m_messageLink.getScenario() != null) {
 				
 				m_messageLink.getScenario().
 						getMessageLinks().remove(m_messageLink);
 			}
-			
+			*/
+			if (m_link != null && m_scenario != null) {
+				m_scenario.getLink().remove(m_link);
+			}
 		}
-		*/
 		
 		if (m_sourceEvent == null && source instanceof Role) {
 			m_sourceEvent=new SendEvent();
 			m_sourceEvent.setRole((Role)source);
+			m_sourceEvent.setId(UUID.randomUUID().toString());
 			
 			m_link.setSource(m_sourceEvent);
 		} else {
@@ -85,6 +116,7 @@ public class RoleConnectionCommand extends Command {
 		if (m_targetEvent == null) {
 			m_targetEvent=new ReceiveEvent();
 			m_targetEvent.setRole(target);
+			m_targetEvent.setId(UUID.randomUUID().toString());
 
 			if (source instanceof MessageEvent) {
 				m_targetEvent.setErrorExpected(
@@ -105,15 +137,19 @@ public class RoleConnectionCommand extends Command {
 			m_link.setTarget(m_targetEvent);
 		}
 	
-		/* TODO: GPB: How to get scenario?
 		if (source instanceof Role) {
-			((Role)source).getScenario().
-				getMessageLinks().add(m_link);
+			//((Role)source).getScenario().
+			//	getMessageLinks().add(m_link);
+			if (m_scenario != null) {
+				m_scenario.getLink().add(m_link);
+			}
 		} else if (source instanceof MessageEvent) {
-			((MessageEvent)source).getScenario().
-					getMessageLinks().add(m_link);
+			//((MessageEvent)source).getScenario().
+			//		getMessageLinks().add(m_link);
+			if (m_scenario != null) {
+				m_scenario.getLink().add(m_link);
+			}
 		}
-		*/
 		
 		if (source instanceof Role) {
 			ModelSupport.addChild(m_sourceParent, m_sourceEvent, m_sourceIndex);
@@ -250,39 +286,19 @@ public class RoleConnectionCommand extends Command {
 		}
 		*/
 		
-		/* TODO: GPB: How to obtain scenario?
 		if (source instanceof Role) {
-			((Role)source).getScenario().
-				getMessageLinks().remove(m_link);
+			//((Role)source).getScenario().
+			//	getMessageLinks().remove(m_link);
+			m_scenario.getLink().remove(m_link);
 		} else if (source instanceof MessageEvent) {
-			((MessageEvent)source).getScenario().
-					getMessageLinks().remove(m_link);
+			//((MessageEvent)source).getScenario().
+			//		getMessageLinks().remove(m_link);
+			m_scenario.getLink().remove(m_link);
 		}
-		*/
 		
 		if (source instanceof Role) {
 			ModelSupport.removeChild(m_sourceParent, m_sourceEvent);
 		}
 		ModelSupport.removeChild(m_targetParent, m_targetEvent);
 	}
-	
-    private static final String ConnectionCommand_Label = "connect participants";
-	private static final String ConnectionCommand_Description =
-		"participant connection command";
-			
-	// Connection are made from an output to an input port
-	protected Object source;
-	private Object m_sourceParent=null;
-	protected Role target;
-	private Object m_targetParent=null;
-	
-	private int m_sourceIndex=-1;
-	private int m_targetIndex=-1;
-	
-	private MessageEvent m_sourceEvent=null;
-	private MessageEvent m_targetEvent=null;
-	
-	// Selected edge. It can be given to the command or 
-	// created by the command itself.
-	protected Link m_link=null;
 }

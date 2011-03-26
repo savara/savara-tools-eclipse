@@ -154,14 +154,15 @@ public class ModelSupport {
 		return(ret);
 	}
 	
-	public static java.util.List getSourceConnections(Object component) {
+	public static java.util.List getSourceConnections(Scenario scenario, Object component) {
 		java.util.List ret=new java.util.Vector();
 		
 		if (component instanceof MessageEvent) {
 			/* TODO: GPB: Need to get scenario???
 			Scenario scenario = ((MessageEvent)component).getScenario();
+			*/
 			
-			java.util.List links=scenario.getLinks();
+			java.util.List links=scenario.getLink();
 			
 			for (int i=0; i < links.size(); i++) {
 				Link link=(Link)links.get(i);
@@ -170,20 +171,21 @@ public class ModelSupport {
 					ret.add(link);
 				}
 			}
-			*/
+			//*/
 		}
 		
 		return(ret);
 	}
 	
-	public static java.util.List getTargetConnections(Object component) {
+	public static java.util.List getTargetConnections(Scenario scenario, Object component) {
 		java.util.List ret=new java.util.Vector();
 		
 		if (component instanceof MessageEvent) {
 			/* TODO: GPB: Need to get scenario???
 			Scenario scenario = ((MessageEvent)component).getScenario();
+			*/
 			
-			java.util.List links=scenario.getLinks();
+			java.util.List links=scenario.getLink();
 			
 			for (int i=0; i < links.size(); i++) {
 				Link link=(Link)links.get(i);
@@ -192,7 +194,7 @@ public class ModelSupport {
 					ret.add(link);
 				}
 			}
-			*/
+			//*/
 		}
 		
 		return(ret);

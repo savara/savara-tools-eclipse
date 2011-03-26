@@ -45,7 +45,11 @@ public class ScenarioTemplateTransferDropTargetListener
     protected CreationFactory getFactory(Object template) {
     	CreationFactory ret=null;
     	
-        ret = new ModelCreationFactory(template);
+    	if (template instanceof Class) {
+    		ret = new ModelCreationFactory((Class<?>)template);
+    	} else {
+    		ret = new ModelCreationFactory(template.getClass());
+    	}
     
         return(ret);
     }

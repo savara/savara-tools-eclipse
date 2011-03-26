@@ -19,9 +19,12 @@
  */
 package org.savara.tools.scenario.designer.model;
 
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.eclipse.gef.requests.CreationFactory;
+import org.savara.scenario.model.Event;
+import org.savara.scenario.model.Role;
 
 /**
  * This class is responsible for creating new instances of the
@@ -29,7 +32,11 @@ import org.eclipse.gef.requests.CreationFactory;
  */
 public class ModelCreationFactory implements CreationFactory {
 
-	public ModelCreationFactory(Object targetClass) {
+	private static Logger logger = Logger.getLogger("org.pi4soa.service.test.designer.view");	
+
+	private Class<?> m_targetClass=null;
+
+	public ModelCreationFactory(Class<?> targetClass) {
 		m_targetClass = targetClass;
 	}
 	
@@ -40,7 +47,13 @@ public class ModelCreationFactory implements CreationFactory {
 		Object ret=null;
 		
 		try {
-			ret = ((Class<?>)m_targetClass).newInstance();
+			ret = m_targetClass.newInstance();
+			
+			if (ret instanceof Event) {
+				((Event)ret).setId(UUID.randomUUID().toString());
+			} else if (ret instanceof Role) {
+				((Role)ret).setId(UUID.randomUUID().toString());				
+			}
 		} catch(Exception e) {
 			logger.severe("Failed to create new object of type '"+
 					m_targetClass+"': "+e);
@@ -56,8 +69,4 @@ public class ModelCreationFactory implements CreationFactory {
 	public Object getObjectType() {
 		return(m_targetClass);
 	}
-
-	private static Logger logger = Logger.getLogger("org.pi4soa.service.test.designer.view");	
-
-	private Object m_targetClass=null;
 }

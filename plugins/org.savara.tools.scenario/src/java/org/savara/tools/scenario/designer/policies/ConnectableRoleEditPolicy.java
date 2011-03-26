@@ -83,6 +83,9 @@ public class ConnectableRoleEditPolicy
         			target = ((ScenarioBaseEditPart)request.getTargetEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
         					Scenario.class);
         		}
+        	} else if (request.getTargetEditPart() instanceof RoleEditPart) {
+           		target = ((RoleEditPart)request.getTargetEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
+            					Scenario.class);
         	} else if (request.getSourceEditPart() instanceof EventEditPart) {
         		target = ((EventEditPart)request.getSourceEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
         				Event.class);
@@ -90,9 +93,16 @@ public class ConnectableRoleEditPolicy
         			target = ((ScenarioBaseEditPart)request.getSourceEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
         					Scenario.class);
         		}
+        	} else if (request.getSourceEditPart() instanceof RoleEditPart) {
+        		target = ((RoleEditPart)request.getSourceEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
+        					Scenario.class);
         	}
         	
-        	/* GPB: WAS
+        	if (target != null) {
+        		((RoleConnectionCommand)command).setScenario(target.getScenarioDiagram().getScenario());
+        	}
+        	
+        	/* GPB: WAS 
         	if (request.getTargetEditPart() instanceof ScenarioBaseEditPart) {
         		target = ((ScenarioBaseEditPart)request.getTargetEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
 						ScenarioObject.class);
@@ -210,6 +220,9 @@ public class ConnectableRoleEditPolicy
         		source = ((EventEditPart)request.getSourceEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
 						Scenario.class);
     		}
+    	} else if (request.getSourceEditPart() instanceof RoleEditPart) {
+           	source = ((RoleEditPart)request.getSourceEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
+    						Scenario.class);
     	} else if (request.getTargetEditPart() instanceof EventEditPart) {
     		source = ((EventEditPart)request.getTargetEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
 					Event.class);
@@ -217,8 +230,11 @@ public class ConnectableRoleEditPolicy
     			source = ((EventEditPart)request.getTargetEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
     					Scenario.class);
     		}
+    	} else if (request.getTargetEditPart() instanceof RoleEditPart) {
+   			source = ((RoleEditPart)request.getTargetEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
+    					Scenario.class);
     	}
-
+    	
     	/* GPB: WAS
     	if (request.getSourceEditPart() instanceof ScenarioBaseEditPart) {
     		source = ((ScenarioBaseEditPart)request.getSourceEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
@@ -270,6 +286,10 @@ public class ConnectableRoleEditPolicy
 	
 	        command.setSourceIndex(index);
 	        command.setSourceParent(source.getModel());
+
+	        if (source != null) {
+	       		((RoleConnectionCommand)command).setScenario(source.getScenarioDiagram().getScenario());
+	    	}
         }
 
         return(command);

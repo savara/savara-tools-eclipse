@@ -190,14 +190,14 @@ public class MessageEventEditPart extends ScenarioBaseEditPart
      * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#getModelSourceConnections()
      */
     protected java.util.List getModelSourceConnections() {
-        return(ModelSupport.getSourceConnections(getModel()));
+        return(ModelSupport.getSourceConnections(getScenarioDiagram().getScenario(), getModel()));
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#getModelTargetConnections()
      */
     protected java.util.List getModelTargetConnections() {
-        return(ModelSupport.getTargetConnections(getModel()));
+        return(ModelSupport.getTargetConnections(getScenarioDiagram().getScenario(), getModel()));
     }
     
     /* (non-Javadoc)
