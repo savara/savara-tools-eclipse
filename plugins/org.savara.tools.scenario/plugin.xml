@@ -31,7 +31,7 @@
   <extension point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
       <propertyContributor
             contributorId="org.savara.tools.scenario.designer.ScenarioDesignerID"
-            typeMapper="org.savara.tools.designer.editor.properties.TypeMapper">
+            typeMapper="org.savara.tools.scenario.designer.editor.properties.TypeMapper">
       	<propertyCategory category="Savara"/>
       </propertyContributor>
   </extension>
@@ -58,7 +58,7 @@
    <extension point="org.eclipse.ui.views.properties.tabbed.propertySections">
       <propertySections contributorId="org.savara.tools.scenario.designer.ScenarioDesignerID">
          <propertySection
-               class="org.savara.tools.designer.editor.properties.AllPropertySheetSection"
+               class="org.savara.tools.scenario.designer.editor.properties.AllPropertySheetSection"
                enablesFor="1"
                id="org.savara.tools.scenario.scenario.AllSection"
                tab="org.savara.tools.scenario.designer.ScenarioDesignerID.AllTab">

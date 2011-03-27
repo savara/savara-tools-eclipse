@@ -68,10 +68,10 @@ public class RolePropertySource implements IPropertySource {
 		descriptors.add(new ComboBoxPropertyDescriptor(
 				TYPE_ID, "Type",
 				values));
+				*/
 
 		descriptors.add(new TextPropertyDescriptor(
 				INSTANCE_ID,"Instance"));
-				*/
 
 		return (IPropertyDescriptor[])descriptors.toArray( new IPropertyDescriptor[] {} );
 	}
