@@ -23,6 +23,8 @@ import java.util.logging.Logger;
 import org.savara.scenario.model.*;
 
 public class ModelSupport {
+	
+	private static Logger logger = Logger.getLogger(ModelSupport.class.getName());
 
 	public static java.util.List<Event> getChildren(Object component) {
 		java.util.List<Event> ret=null;
@@ -114,10 +116,8 @@ public class ModelSupport {
 			java.util.List list=null;
 			
 			if (parent instanceof Scenario &&
-					child instanceof Role) {
-				
-				// TODO: GPB: Need to get scenario???
-				//list = ((Role)child).getScenario().getParticipants();
+					child instanceof Role) {				
+				((Scenario)parent).getRole().remove(child);
 			} else {
 				list = getChildren(parent);		
 			}
@@ -199,6 +199,4 @@ public class ModelSupport {
 		
 		return(ret);
 	}
-	
-	private static Logger logger = Logger.getLogger("org.pi4soa.service.test.designer.model");
 }

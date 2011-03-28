@@ -27,6 +27,18 @@ import org.savara.tools.scenario.designer.DesignerImages;
 import org.savara.tools.scenario.designer.model.*;
 
 public class ViewSupport {
+	
+	private static Logger logger = Logger.getLogger(ViewSupport.class.getName());
+	
+	public static int TYPES_INITIAL_YPADDING=26;
+
+	public static final int EVENT_GROUP_PADDING_X=8;
+	public static final int EVENT_GROUP_PADDING_Y=35;
+	public static final int PARTICIPANT_PADDING_Y=10;
+	public static final int HEADER_HEIGHT=60;
+	public static final int PADDING_Y=10;
+	//public static final int SIDEBAR_WIDTH=300;
+	public static final int ROLE_PADDING_X=200;
 
 	/**
 	 * This method returns the appropriate image for this scenario
@@ -352,6 +364,9 @@ public class ViewSupport {
 				ret = ROLE_PADDING_X;
 			}
 			
+		} else if (child instanceof Group) {
+			// Return the default value
+			
 		} else if (child instanceof Event) {
 			Event me=(Event)child;
 			
@@ -495,16 +510,4 @@ public class ViewSupport {
 		// depth of the event groups
 		return(100);
 	}
-	
-	private static Logger logger = Logger.getLogger("org.pi4soa.service.test.designer.view");
-	
-	public static int TYPES_INITIAL_YPADDING=26;
-
-	public static final int EVENT_GROUP_PADDING_X=8;
-	public static final int EVENT_GROUP_PADDING_Y=35;
-	public static final int PARTICIPANT_PADDING_Y=10;
-	public static final int HEADER_HEIGHT=60;
-	public static final int PADDING_Y=10;
-	//public static final int SIDEBAR_WIDTH=300;
-	public static final int ROLE_PADDING_X=200;
 }

@@ -76,26 +76,20 @@ public class ConnectableRoleEditPolicy
 			org.eclipse.draw2d.geometry.Point point=
 				request.getLocation().getTranslated(port.getClientArea().getTopLeft());
 			
-        	if (request.getTargetEditPart() instanceof EventEditPart) {
-        		target = ((EventEditPart)request.getTargetEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
+        	if (request.getTargetEditPart() instanceof ScenarioBaseEditPart) {
+        		target = ((ScenarioBaseEditPart)request.getTargetEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
 						Event.class);
         		if (target == null) {
         			target = ((ScenarioBaseEditPart)request.getTargetEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
         					Scenario.class);
         		}
-        	} else if (request.getTargetEditPart() instanceof RoleEditPart) {
-           		target = ((RoleEditPart)request.getTargetEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
-            					Scenario.class);
-        	} else if (request.getSourceEditPart() instanceof EventEditPart) {
-        		target = ((EventEditPart)request.getSourceEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
+        	} else if (request.getSourceEditPart() instanceof ScenarioBaseEditPart) {
+        		target = ((ScenarioBaseEditPart)request.getSourceEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
         				Event.class);
         		if (target == null) {
         			target = ((ScenarioBaseEditPart)request.getSourceEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
         					Scenario.class);
         		}
-        	} else if (request.getSourceEditPart() instanceof RoleEditPart) {
-        		target = ((RoleEditPart)request.getSourceEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
-        					Scenario.class);
         	}
         	
         	if (target != null) {
@@ -127,11 +121,11 @@ public class ConnectableRoleEditPolicy
         	// on bounds and locations
         	
            	if (target instanceof MessageEventEditPart) {
-            	if (request.getTargetEditPart() instanceof EventEditPart) {
-            		target = ((EventEditPart)request.getTargetEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
+            	if (request.getTargetEditPart() instanceof ScenarioBaseEditPart) {
+            		target = ((ScenarioBaseEditPart)request.getTargetEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
             								Event.class);
-            	} else if (request.getSourceEditPart() instanceof EventEditPart) {
-            		target = ((EventEditPart)request.getSourceEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
+            	} else if (request.getSourceEditPart() instanceof ScenarioBaseEditPart) {
+            		target = ((ScenarioBaseEditPart)request.getSourceEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
             								Event.class);
             	}
         		return(null);
@@ -213,26 +207,32 @@ public class ConnectableRoleEditPolicy
 		org.eclipse.draw2d.geometry.Point point=
 			request.getLocation().getTranslated(port.getClientArea().getTopLeft());
 		
-    	if (request.getSourceEditPart() instanceof EventEditPart) {
-    		source = ((EventEditPart)request.getSourceEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
-    				Event.class);
+    	if (request.getSourceEditPart() instanceof ScenarioBaseEditPart) {
+    		source = ((ScenarioBaseEditPart)request.getSourceEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
+    				Group.class);
     		if (source == null) {
-        		source = ((EventEditPart)request.getSourceEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
+        		source = ((ScenarioBaseEditPart)request.getSourceEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
 						Scenario.class);
     		}
+    	/*
     	} else if (request.getSourceEditPart() instanceof RoleEditPart) {
            	source = ((RoleEditPart)request.getSourceEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
     						Scenario.class);
-    	} else if (request.getTargetEditPart() instanceof EventEditPart) {
-    		source = ((EventEditPart)request.getTargetEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
-					Event.class);
+    	*/
+    	} else if (request.getTargetEditPart() instanceof ScenarioBaseEditPart) {
+    		source = ((ScenarioBaseEditPart)request.getTargetEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
+    				Group.class);
     		if (source == null) {
-    			source = ((EventEditPart)request.getTargetEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
+    			source = ((ScenarioBaseEditPart)request.getTargetEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
     					Scenario.class);
     		}
+    	/*
     	} else if (request.getTargetEditPart() instanceof RoleEditPart) {
    			source = ((RoleEditPart)request.getTargetEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
-    					Scenario.class);
+					Group.class);
+   			source = ((RoleEditPart)request.getTargetEditPart()).getScenarioDiagram().findEditPartAtLocation(point,
+					Scenario.class);
+		*/
     	}
     	
     	/* GPB: WAS
