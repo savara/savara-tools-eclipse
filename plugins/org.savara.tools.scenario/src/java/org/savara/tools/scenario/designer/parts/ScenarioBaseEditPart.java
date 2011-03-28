@@ -37,6 +37,11 @@ import org.savara.tools.scenario.designer.view.GraphicalComponent;
 public abstract class ScenarioBaseEditPart extends AbstractGraphicalEditPart
 						implements java.beans.PropertyChangeListener,
 							GraphicalComponent, SimulationEntity {
+	
+    private IPropertySource propertySource = null;
+    //private Notifier target;
+    private int m_logStartPosition=0;
+    private int m_logEndPosition=0;
 
     /**
      * This is the default constructor.
@@ -440,9 +445,4 @@ public abstract class ScenarioBaseEditPart extends AbstractGraphicalEditPart
 	public int getLogEndPosition() {
 		return(m_logEndPosition);
 	}
-	
-    private IPropertySource propertySource = null;
-    //private Notifier target;
-    private int m_logStartPosition=0;
-    private int m_logEndPosition=0;
 }

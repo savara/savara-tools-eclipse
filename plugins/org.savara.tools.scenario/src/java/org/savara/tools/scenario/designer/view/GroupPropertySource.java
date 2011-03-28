@@ -28,16 +28,15 @@ import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.savara.scenario.model.*;
 
 /**
- * This class implements the property source for a scenario
- * participant.
+ * This class implements the property source for a Group.
  */
-public class RolePropertySource implements IPropertySource {
+public class GroupPropertySource implements IPropertySource {
 	
 	private static final String NAME_ID = "name";
 
-    private Role m_element=null;
+    private Group m_element=null;
 
-	public RolePropertySource(Role element) {
+	public GroupPropertySource(Group element) {
 		m_element = element;
 	}
 
@@ -110,7 +109,7 @@ public class RolePropertySource implements IPropertySource {
 	 * 
 	 * @return The element
 	 */
-	protected Role getElement() {
+	protected Group getElement() {
 		return(m_element);
 	}
 }

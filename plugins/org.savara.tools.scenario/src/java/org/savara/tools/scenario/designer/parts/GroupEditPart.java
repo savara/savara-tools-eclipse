@@ -22,6 +22,7 @@ package org.savara.tools.scenario.designer.parts;
 import java.util.Iterator;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.ui.views.properties.IPropertySource;
 import org.savara.tools.scenario.designer.figures.*;
 import org.savara.tools.scenario.designer.simulate.*;
 import org.savara.tools.scenario.designer.view.ViewSupport;
@@ -31,6 +32,8 @@ import org.savara.tools.scenario.designer.view.ViewSupport;
  * edit part.
  */
 public class GroupEditPart extends StructuredGroupEditPart {
+
+	private IPropertySource propertySource = null;
 
 	/**
 	 * This is the constructor.
@@ -70,6 +73,18 @@ public class GroupEditPart extends StructuredGroupEditPart {
     			((ScenarioBaseEditPart)obj).refreshChildren();
     		}
     	}
+    }
+    
+    /* (non-Javadoc)
+     * @see com.ibm.itso.sal330r.gefdemo.edit.WorkflowElementEditPart#getPropertySource()
+     */
+    protected IPropertySource getPropertySource() {
+        if (propertySource == null) {
+           	propertySource = new org.savara.tools.scenario.designer.view.GroupPropertySource(
+           					(org.savara.scenario.model.Group)getModel());
+        }
+        
+        return propertySource;
     }
     
 	/**

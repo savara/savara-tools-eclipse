@@ -501,6 +501,9 @@ public class ScenarioDesigner
             m_isDirty = dirty;
             firePropertyChange(IEditorPart.PROP_DIRTY);
         }
+        
+        // Refresh the visuals - required as model no longer provides notifications
+        getCurrentPage().refresh();
 	}
 	
     /**

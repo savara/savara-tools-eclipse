@@ -28,6 +28,7 @@ import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.DropRequest;
+import org.eclipse.ui.views.properties.IPropertySource;
 import org.savara.scenario.model.*;
 import org.savara.tools.scenario.designer.figures.*;
 import org.savara.tools.scenario.designer.model.ModelSupport;
@@ -42,7 +43,9 @@ import org.savara.tools.scenario.designer.view.ViewSupport;
 public class MessageEventEditPart extends ScenarioBaseEditPart 
 					implements org.eclipse.gef.NodeEditPart {
 
-	public MessageEventEditPart(Object elem) {
+    private IPropertySource propertySource = null;
+
+    public MessageEventEditPart(Object elem) {
 		super(elem);
 	}
 	
@@ -152,6 +155,17 @@ public class MessageEventEditPart extends ScenarioBaseEditPart
     	return(ret);
     }
     
+    /* (non-Javadoc)
+     * @see com.ibm.itso.sal330r.gefdemo.edit.WorkflowElementEditPart#getPropertySource()
+     */
+    protected IPropertySource getPropertySource() {
+        if (propertySource == null) {
+           	propertySource = new org.savara.tools.scenario.designer.view.MessageEventPropertySource((MessageEvent)getModel());
+        }
+        
+        return propertySource;
+    }
+
     public org.eclipse.gef.EditPart findEditPartForModel(Object model) {
     	org.eclipse.gef.EditPart ret=null;
     	

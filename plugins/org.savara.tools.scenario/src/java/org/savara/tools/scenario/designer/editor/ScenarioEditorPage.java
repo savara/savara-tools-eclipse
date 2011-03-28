@@ -130,6 +130,14 @@ public class ScenarioEditorPage extends AbstractEditorPage
         focus(getScenario());
     }
     
+    /**
+     * Refresh the editor page without a new input.
+     * 
+     */
+    public void refresh() {
+    	resetViewer();
+    }
+
     protected void resetViewer() {
     	if (m_viewer != null &&
     			getScenario() != null) {

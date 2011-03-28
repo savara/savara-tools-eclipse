@@ -42,6 +42,8 @@ import org.savara.tools.scenario.designer.view.ViewSupport;
  */
 public class RoleEditPart extends ScenarioBaseEditPart  
 					implements org.eclipse.gef.NodeEditPart {
+    
+	private IPropertySource propertySource = null;
 
 	public RoleEditPart(Object elem) {
 		super(elem);
@@ -274,6 +276,4 @@ public class RoleEditPart extends ScenarioBaseEditPart
     public ConnectionAnchor getTargetConnectionAnchor() {
         return(((RoleFigure)getFigure()).getConnectionAnchor());
     }
-    
-	private IPropertySource propertySource = null;
 }
