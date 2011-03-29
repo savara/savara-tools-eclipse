@@ -1,0 +1,31 @@
+This repository contains the Savara Tools for Eclipse.
+
+
+Building the project
+--------------------
+
+1) JBossTools Parent Pom
+
+You need to checkout the build component of the jbosstools project into an appropriate folder, e.g.
+
+	svn co http://anonsvn.jboss.org/repos/jbosstools/branches/3.3.indigo/build/
+
+and then build the parent pom, e.g.
+
+	cd build/parent
+	mvn clean install
+
+This will install the jbosstools parent pom into your local maven repository, ready for building the main project.
+
+
+2) Savara Tools Eclipse
+
+Checkout the savara-tools-eclipse-master project, e.g.
+
+	git clone git@github.com:savara/savara-tools-eclipse.git
+
+and run the following command from the top level folder,
+
+	mvn clean install -e -P unified.site
+
+This will create an update site in the site/target/site (expanded) and site/target/site_assembly.zip (compressed).
