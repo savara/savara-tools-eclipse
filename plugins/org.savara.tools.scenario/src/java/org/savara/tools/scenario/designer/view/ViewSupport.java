@@ -22,6 +22,7 @@ package org.savara.tools.scenario.designer.view;
 import java.util.logging.Logger;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.views.properties.IPropertySource;
 import org.savara.scenario.model.*;
 import org.savara.tools.scenario.designer.DesignerImages;
 import org.savara.tools.scenario.designer.model.*;
@@ -40,6 +41,24 @@ public class ViewSupport {
 	//public static final int SIDEBAR_WIDTH=300;
 	public static final int ROLE_PADDING_X=200;
 
+	public static IPropertySource getPropertySource(Object model) {
+		IPropertySource ret=null;
+		
+		if (model instanceof Group) {
+			ret = new GroupPropertySource((Group)model);
+		} else if (model instanceof Link) {
+			ret = new LinkPropertySource((Link)model);
+		} else if (model instanceof MessageEvent) {
+			ret = new MessageEventPropertySource((MessageEvent)model);
+		} else if (model instanceof Role) {
+			ret = new RolePropertySource((Role)model);
+		} else if (model instanceof Scenario) {
+			ret = new ScenarioPropertySource((Scenario)model);
+		}
+		
+		return(ret);
+	}
+	
 	/**
 	 * This method returns the appropriate image for this scenario
 	 * component on the main display area.
