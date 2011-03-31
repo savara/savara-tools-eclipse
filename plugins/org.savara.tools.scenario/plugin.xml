@@ -75,6 +75,15 @@
             <input type="org.savara.scenario.model.MessageEvent"/>
             <input type="org.savara.scenario.model.Link"/>
          </propertySection>
+        <propertySection
+        	  afterSection="org.savara.tools.scenario.designer.editor.properties.MessagePropertySection"
+              class="org.savara.tools.scenario.designer.editor.properties.ParametersPropertySection"
+              enablesFor="1"
+              id="org.savara.tools.scenario.designer.editor.properties.ParametersPropertySection"
+              tab="org.savara.tools.scenario.designer.ScenarioDesignerID.GeneralTab">
+            <input type="org.savara.scenario.model.MessageEvent"/>
+            <input type="org.savara.scenario.model.Link"/>
+         </propertySection>
       </propertySections>
    </extension>
 

@@ -23,31 +23,27 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
+import org.savara.scenario.model.Parameter;
 
-public class MessagePropertySection extends AbstractPropertySection {
+public class ParametersPropertySection extends AbstractPropertySection {
     
-	private DefaultTextPropertySection m_operation=
-		new DefaultTextPropertySection("operationName",
-				"Operation", "Operation");
-	private DefaultTextPropertySection m_fault=
-		new DefaultTextPropertySection("faultName",
-				"Fault", "Fault");
+	private ParameterListPropertySection m_parameters=
+		new ParameterListPropertySection("parameter",
+				"Parameters", "Parameters", 0, 100);
 
-	public MessagePropertySection() {
+	public ParametersPropertySection() {
 	}
 	
     public void aboutToBeShown() {
     	super.aboutToBeShown();
     	
-    	m_operation.aboutToBeShown();
-    	m_fault.aboutToBeShown();
+    	m_parameters.aboutToBeShown();
     }
     
     public void aboutToBeHidden() {
     	super.aboutToBeHidden();
 
-    	m_operation.aboutToBeHidden();
-    	m_fault.aboutToBeHidden();
+    	m_parameters.aboutToBeHidden();
     }
     
     public void createControls(Composite parent,
@@ -57,39 +53,68 @@ public class MessagePropertySection extends AbstractPropertySection {
         Composite composite = getWidgetFactory()
 					.createFlatFormComposite(parent);
 
-        m_operation.setToolTip("The optional operation name");
-        m_operation.setTextGap(100);
-        m_operation.setStartPercentage(0);
-        m_operation.setEndPercentage(38);
-        m_operation.createControls(composite,
-        		aTabbedPropertySheetPage);
-
-        m_fault.setTextGap(100);
-        m_fault.setStartPercentage(40);
-        m_fault.setEndPercentage(78);
-        m_fault.setToolTip("The optional fault name");
-        m_fault.createControls(composite,
-        		aTabbedPropertySheetPage);
-     }
+        m_parameters.setToolTip("The parameters");
+        m_parameters.setTextGap(100);
+        m_parameters.createControls(composite,
+        		aTabbedPropertySheetPage);        
+    }
     
     public void setInput(IWorkbenchPart part, ISelection selection) {
         super.setInput(part, selection);
         
-        m_operation.setInput(part, selection);
-        m_fault.setInput(part, selection);
+        m_parameters.setInput(part, selection);
     }
     
     public void refresh() {    	
     	super.refresh();
     	
-    	m_operation.refresh();
-    	m_fault.refresh();
+    	m_parameters.refresh();
+    }
+    
+    public int getMinimumHeight() {
+    	return(400);
     }
     
     public void dispose() {    	
     	super.dispose();
     	
-    	m_operation.dispose();
-    	m_fault.dispose();
+    	m_parameters.dispose();
     }
+	
+	public static class ParameterListPropertySection extends AbstractListPropertySection {
+		
+		public ParameterListPropertySection(String property, String displayName,
+				String label, int start, int end) {
+			super(property, displayName, label, start, end);
+		}
+
+		protected Object createNewObject() {
+			Parameter ret=new Parameter();
+			ret.setType("PType"+System.currentTimeMillis());
+			ret.setValue("http://ptype"+System.currentTimeMillis());
+			return(ret);
+		}
+		
+	    protected String getDisplayValue(Object sourceValue) {
+	    	String ret="";
+
+	    	if (sourceValue instanceof Parameter) {
+	    		Parameter p=(Parameter)sourceValue;
+	    		
+	    		if (p.getType() != null && p.getType().trim().length() > 0) {
+	    			ret += p.getType();
+	    		}
+
+	    		ret += " [";
+	    		
+	    		if (p.getType() != null && p.getType().trim().length() > 0) {
+	    			ret += p.getType();
+	    		}
+
+	    		ret += "]";
+	    	}
+	    	
+	    	return(ret);
+	    }
+	}
 }

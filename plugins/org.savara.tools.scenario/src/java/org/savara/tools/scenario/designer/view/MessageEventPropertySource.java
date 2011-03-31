@@ -21,6 +21,7 @@ package org.savara.tools.scenario.designer.view;
 
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
+import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.savara.scenario.model.*;
 
@@ -61,6 +62,8 @@ public class MessageEventPropertySource implements IPropertySource {
 				OPERATION_ID,"Operation"));
 		descriptors.add(new TextPropertyDescriptor(
 				FAULT_ID,"Fault"));
+		descriptors.add(new PropertyDescriptor(
+				PARAMETERS_ID,"Parameters"));
 				
 		ret = new IPropertyDescriptor[descriptors.size()];
 		descriptors.copyInto(ret);
@@ -78,6 +81,8 @@ public class MessageEventPropertySource implements IPropertySource {
 			ret = getElement().getOperationName();
 		} else if (id == FAULT_ID) {
 			ret = getElement().getFaultName();
+		} else if (id == PARAMETERS_ID) {
+			ret = getElement().getParameter();
 		}
 
 		if (ret == null) {
@@ -116,6 +121,8 @@ public class MessageEventPropertySource implements IPropertySource {
 			if (value instanceof String) {
 				getElement().setFaultName((String)value);
 			}			
+		} else if (id == PARAMETERS_ID) {
+			throw new UnsupportedOperationException("Cannot set parameters list");			
 		}
 	}
 	

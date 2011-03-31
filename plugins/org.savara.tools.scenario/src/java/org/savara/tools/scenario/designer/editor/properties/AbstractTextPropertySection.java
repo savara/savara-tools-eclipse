@@ -91,6 +91,9 @@ public abstract class AbstractTextPropertySection
         }
         
         data = new FormData();
+        
+        data.width = 60;
+        
         data.left = new FormAttachment(getStartPercentage(), getTextGap());
         
         if (isExpandable()) {

@@ -35,20 +35,6 @@ public class SetPropertyCommand
         m_oldValue = m_property.getPropertyValue(
         			m_propertyDescriptor.getId());
         
-        /*
-        if (m_oldValue instanceof Integer) {
-        	java.util.List list=m_property.getValues(m_propertyDescriptor);
-        	
-        	m_oldValue = list.get(((Integer)m_oldValue).intValue()-1);
-        } else if (m_oldValue instanceof java.util.List) {
-        	
-        	// Copy list, as the original list may be cleared
-        	java.util.List tmp=new java.util.Vector((java.util.List)m_oldValue);
-        	
-        	m_oldValue = tmp;
-        }
-        */
-        
         m_property.setPropertyValue(m_propertyDescriptor.getId(),
 								m_value);
 	}
