@@ -22,6 +22,7 @@ package org.savara.tools.scenario.designer.dnd;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.dnd.TemplateTransferDropTargetListener;
 import org.eclipse.gef.requests.CreationFactory;
+import org.eclipse.swt.dnd.DropTargetEvent;
 import org.savara.tools.scenario.designer.model.ModelCreationFactory;
 
 /**
@@ -37,6 +38,13 @@ public class ScenarioTemplateTransferDropTargetListener
      */
     public ScenarioTemplateTransferDropTargetListener(EditPartViewer viewer) {
         super(viewer);
+    }
+    
+    public void drop(DropTargetEvent event) {   
+    	// Deselect, to avoid refresh problems in ScenarioEditorPage
+    	getViewer().deselectAll();
+    	
+    	super.drop(event);
     }
 
     /* (non-Javadoc)

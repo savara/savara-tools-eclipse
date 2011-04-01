@@ -70,7 +70,7 @@ public class ConnectableRoleEditPolicy
 
         	ScenarioBaseEditPart target=null;
 			FigureCanvas canvas=(FigureCanvas)
-			getHost().getViewer().getControl();
+					getHost().getViewer().getControl();
 
 			Viewport port = canvas.getViewport();
 			org.eclipse.draw2d.geometry.Point point=
@@ -143,6 +143,10 @@ public class ConnectableRoleEditPolicy
         		return(null);
         	}
         	*/
+           	
+           	// Prior to connecting, clear selection so as not to interfere with ScenarioEditorPage refresh
+           	getHost().getViewer().deselectAll();
+           	
         	Scenario scenario=null;
         	
         	if (target != null) {
