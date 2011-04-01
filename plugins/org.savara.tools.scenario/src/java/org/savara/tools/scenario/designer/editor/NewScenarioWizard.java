@@ -28,8 +28,6 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
@@ -54,8 +52,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
-import org.savara.scenario.util.ScenarioDefinitions;
 import org.savara.scenario.util.ScenarioModelUtil;
+import org.savara.tools.scenario.designer.DesignerDefinitions;
 
 /**
  * This class provides the wizard responsible for creating
@@ -96,37 +94,6 @@ public class NewScenarioWizard extends Wizard implements INewWizard {
 							//
 							org.savara.scenario.model.Scenario scenario=
 							    		new org.savara.scenario.model.Scenario();
-							
-							/* Create an example configuration
-							 * 
-							 *
-							org.savara.scenario.model.Role role1=new org.savara.scenario.model.Role();
-							role1.setID("role1");
-							role1.setName("role1");
-							scenario.getRoles().add(role1);
-
-							org.savara.scenario.model.Role role2=new org.savara.scenario.model.Role();
-							role2.setID("role2");
-							role2.setName("role2");
-							scenario.getRoles().add(role2);
-							
-							org.savara.scenario.model.SendEvent se1=new org.savara.scenario.model.SendEvent();
-							se1.setID("se1");
-							se1.setRole(role1);
-							se1.setOperationName("hello");
-							scenario.getEvents().add(se1);
-
-							org.savara.scenario.model.ReceiveEvent re1=new org.savara.scenario.model.ReceiveEvent();
-							re1.setID("re1");
-							re1.setRole(role2);
-							re1.setOperationName("hello");
-							scenario.getEvents().add(re1);
-
-							org.savara.scenario.model.Link l1=new org.savara.scenario.model.Link();
-							l1.setSource(se1);
-							l1.setTarget(re1);
-							scenario.getLinks().add(l1);
-							*/
 
 							ByteArrayOutputStream os=new ByteArrayOutputStream();
 							
@@ -214,13 +181,10 @@ public class NewScenarioWizard extends Wizard implements INewWizard {
         // Create a page, set the title, and the initial model file name.
         //
 		m_newFileCreationPage = new ScenarioModelWizardNewFileCreationPage("Whatever", m_selection);
-		//m_newFileCreationPage.setTitle(scenarioEditorPlugin.INSTANCE.getString("_UI_ScenarioModelWizard_label"));
-		//m_newFileCreationPage.setDescription(scenarioEditorPlugin.INSTANCE.getString("_UI_ScenarioModelWizard_description"));
-		//m_newFileCreationPage.setFileName(scenarioEditorPlugin.INSTANCE.getString("_UI_ScenarioEditorFilenameDefaultBase") + "." + scenarioEditorPlugin.INSTANCE.getString("_UI_ScenarioEditorFilenameExtension"));
 		m_newFileCreationPage.setTitle("Scenario");
 		m_newFileCreationPage.setDescription("Create a new Scenario");
 		m_newFileCreationPage.setFileName("My"+"."+
-						ScenarioDefinitions.SCENARIO_FILE_EXTENSION);
+						DesignerDefinitions.SCENARIO_FILE_EXTENSION);
         addPage(m_newFileCreationPage);
 
         // Try and get the resource selection to determine a current directory for the file dialog.
@@ -250,7 +214,7 @@ public class NewScenarioWizard extends Wizard implements INewWizard {
                     //String defaultModelFilenameExtension = scenarioEditorPlugin.INSTANCE.getString("_UI_ScenarioEditorFilenameExtension");
                     String defaultModelBaseFilename = "My";
                     String defaultModelFilenameExtension =
-                    				ScenarioDefinitions.SCENARIO_FILE_EXTENSION;
+                    				DesignerDefinitions.SCENARIO_FILE_EXTENSION;
                     String modelFilename = defaultModelBaseFilename + "." + defaultModelFilenameExtension;
                     for (int i = 1; ((IContainer)selectedResource).findMember(modelFilename) != null; ++i) {
                         modelFilename = defaultModelBaseFilename + i + "." + defaultModelFilenameExtension;
@@ -302,10 +266,10 @@ public class NewScenarioWizard extends Wizard implements INewWizard {
                 //
                 //String requiredExt = scenarioEditorPlugin.INSTANCE.getString("_UI_ScenarioEditorFilenameExtension");
             	
-            	if (new Path(getFileName()).getFileExtension().equals(ScenarioDefinitions.SCENARIO_FILE_EXTENSION)) {
+            	if (new Path(getFileName()).getFileExtension().equals(DesignerDefinitions.SCENARIO_FILE_EXTENSION)) {
             		return true;
             	} else {
-                    setErrorMessage("The filename must end in \"."+ScenarioDefinitions.SCENARIO_FILE_EXTENSION+"\"");
+                    setErrorMessage("The filename must end in \"."+DesignerDefinitions.SCENARIO_FILE_EXTENSION+"\"");
                     return false;
             	}
             	/*

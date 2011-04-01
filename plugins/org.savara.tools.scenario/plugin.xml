@@ -20,13 +20,28 @@
   <extension point = "org.eclipse.ui.editors">
     <editor
           class="org.savara.tools.scenario.designer.editor.ScenarioDesigner"
-          icon="icons/full/obj16/ScenarioFile.gif"
           contributorClass="org.savara.tools.scenario.designer.editor.DesignerActionBarContributor"
           name="Scenario Designer"
-          id="org.savara.tools.scenario.designer.ScenarioDesignerID"
-          extensions="scr">
+          id="org.savara.tools.scenario.designer.ScenarioDesignerID">
+     <contentTypeBinding
+         contentTypeId="org.savara.tools.scenario.contenttype">
+     </contentTypeBinding>
     </editor>
    </extension>
+
+  <extension point="org.eclipse.core.contenttype.contentTypes">
+    <content-type
+      	base-type="org.eclipse.core.runtime.xml"
+      	id="org.savara.tools.scenario.contenttype"
+      	name="SAVARA Scenario File"
+      	file-extensions="scn,xml"
+      	priority="normal">
+      <describer class="org.eclipse.core.runtime.content.XMLRootElementContentDescriber2">
+      	<parameter name="element"
+          	value="{http://www.savara.org/scenario}Scenario"/>
+      </describer>
+    </content-type>
+  </extension>
 
   <extension point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
       <propertyContributor
