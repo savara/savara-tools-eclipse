@@ -42,26 +42,11 @@
             category="Savara"
                id="org.savara.tools.scenario.designer.ScenarioDesignerID.GeneralTab"
             label="General"/>
-         <propertyTab
-            afterTab="org.savara.tools.scenario.designer.ScenarioDesignerID.AdvancedTab"
-            category="Savara"
-               id="org.savara.tools.scenario.designer.ScenarioDesignerID.AllTab"
-            label="All"/>
       </propertyTabs>
    </extension>      
 
    <extension point="org.eclipse.ui.views.properties.tabbed.propertySections">
       <propertySections contributorId="org.savara.tools.scenario.designer.ScenarioDesignerID">
-         <propertySection
-               class="org.savara.tools.scenario.designer.editor.properties.AllPropertySheetSection"
-               enablesFor="1"
-               id="org.savara.tools.scenario.scenario.AllSection"
-               tab="org.savara.tools.scenario.designer.ScenarioDesignerID.AllTab">
-            <input type="org.savara.scenario.model.Scenario"/>
-            <input type="org.savara.scenario.model.Event"/>
-            <input type="org.savara.scenario.model.Link"/>
-            <input type="org.savara.scenario.model.Role"/>
-         </propertySection>
         <propertySection
               class="org.savara.tools.scenario.designer.editor.properties.NamePropertySection"
               enablesFor="1"

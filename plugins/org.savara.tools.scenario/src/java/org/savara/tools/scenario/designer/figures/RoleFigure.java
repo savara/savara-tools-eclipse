@@ -41,7 +41,7 @@ public class RoleFigure extends GroupingFigure {//org.eclipse.draw2d.Figure {
 		((org.eclipse.draw2d.Label)getHeader()).setForegroundColor(ColorConstants.black);
 			
 		((org.eclipse.draw2d.Label)getHeader()).setTextAlignment(
-				org.eclipse.draw2d.PositionConstants.LEFT);
+				org.eclipse.draw2d.PositionConstants.CENTER);
 
 		m_connectionAnchor = new org.eclipse.draw2d.ChopboxAnchor(this);
 	}

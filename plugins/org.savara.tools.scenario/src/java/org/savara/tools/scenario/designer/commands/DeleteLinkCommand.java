@@ -83,15 +83,6 @@ public class DeleteLinkCommand
 		
 		m_sourceEvent = (MessageEvent)m_child.getSource();
 		m_targetEvent = (MessageEvent)m_child.getTarget();
-		
-		/* TODO: GPB: need parent
-		if (m_sourceEvent != null) {
-			m_sourceParent = m_sourceEvent.eContainer();
-		}
-		if (m_targetEvent != null) {
-			m_targetParent = m_targetEvent.eContainer();
-		}
-		*/
 	}
 	
 	public void setParent(Scenario newParent) {
