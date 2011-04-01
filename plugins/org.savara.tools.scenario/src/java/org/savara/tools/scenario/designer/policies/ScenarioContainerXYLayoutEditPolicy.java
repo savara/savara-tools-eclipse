@@ -57,7 +57,8 @@ public class ScenarioContainerXYLayoutEditPolicy extends XYLayoutEditPolicy {
 		if (comppart != null && getHost() instanceof ScenarioBaseEditPart
 				&& ModelSupport.isValidTarget(comppart.getModel(),
 						((ScenarioBaseEditPart)getHost()).getModel())) {
-			Object oldParent=ModelSupport.getParent(comppart.getModel());
+			Object oldParent=ModelSupport.getParent(comppart.getScenarioDiagram().getScenario(),
+									comppart.getModel());
 			
 			ret = new AddCommand();
 			

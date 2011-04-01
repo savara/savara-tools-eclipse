@@ -43,11 +43,6 @@
                id="org.savara.tools.scenario.designer.ScenarioDesignerID.GeneralTab"
             label="General"/>
          <propertyTab
-            afterTab="org.pi4soa.scenario.designer.ScenarioDesignerID.GeneralTab"
-            category="Savara"
-               id="org.savara.tools.scenario.designer.ScenarioDesignerID.AdvancedTab"
-            label="Advanced"/>
-         <propertyTab
             afterTab="org.savara.tools.scenario.designer.ScenarioDesignerID.AdvancedTab"
             category="Savara"
                id="org.savara.tools.scenario.designer.ScenarioDesignerID.AllTab"
@@ -68,6 +63,23 @@
             <input type="org.savara.scenario.model.Role"/>
          </propertySection>
         <propertySection
+              class="org.savara.tools.scenario.designer.editor.properties.NamePropertySection"
+              enablesFor="1"
+              id="org.savara.tools.scenario.designer.editor.properties.NamePropertySection"
+              tab="org.savara.tools.scenario.designer.ScenarioDesignerID.GeneralTab">
+            <input type="org.savara.scenario.model.Group"/>
+            <input type="org.savara.scenario.model.Role"/>
+            <input type="org.savara.scenario.model.Scenario"/>
+         </propertySection>
+        <propertySection
+        	  afterSection="org.savara.tools.scenario.designer.editor.properties.NamePropertySection"
+              class="org.savara.tools.scenario.designer.editor.properties.ScenarioDetailsPropertySection"
+              enablesFor="1"
+              id="org.savara.tools.scenario.designer.editor.properties.ScenarioDetailsPropertySection"
+              tab="org.savara.tools.scenario.designer.ScenarioDesignerID.GeneralTab">
+            <input type="org.savara.scenario.model.Scenario"/>
+         </propertySection>
+        <propertySection
               class="org.savara.tools.scenario.designer.editor.properties.MessagePropertySection"
               enablesFor="1"
               id="org.savara.tools.scenario.designer.editor.properties.MessagePropertySection"
@@ -83,6 +95,13 @@
               tab="org.savara.tools.scenario.designer.ScenarioDesignerID.GeneralTab">
             <input type="org.savara.scenario.model.MessageEvent"/>
             <input type="org.savara.scenario.model.Link"/>
+         </propertySection>
+        <propertySection
+              class="org.savara.tools.scenario.designer.editor.properties.ImportPropertySection"
+              enablesFor="1"
+              id="org.savara.tools.scenario.designer.editor.properties.ImportPropertySection"
+              tab="org.savara.tools.scenario.designer.ScenarioDesignerID.GeneralTab">
+            <input type="org.savara.scenario.model.Import"/>
          </propertySection>
       </propertySections>
    </extension>

@@ -46,6 +46,8 @@ public class ViewSupport {
 		
 		if (model instanceof Group) {
 			ret = new GroupPropertySource((Group)model);
+		} else if (model instanceof Import) {
+			ret = new ImportPropertySource((Import)model);
 		} else if (model instanceof Link) {
 			ret = new LinkPropertySource((Link)model);
 		} else if (model instanceof MessageEvent) {
@@ -54,6 +56,8 @@ public class ViewSupport {
 			ret = new RolePropertySource((Role)model);
 		} else if (model instanceof Scenario) {
 			ret = new ScenarioPropertySource((Scenario)model);
+		} else if (model instanceof TimeElapsedEvent) {
+			ret = new TimeElapsedEventPropertySource((TimeElapsedEvent)model);
 		}
 		
 		return(ret);
@@ -386,6 +390,12 @@ public class ViewSupport {
 		} else if (child instanceof Group) {
 			// Return the default value
 			
+		} else if (child instanceof TimeElapsedEvent) {
+			ret = 5;
+		
+		} else if (child instanceof Import) {
+			ret = 5;
+
 		} else if (child instanceof Event) {
 			Event me=(Event)child;
 			
@@ -397,18 +407,14 @@ public class ViewSupport {
 				
 				// For each contained event group, we need to adjust
 				// the X position
-				Object cur=ModelSupport.getParent(me);
+				Object cur=ModelSupport.getParent(diagram.getScenario(), me);
 				while (cur != null && (cur instanceof Scenario) == false) {
 					ret -= EVENT_GROUP_PADDING_X;
-					cur=ModelSupport.getParent(cur);
+					cur=ModelSupport.getParent(diagram.getScenario(), cur);
 				}
 			} else {
 				ret = 50;
 			}
-		} else if (child instanceof TimeElapsedEvent) {
-			ret = 5;
-		} else if (child instanceof Import) {
-			ret = 5;
 		}
 		
 		return(ret);

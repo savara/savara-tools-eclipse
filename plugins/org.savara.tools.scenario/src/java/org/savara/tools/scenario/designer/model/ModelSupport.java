@@ -38,18 +38,32 @@ public class ModelSupport {
 		return(ret);
 	}
 	
-	public static Object getParent(Object component) {
+	public static Object getParent(Scenario scenario, Object component) {
 		Object ret=null;
 		
-		// TODO: GPB: how to get parent???
-		
-		/*
-		if (component instanceof org.eclipse.emf.ecore.EObject) {
-			ret = ((org.eclipse.emf.ecore.EObject)component).eContainer();
-		//} else if (component instanceof Participant) {
-		//	ret = ((Participant)component).getDiagram();
+		// Need to scan the scenario as the components don't have reference to their parents
+		if (component instanceof Event) {
+			ret = getParentFromEventList(scenario, scenario.getEvent(), component);
 		}
-		*/
+		
+		return(ret);
+	}
+	
+	protected static Object getParentFromEventList(Object parent, java.util.List<Event> events,
+								Object component) {
+		Object ret=null;
+		
+		if (events.contains(component)) {
+			ret = parent;
+		} else {
+			for (int i=0; ret == null && i < events.size(); i++) {
+				Event evt=events.get(i);
+				
+				if (evt instanceof Group) {
+					ret = getParentFromEventList(evt, ((Group)evt).getEvent(), component);
+				}
+			}
+		}
 		
 		return(ret);
 	}

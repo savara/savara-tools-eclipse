@@ -25,6 +25,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.EditDomain;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.commands.CommandStack;
@@ -135,7 +136,39 @@ public class ScenarioEditorPage extends AbstractEditorPage
      * 
      */
     public void refresh() {
-    	resetViewer();
+    	EditPart ep=getFocusEditPart();
+    	
+    	if (ep != null) {
+    		ep.refresh();
+    	} else {
+    		resetViewer();
+    	}
+    }
+    
+    public Object getFocusComponent() {
+    	Object ret=null;
+    	
+    	java.util.List parts=m_viewer.getSelectedEditParts();
+    	if (parts.size() == 1) {
+    		EditPart part=(EditPart)parts.get(0);
+    		
+    		if (part instanceof ScenarioBaseEditPart) {
+    			ret = ((ScenarioBaseEditPart)part).getModel();
+    		}
+    	}
+    	
+    	return(ret);
+    }
+
+    public EditPart getFocusEditPart() {
+    	EditPart ret=null;
+    	
+    	java.util.List parts=m_viewer.getSelectedEditParts();
+    	if (parts.size() == 1) {
+    		ret=(EditPart)parts.get(0);
+    	}
+    	
+    	return(ret);
     }
 
     protected void resetViewer() {

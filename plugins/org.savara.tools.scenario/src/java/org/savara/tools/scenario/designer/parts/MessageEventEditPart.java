@@ -108,20 +108,6 @@ public class MessageEventEditPart extends ScenarioBaseEditPart
 		return(-10);
 	}
 	
-	/* TODO: GPB: Way to handle notification
-    public void notifyChanged(Notification notification) {
-        int type = notification.getEventType();
-        
-        if (type != Notification.SET) {
-        	super.notifyChanged(notification);
-        } else {
-        	getFigure().invalidateTree();
-        	refresh();
-        	getFigure().repaint();
-        }
-    }
-    */
-
 	/**
 	 * @see org.eclipse.gef.editparts.AbstractEditPart#refreshVisuals()
 	 */
@@ -141,6 +127,8 @@ public class MessageEventEditPart extends ScenarioBaseEditPart
 		ViewSupport.setTooltip(getFigure(), getModel());
 
 		super.refreshVisuals();
+		
+		refreshLinks();
 	}
 
     public int getHeight() {
@@ -320,6 +308,20 @@ public class MessageEventEditPart extends ScenarioBaseEditPart
     	// Refresh any message links
     	java.util.List links=null;
     	
+    	links = getSourceConnections();
+    	for (int i=0; i < links.size(); i++) {
+    		LinkEditPart ep=(LinkEditPart)links.get(i);
+
+    		ep.refresh();
+    	}
+
+    	links = getTargetConnections();
+    	for (int i=0; i < links.size(); i++) {
+    		LinkEditPart ep=(LinkEditPart)links.get(i);
+
+    		ep.refresh();
+    	}
+
     	/* Not at present, as this may cause the link info
     	 * to be derived twice - after both the source and target
     	 * message events have been set

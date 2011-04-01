@@ -275,9 +275,8 @@ public abstract class ScenarioBaseEditPart extends AbstractGraphicalEditPart
         return super.getAdapter(key);
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.itso.sal330r.gefdemo.edit.WorkflowElementEditPart#getPropertySource()
-     */
+    protected abstract IPropertySource getPropertySource();
+    /*
     protected IPropertySource getPropertySource() {
         if (propertySource == null) {
            	propertySource = new org.savara.tools.scenario.designer.view.ScenarioPropertySource(getModel());
@@ -285,6 +284,7 @@ public abstract class ScenarioBaseEditPart extends AbstractGraphicalEditPart
         
         return propertySource;
     }
+    */
 
     /* TODO: GPB notification
     public void notifyChanged(Notification notification) {
