@@ -44,6 +44,14 @@ public class ModelSupport {
 		// Need to scan the scenario as the components don't have reference to their parents
 		if (component instanceof Event) {
 			ret = getParentFromEventList(scenario, scenario.getEvent(), component);
+		} else if (component instanceof Link) {
+			if (scenario.getLink().contains(component)) {
+				ret = scenario;
+			}
+		} else if (component instanceof Role) {
+			if (scenario.getRole().contains(component)) {
+				ret = scenario;
+			}
 		}
 		
 		return(ret);

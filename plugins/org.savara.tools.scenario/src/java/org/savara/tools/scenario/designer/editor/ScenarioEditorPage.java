@@ -42,6 +42,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 
 import org.savara.tools.scenario.designer.dnd.ScenarioTemplateTransferDropTargetListener;
+import org.savara.tools.scenario.designer.model.ModelSupport;
 import org.savara.tools.scenario.designer.parts.*;
 import org.savara.tools.scenario.designer.simulate.SimulationEntity;
 import org.savara.tools.scenario.designer.view.GraphicalComponent;
@@ -138,7 +139,11 @@ public class ScenarioEditorPage extends AbstractEditorPage
     public void refresh() {
     	EditPart ep=getFocusEditPart();
     	
-    	if (ep != null) {
+    	if (ep instanceof ScenarioEditPart) {
+    		//resetViewer();
+    		focus(ep.getModel());
+    	} else if (ep instanceof ScenarioBaseEditPart /*&& ModelSupport.getParent(
+    			((ScenarioBaseEditPart)ep).getScenarioDiagram().getScenario(), ep.getModel()) != null*/) {
     		ep.refresh();
     	} else {
     		resetViewer();

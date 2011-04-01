@@ -48,6 +48,8 @@ public class DeleteComponentCommand
 	public void execute() {
 		
 		if (m_child instanceof MessageEvent) {
+			
+			//ModelSupport.getSourceConnections(scenario, m_child);
 			/* TODO: GPB: need links associated with an event
 			
 			java.util.List list=((MessageEvent)m_child).getSourceMessageLinks();
