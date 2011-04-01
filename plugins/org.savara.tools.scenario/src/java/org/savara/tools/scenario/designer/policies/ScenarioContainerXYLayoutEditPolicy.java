@@ -84,7 +84,8 @@ public class ScenarioContainerXYLayoutEditPolicy extends XYLayoutEditPolicy {
 				
 				// Calculate the index position
 				int y = port.getClientArea().y + rect.y -
-					ViewSupport.getHeaderPadding(((ScenarioBaseEditPart)getHost()).getModel());
+					ViewSupport.getHeaderPadding(comppart.getScenarioDiagram().getScenario(),
+									((ScenarioBaseEditPart)getHost()).getModel());
 		
 				int index=0;
 				java.util.List list=ModelSupport.getChildren(((ScenarioBaseEditPart)getHost()).getModel());
@@ -185,7 +186,8 @@ public class ScenarioContainerXYLayoutEditPolicy extends XYLayoutEditPolicy {
 	
 			// Calculate the index position
 			int y=port.getClientArea().y + req.getLocation().y
-						- ViewSupport.getHeaderPadding(((ScenarioBaseEditPart)getHost()).getModel()); /* -
+						- ViewSupport.getHeaderPadding(comppart.getScenarioDiagram().getScenario(),
+									((ScenarioBaseEditPart)getHost()).getModel()); /* -
 						ViewSupport.INITIAL_YPADDING
 							- ViewSupport.YPADDING;*/
 			y -= ((ScenarioBaseEditPart)getHost()).getFigure().getBounds().y;

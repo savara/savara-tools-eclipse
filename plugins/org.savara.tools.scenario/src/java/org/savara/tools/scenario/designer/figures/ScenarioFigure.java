@@ -51,7 +51,7 @@ public class ScenarioFigure extends FreeformLayer {
 			width = (int)((m_name.length()+6)*6.5);
 		}
 		
-		if (m_author != null) {
+		if (m_author != null && m_author.trim().length() > 0) {
 			height += 25;
 			if (width == 0 || m_author.length() > m_name.length()) { 
 				width = (int)((m_author.length()+7)*6.5);
@@ -74,7 +74,7 @@ public class ScenarioFigure extends FreeformLayer {
 		
 		graphics.drawText(text, 10, 5);
 			
-		if (m_author != null) {
+		if (m_author != null && m_author.trim().length() > 0) {
 			text = "Author: "+m_author;
 				
 			graphics.drawText(text, 10, 25);

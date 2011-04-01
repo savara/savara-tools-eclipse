@@ -143,10 +143,15 @@ public class ConnectableRoleEditPolicy
         		return(null);
         	}
         	*/
+        	Scenario scenario=null;
+        	
+        	if (target != null) {
+        		scenario = target.getScenarioDiagram().getScenario();
+        	}
         	
 			// Calculate the index position
 			int y=port.getClientArea().y + request.getLocation().y
-						- ViewSupport.getHeaderPadding(target.getModel()); /* -
+						- ViewSupport.getHeaderPadding(scenario, target.getModel()); /* -
 						ViewSupport.INITIAL_YPADDING
 							- ViewSupport.YPADDING;*/
 			y -= target.getFigure().getBounds().y;
@@ -268,7 +273,8 @@ public class ConnectableRoleEditPolicy
 	        
 			// Calculate the index position
 			int y=port.getClientArea().y + request.getLocation().y
-						- ViewSupport.getHeaderPadding(source.getModel()); /* -
+						- ViewSupport.getHeaderPadding(source.getScenarioDiagram().getScenario(),
+											source.getModel()); /* -
 						ViewSupport.INITIAL_YPADDING
 							- ViewSupport.YPADDING;*/
 			y -= source.getFigure().getBounds().y;

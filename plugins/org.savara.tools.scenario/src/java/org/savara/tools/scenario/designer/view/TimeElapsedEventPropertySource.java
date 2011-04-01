@@ -51,7 +51,7 @@ public class TimeElapsedEventPropertySource implements IPropertySource {
 		java.util.Vector<IPropertyDescriptor> descriptors=new java.util.Vector<IPropertyDescriptor>();
 		
 		descriptors.add(new TextPropertyDescriptor(
-				DURATION_ID,"URL"));
+				DURATION_ID,"Duration"));
 
 		ret = new IPropertyDescriptor[descriptors.size()];
 		descriptors.copyInto(ret);

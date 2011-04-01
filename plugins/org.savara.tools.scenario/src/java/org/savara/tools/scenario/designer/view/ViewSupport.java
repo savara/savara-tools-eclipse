@@ -216,7 +216,7 @@ public class ViewSupport {
 		}
 		
 		if (component instanceof Scenario) {
-			ret += getHeaderPadding(component);
+			ret += getHeaderPadding((Scenario)component, component);
 			
 			ret += 40; // Additional padding
 			
@@ -290,7 +290,7 @@ public class ViewSupport {
 		int ret=0;
 		
 		if (child instanceof Role) {
-			ret = getHeaderPadding(child);
+			ret = getHeaderPadding(diagram.getScenario(), child);
 			
 		} else {			
 			java.util.List children=ModelSupport.getChildren(parent);
@@ -298,7 +298,7 @@ public class ViewSupport {
 			if (children != null) {
 				int pos=children.indexOf(child);
 				
-				ret = getHeaderPadding(parent);
+				ret = getHeaderPadding(diagram.getScenario(), parent);
 	    		
 		    	if (pos > 0) {
 		    		
@@ -497,7 +497,7 @@ public class ViewSupport {
 		return(ret);
 	}
 	
-	public static int getHeaderPadding(Object parent) {
+	public static int getHeaderPadding(Scenario scenario, Object parent) {
 		int ret=EVENT_GROUP_PADDING_Y;
 		
 		if (parent instanceof Scenario) {
@@ -513,11 +513,9 @@ public class ViewSupport {
 			
 			ret += 30; // For the name in the header
 			
-			/* TODO: GPB: Need to find scenario
-			if (((Role)parent).getScenario().getAuthor() != null) {
+			if (scenario.getAuthor() != null && scenario.getAuthor().trim().length() > 0) {
 				ret += 30;
 			}
-			*/
 		}
 		
 		return(ret);

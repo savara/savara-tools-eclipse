@@ -184,7 +184,8 @@ public class RoleEditPart extends ScenarioBaseEditPart
     	int ret=getScenarioDiagram().getHeight();
     	
     	ret -= ViewSupport.PARTICIPANT_PADDING_Y*2 +
-    				ViewSupport.getHeaderPadding(getScenarioDiagram().getScenario());
+    				ViewSupport.getHeaderPadding(getScenarioDiagram().getScenario(),
+    								getScenarioDiagram().getScenario());
     	
     	return(ret);
     }

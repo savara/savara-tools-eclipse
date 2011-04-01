@@ -80,6 +80,15 @@
             <input type="org.savara.scenario.model.Scenario"/>
          </propertySection>
         <propertySection
+              class="org.savara.tools.scenario.designer.editor.properties.ErrorExpectedPropertySection"
+              enablesFor="1"
+              id="org.savara.tools.scenario.designer.editor.properties.ErrorExpectedPropertySection"
+              tab="org.savara.tools.scenario.designer.ScenarioDesignerID.GeneralTab">
+            <input type="org.savara.scenario.model.MessageEvent"/>
+            <input type="org.savara.scenario.model.Link"/>
+         </propertySection>
+        <propertySection
+        	  afterSection="org.savara.tools.scenario.designer.editor.properties.ErrorExpectedPropertySection"
               class="org.savara.tools.scenario.designer.editor.properties.MessagePropertySection"
               enablesFor="1"
               id="org.savara.tools.scenario.designer.editor.properties.MessagePropertySection"
@@ -102,6 +111,13 @@
               id="org.savara.tools.scenario.designer.editor.properties.ImportPropertySection"
               tab="org.savara.tools.scenario.designer.ScenarioDesignerID.GeneralTab">
             <input type="org.savara.scenario.model.Import"/>
+         </propertySection>
+        <propertySection
+              class="org.savara.tools.scenario.designer.editor.properties.TimeElapsedEventPropertySection"
+              enablesFor="1"
+              id="org.savara.tools.scenario.designer.editor.properties.TimeElapsedEventPropertySection"
+              tab="org.savara.tools.scenario.designer.ScenarioDesignerID.GeneralTab">
+            <input type="org.savara.scenario.model.TimeElapsedEvent"/>
          </propertySection>
       </propertySections>
    </extension>

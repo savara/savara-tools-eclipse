@@ -34,6 +34,7 @@ public class MessageEventPropertySource implements IPropertySource {
 	private static final String OPERATION_ID = "Operation";
 	private static final String FAULT_ID = "Fault";
 	private static final String PARAMETERS_ID = "Parameters";
+	private static final String ERROR_EXPECTED_ID = "ErrorExpected";
 
     private org.savara.scenario.model.MessageEvent m_element=null;
 
@@ -64,6 +65,8 @@ public class MessageEventPropertySource implements IPropertySource {
 				FAULT_ID,"Fault"));
 		descriptors.add(new PropertyDescriptor(
 				PARAMETERS_ID,"Parameters"));
+		descriptors.add(new PropertyDescriptor(
+				ERROR_EXPECTED_ID,"ErrorExpected"));
 				
 		ret = new IPropertyDescriptor[descriptors.size()];
 		descriptors.copyInto(ret);
@@ -83,6 +86,8 @@ public class MessageEventPropertySource implements IPropertySource {
 			ret = getElement().getFaultName();
 		} else if (id == PARAMETERS_ID) {
 			ret = getElement().getParameter();
+		} else if (id == ERROR_EXPECTED_ID) {
+			ret = getElement().isErrorExpected();
 		}
 
 		if (ret == null) {
@@ -123,6 +128,12 @@ public class MessageEventPropertySource implements IPropertySource {
 			}			
 		} else if (id == PARAMETERS_ID) {
 			throw new UnsupportedOperationException("Cannot set parameters list");			
+		} else if (id == ERROR_EXPECTED_ID) {
+			if (value instanceof Boolean) {
+				getElement().setErrorExpected((Boolean)value);
+			} else if (value instanceof String) {
+				getElement().setErrorExpected(Boolean.valueOf((String)value));
+			}
 		}
 	}
 	
