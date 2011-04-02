@@ -49,12 +49,7 @@ public class DeleteComponentCommand
 		
 		if (m_child instanceof MessageEvent) {
 			
-			//ModelSupport.getSourceConnections(scenario, m_child);
-			/* TODO: GPB: need links associated with an event
-			 */
-			
 			java.util.List list=ModelSupport.getSourceConnections(m_scenario, m_child);
-			//java.util.List list=((MessageEvent)m_child).getSourceMessageLinks();
 			
 			for (int i=list.size()-1; i >= 0; i--) {
 				Link link=(Link)list.get(i);
@@ -62,12 +57,10 @@ public class DeleteComponentCommand
 				link.setSource(null);
 				link.setTarget(null);
 				
-				//((MessageEvent)m_child).getScenario().getLinks().remove(link);
 				m_scenario.getLink().remove(link);
 			}
 			
 			list=ModelSupport.getTargetConnections(m_scenario, m_child);
-			//list=((MessageEvent)m_child).getTargetMessageLinks();
 			
 			for (int i=list.size()-1; i >= 0; i--) {
 				Link link=(Link)list.get(i);
@@ -75,7 +68,6 @@ public class DeleteComponentCommand
 				link.setSource(null);
 				link.setTarget(null);
 				
-				//((MessageEvent)m_child).getScenario().getLinks().remove(link);
 				m_scenario.getLink().remove(link);
 			}
 
@@ -102,29 +94,7 @@ public class DeleteComponentCommand
 						parent, event));
 				
 				m_propagatedCommands.add(command);
-			}
-			
-			/* TODO: GPB: need scenario and visitor mechanism
-
-			((Role)m_child).getScenario().visit(new DefaultScenarioVisitor() {
-
-				public void messageEvent(MessageEvent message) {
-					
-					if (message.getRole() == m_child) {
-						DeleteComponentCommand command=
-							new DeleteComponentCommand();
-						
-						command.setChild(message);
-						command.setParent(message.eContainer());
-						
-						command.setIndex(ModelSupport.getChildIndex(
-								message.eContainer(), message));
-						
-						m_propagatedCommands.add(command);
-					}
-				}
-			});
-			*/
+			}			
 		}
 		
 		for (int i=0; i < m_propagatedCommands.size(); i++) {
@@ -176,10 +146,7 @@ public class DeleteComponentCommand
 		// Determine connected children
 		if (newNode instanceof MessageEvent) {
 			
-			java.util.List list=ModelSupport.getSourceConnections(m_scenario, newNode);
-			/* TODO: GPB: need source/target message links
-			java.util.List list=((MessageEvent)newNode).getSourceMessageLinks();
-			*/
+			java.util.List<Link> list=ModelSupport.getSourceConnections(m_scenario, newNode);
 			
 			for (int i=0; i < list.size(); i++) {
 				Link link=(Link)list.get(i);
@@ -187,7 +154,6 @@ public class DeleteComponentCommand
 				m_targetConnectedEvents.add((MessageEvent)link.getTarget());
 			}
 			
-			//list=((MessageEvent)newNode).getTargetMessageLinks();
 			list=ModelSupport.getTargetConnections(m_scenario, newNode);
 			
 			for (int i=0; i < list.size(); i++) {
@@ -256,5 +222,5 @@ public class DeleteComponentCommand
 	private java.util.Vector<MessageEvent> m_sourceConnectedEvents=new java.util.Vector<MessageEvent>();
 	private java.util.Vector<MessageEvent> m_targetConnectedEvents=new java.util.Vector<MessageEvent>();
 	private java.util.Vector<Link> m_removedMessageLinks=new java.util.Vector<Link>();
-	private java.util.Vector m_propagatedCommands=new java.util.Vector();
+	private java.util.Vector<Command> m_propagatedCommands=new java.util.Vector<Command>();
 }
