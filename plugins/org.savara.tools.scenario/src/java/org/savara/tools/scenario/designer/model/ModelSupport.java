@@ -38,6 +38,17 @@ public class ModelSupport {
 		return(ret);
 	}
 	
+	public static void getEventsForRole(Role role, java.util.List<Event> events,
+							java.util.List<Event> results) {
+		for (Event event : events) {
+			if (event instanceof Group) {
+				getEventsForRole(role, ((Group)event).getEvent(), results);
+			} else if (event.getRole() == role) {
+				results.add(event);
+			}
+		}
+	}
+	
 	public static Object getParent(Scenario scenario, Object component) {
 		Object ret=null;
 		
@@ -139,7 +150,7 @@ public class ModelSupport {
 			
 			if (parent instanceof Scenario &&
 					child instanceof Role) {				
-				((Scenario)parent).getRole().remove(child);
+				list = ((Scenario)parent).getRole();
 			} else {
 				list = getChildren(parent);		
 			}

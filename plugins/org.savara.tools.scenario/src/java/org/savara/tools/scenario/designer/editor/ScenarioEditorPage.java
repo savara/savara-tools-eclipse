@@ -142,8 +142,8 @@ public class ScenarioEditorPage extends AbstractEditorPage
     	if (ep instanceof ScenarioEditPart) {
     		//resetViewer();
     		focus(ep.getModel());
-    	} else if (ep instanceof ScenarioBaseEditPart /*&& ModelSupport.getParent(
-    			((ScenarioBaseEditPart)ep).getScenarioDiagram().getScenario(), ep.getModel()) != null*/) {
+    	} else if (ep instanceof ScenarioBaseEditPart && ModelSupport.getParent(
+    			((ScenarioBaseEditPart)ep).getScenarioDiagram().getScenario(), ep.getModel()) != null) {
     		ep.refresh();
     	} else {
     		resetViewer();

@@ -51,19 +51,10 @@ public class DeleteComponentCommand
 			
 			//ModelSupport.getSourceConnections(scenario, m_child);
 			/* TODO: GPB: need links associated with an event
+			 */
 			
-			java.util.List list=((MessageEvent)m_child).getSourceMessageLinks();
-			
-			for (int i=list.size()-1; i >= 0; i--) {
-				Link link=(Link)list.get(i);
-				
-				link.setSource(null);
-				link.setTarget(null);
-				
-				((MessageEvent)m_child).getScenario().getLinks().remove(link);
-			}
-			
-			list=((MessageEvent)m_child).getTargetMessageLinks();
+			java.util.List list=ModelSupport.getSourceConnections(m_scenario, m_child);
+			//java.util.List list=((MessageEvent)m_child).getSourceMessageLinks();
 			
 			for (int i=list.size()-1; i >= 0; i--) {
 				Link link=(Link)list.get(i);
@@ -71,12 +62,47 @@ public class DeleteComponentCommand
 				link.setSource(null);
 				link.setTarget(null);
 				
-				((MessageEvent)m_child).getScenario().getLinks().remove(link);
+				//((MessageEvent)m_child).getScenario().getLinks().remove(link);
+				m_scenario.getLink().remove(link);
 			}
-			*/
+			
+			list=ModelSupport.getTargetConnections(m_scenario, m_child);
+			//list=((MessageEvent)m_child).getTargetMessageLinks();
+			
+			for (int i=list.size()-1; i >= 0; i--) {
+				Link link=(Link)list.get(i);
+				
+				link.setSource(null);
+				link.setTarget(null);
+				
+				//((MessageEvent)m_child).getScenario().getLinks().remove(link);
+				m_scenario.getLink().remove(link);
+			}
+
 		} else if (m_child instanceof Role) {
 			// Construct deletion commands for each nessage event
 			// related to the participant
+			
+			java.util.List<Event> results=new java.util.Vector();
+			
+			ModelSupport.getEventsForRole((Role)m_child, m_scenario.getEvent(), results);
+			
+			for (Event event : results) {
+				DeleteComponentCommand command=
+					new DeleteComponentCommand();
+				
+				command.setScenario(m_scenario);
+				command.setChild(event);
+				
+				Object parent=ModelSupport.getParent(m_scenario, event);
+				
+				command.setParent(parent);
+				
+				command.setIndex(ModelSupport.getChildIndex(
+						parent, event));
+				
+				m_propagatedCommands.add(command);
+			}
 			
 			/* TODO: GPB: need scenario and visitor mechanism
 
@@ -110,35 +136,24 @@ public class DeleteComponentCommand
 		ModelSupport.removeChild(m_parent, m_child);
 		
 		if (m_child instanceof Group) {
-			Scenario scenario=null;
-			
-			if (m_parent instanceof Scenario) {
-				scenario = (Scenario)m_parent;
-			} else if (m_parent instanceof Event) {
-				/* TODO: GPB: need scenario
-				scenario = ((Event)m_parent).getScenario();
-				*/
-			}
-			
+
 			// Scan list of message links to see if any no longer have
 			// a message event that is attached to the scenario - and
 			// then save these in case of an undo
-			for (int i=scenario.getLink().size()-1;
+			for (int i=m_scenario.getLink().size()-1;
 						i >= 0; i--) {
-				Link link=(Link)scenario.getLink().get(i);
+				Link link=(Link)m_scenario.getLink().get(i);
 				
-				/* TODO: GPB: need scenario
 				if ((link.getSource() != null &&
-						link.getSource().getScenario() == null) ||
+						ModelSupport.getParent(m_scenario, link.getSource()) == null) ||
 					(link.getTarget() != null &&
-						link.getTarget().getScenario() == null)) {
+							ModelSupport.getParent(m_scenario, link.getTarget()) == null)) {
 					
 					// Remove link
-					scenario.getLinks().remove(link);
+					m_scenario.getLink().remove(link);
 					
 					m_removedMessageLinks.add(0, link);
 				}
-				*/
 			}
 		}
 	}
@@ -151,28 +166,35 @@ public class DeleteComponentCommand
 		execute();
 	}
 	
+	public void setScenario(Scenario scenario) {
+		m_scenario = scenario;
+	}
+	
 	public void setChild(Object newNode) {
 		m_child = newNode;
 		
 		// Determine connected children
 		if (newNode instanceof MessageEvent) {
+			
+			java.util.List list=ModelSupport.getSourceConnections(m_scenario, newNode);
 			/* TODO: GPB: need source/target message links
 			java.util.List list=((MessageEvent)newNode).getSourceMessageLinks();
-			
-			for (int i=0; i < list.size(); i++) {
-				Link link=(Link)list.get(i);
-				
-				m_targetConnectedEvents.add(link.getTarget());
-			}
-			
-			list=((MessageEvent)newNode).getTargetMessageLinks();
-			
-			for (int i=0; i < list.size(); i++) {
-				Link link=(Link)list.get(i);
-				
-				m_sourceConnectedEvents.add(link.getSource());
-			}
 			*/
+			
+			for (int i=0; i < list.size(); i++) {
+				Link link=(Link)list.get(i);
+				
+				m_targetConnectedEvents.add((MessageEvent)link.getTarget());
+			}
+			
+			//list=((MessageEvent)newNode).getTargetMessageLinks();
+			list=ModelSupport.getTargetConnections(m_scenario, newNode);
+			
+			for (int i=0; i < list.size(); i++) {
+				Link link=(Link)list.get(i);
+				
+				m_sourceConnectedEvents.add((MessageEvent)link.getSource());
+			}
 		}
 	}
 	
@@ -197,14 +219,14 @@ public class DeleteComponentCommand
 		m_propagatedCommands.clear();
 		
 		if (m_child instanceof MessageEvent) {
-			/* TODO: GPB: need scenario
+			/* TODO: GPB: need scenario */
 			for (int i=0; i < m_sourceConnectedEvents.size(); i++) {
 				Link link=new Link();
 				
 				link.setSource((MessageEvent)m_sourceConnectedEvents.get(i));
 				link.setTarget((MessageEvent)m_child);
 				
-				((MessageEvent)m_child).getScenario().getLinks().add(link);
+				m_scenario.getLink().add(link);
 			}
 			
 			for (int i=0; i < m_targetConnectedEvents.size(); i++) {
@@ -213,22 +235,21 @@ public class DeleteComponentCommand
 				link.setSource((MessageEvent)m_child);
 				link.setTarget((MessageEvent)m_targetConnectedEvents.get(i));
 				
-				((MessageEvent)m_child).getScenario().getLinks().add(link);
+				m_scenario.getLink().add(link);
 			}
-			*/
+			 /**/
 		} else if (m_child instanceof Group) {
 			
 			for (int i=0; i < m_removedMessageLinks.size(); i++) {
-				/* TODO: GPB: need scenario
-				((Group)m_child).getScenario().getMessageLinks().add(
+				m_scenario.getLink().add(
 						m_removedMessageLinks.get(i));
-				*/
 			}
 			
 			m_removedMessageLinks.clear();
 		}
 	}
 
+	private Scenario m_scenario=null;
 	private Object m_child=null;
 	private Object m_parent=null;
 	private int m_index = -1;
