@@ -28,6 +28,7 @@ import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.DropRequest;
+import org.eclipse.ui.views.properties.IPropertySource;
 import org.savara.scenario.model.*;
 import org.savara.tools.scenario.designer.figures.*;
 import org.savara.tools.scenario.designer.model.ModelSupport;
@@ -56,6 +57,10 @@ public class TimeElapsedEventEditPart extends ScenarioBaseEditPart {
 		return(ret);
 	}
 	
+    protected IPropertySource getPropertySource() {
+    	return(new org.savara.tools.scenario.designer.view.TimeElapsedEventPropertySource((TimeElapsedEvent)getModel()));
+    }
+
 	/**
 	 * @see org.eclipse.gef.editparts.AbstractEditPart#createEditPolicies()
 	 */

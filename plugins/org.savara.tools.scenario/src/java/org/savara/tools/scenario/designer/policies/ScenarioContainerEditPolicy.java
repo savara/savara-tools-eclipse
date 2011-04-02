@@ -64,7 +64,8 @@ public class ScenarioContainerEditPolicy extends ContainerEditPolicy {
 	
 				// Calculate the index position
 				int y=port.getClientArea().y + request.getLocation().y
-							- ViewSupport.getHeaderPadding(((ScenarioBaseEditPart)getHost()).getModel()); /* -
+							- ViewSupport.getHeaderPadding(part.getScenarioDiagram().getScenario(),
+										((ScenarioBaseEditPart)getHost()).getModel()); /* -
 							ViewSupport.INITIAL_YPADDING
 								- ViewSupport.YPADDING;*/
 				y -= ((ScenarioBaseEditPart)getHost()).getFigure().getBounds().y;

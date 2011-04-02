@@ -40,6 +40,10 @@ public class ScenarioComponentEditPolicy extends ComponentEditPolicy {
 		
 		Object child=(Object)(getHost().getModel());
 		
+		if (getHost() instanceof ScenarioBaseEditPart) {
+			deleteCmd.setScenario(((ScenarioBaseEditPart)getHost()).getScenarioDiagram().getScenario());			
+		}
+		
 		deleteCmd.setChild(child);
 		
 		if (getHost().getParent() instanceof ScenarioBaseEditPart) {

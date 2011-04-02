@@ -20,13 +20,28 @@
   <extension point = "org.eclipse.ui.editors">
     <editor
           class="org.savara.tools.scenario.designer.editor.ScenarioDesigner"
-          icon="icons/full/obj16/ScenarioFile.gif"
           contributorClass="org.savara.tools.scenario.designer.editor.DesignerActionBarContributor"
           name="Scenario Designer"
-          id="org.savara.tools.scenario.designer.ScenarioDesignerID"
-          extensions="scr">
+          id="org.savara.tools.scenario.designer.ScenarioDesignerID">
+     <contentTypeBinding
+         contentTypeId="org.savara.tools.scenario.contenttype">
+     </contentTypeBinding>
     </editor>
    </extension>
+
+  <extension point="org.eclipse.core.contenttype.contentTypes">
+    <content-type
+      	base-type="org.eclipse.core.runtime.xml"
+      	id="org.savara.tools.scenario.contenttype"
+      	name="SAVARA Scenario File"
+      	file-extensions="scn,xml"
+      	priority="normal">
+      <describer class="org.eclipse.core.runtime.content.XMLRootElementContentDescriber2">
+      	<parameter name="element"
+          	value="{http://www.savara.org/scenario}Scenario"/>
+      </describer>
+    </content-type>
+  </extension>
 
   <extension point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
       <propertyContributor
@@ -42,30 +57,67 @@
             category="Savara"
                id="org.savara.tools.scenario.designer.ScenarioDesignerID.GeneralTab"
             label="General"/>
-         <propertyTab
-            afterTab="org.pi4soa.scenario.designer.ScenarioDesignerID.GeneralTab"
-            category="Savara"
-               id="org.savara.tools.scenario.designer.ScenarioDesignerID.AdvancedTab"
-            label="Advanced"/>
-         <propertyTab
-            afterTab="org.savara.tools.scenario.designer.ScenarioDesignerID.AdvancedTab"
-            category="Savara"
-               id="org.savara.tools.scenario.designer.ScenarioDesignerID.AllTab"
-            label="All"/>
       </propertyTabs>
    </extension>      
 
    <extension point="org.eclipse.ui.views.properties.tabbed.propertySections">
       <propertySections contributorId="org.savara.tools.scenario.designer.ScenarioDesignerID">
-         <propertySection
-               class="org.savara.tools.scenario.designer.editor.properties.AllPropertySheetSection"
-               enablesFor="1"
-               id="org.savara.tools.scenario.scenario.AllSection"
-               tab="org.savara.tools.scenario.designer.ScenarioDesignerID.AllTab">
-            <input type="org.savara.scenario.model.Scenario"/>
-            <input type="org.savara.scenario.model.Event"/>
-            <input type="org.savara.scenario.model.Link"/>
+        <propertySection
+              class="org.savara.tools.scenario.designer.editor.properties.NamePropertySection"
+              enablesFor="1"
+              id="org.savara.tools.scenario.designer.editor.properties.NamePropertySection"
+              tab="org.savara.tools.scenario.designer.ScenarioDesignerID.GeneralTab">
+            <input type="org.savara.scenario.model.Group"/>
             <input type="org.savara.scenario.model.Role"/>
+            <input type="org.savara.scenario.model.Scenario"/>
+         </propertySection>
+        <propertySection
+        	  afterSection="org.savara.tools.scenario.designer.editor.properties.NamePropertySection"
+              class="org.savara.tools.scenario.designer.editor.properties.ScenarioDetailsPropertySection"
+              enablesFor="1"
+              id="org.savara.tools.scenario.designer.editor.properties.ScenarioDetailsPropertySection"
+              tab="org.savara.tools.scenario.designer.ScenarioDesignerID.GeneralTab">
+            <input type="org.savara.scenario.model.Scenario"/>
+         </propertySection>
+        <propertySection
+              class="org.savara.tools.scenario.designer.editor.properties.ErrorExpectedPropertySection"
+              enablesFor="1"
+              id="org.savara.tools.scenario.designer.editor.properties.ErrorExpectedPropertySection"
+              tab="org.savara.tools.scenario.designer.ScenarioDesignerID.GeneralTab">
+            <input type="org.savara.scenario.model.MessageEvent"/>
+            <input type="org.savara.scenario.model.Link"/>
+         </propertySection>
+        <propertySection
+        	  afterSection="org.savara.tools.scenario.designer.editor.properties.ErrorExpectedPropertySection"
+              class="org.savara.tools.scenario.designer.editor.properties.MessagePropertySection"
+              enablesFor="1"
+              id="org.savara.tools.scenario.designer.editor.properties.MessagePropertySection"
+              tab="org.savara.tools.scenario.designer.ScenarioDesignerID.GeneralTab">
+            <input type="org.savara.scenario.model.MessageEvent"/>
+            <input type="org.savara.scenario.model.Link"/>
+         </propertySection>
+        <propertySection
+        	  afterSection="org.savara.tools.scenario.designer.editor.properties.MessagePropertySection"
+              class="org.savara.tools.scenario.designer.editor.properties.ParametersPropertySection"
+              enablesFor="1"
+              id="org.savara.tools.scenario.designer.editor.properties.ParametersPropertySection"
+              tab="org.savara.tools.scenario.designer.ScenarioDesignerID.GeneralTab">
+            <input type="org.savara.scenario.model.MessageEvent"/>
+            <input type="org.savara.scenario.model.Link"/>
+         </propertySection>
+        <propertySection
+              class="org.savara.tools.scenario.designer.editor.properties.ImportPropertySection"
+              enablesFor="1"
+              id="org.savara.tools.scenario.designer.editor.properties.ImportPropertySection"
+              tab="org.savara.tools.scenario.designer.ScenarioDesignerID.GeneralTab">
+            <input type="org.savara.scenario.model.Import"/>
+         </propertySection>
+        <propertySection
+              class="org.savara.tools.scenario.designer.editor.properties.TimeElapsedEventPropertySection"
+              enablesFor="1"
+              id="org.savara.tools.scenario.designer.editor.properties.TimeElapsedEventPropertySection"
+              tab="org.savara.tools.scenario.designer.ScenarioDesignerID.GeneralTab">
+            <input type="org.savara.scenario.model.TimeElapsedEvent"/>
          </propertySection>
       </propertySections>
    </extension>

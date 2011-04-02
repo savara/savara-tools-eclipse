@@ -27,6 +27,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.views.properties.IPropertySource;
 import org.savara.scenario.model.*;
 import org.savara.tools.scenario.designer.figures.*;
 import org.savara.tools.scenario.designer.policies.*;
@@ -52,6 +53,10 @@ public class ImportEditPart extends ScenarioBaseEditPart {
 		return(ret);
 	}
 	
+    protected IPropertySource getPropertySource() {
+    	return(new org.savara.tools.scenario.designer.view.ImportPropertySource((Import)getModel()));
+    }
+
 	/**
 	 * @see org.eclipse.gef.editparts.AbstractEditPart#createEditPolicies()
 	 */

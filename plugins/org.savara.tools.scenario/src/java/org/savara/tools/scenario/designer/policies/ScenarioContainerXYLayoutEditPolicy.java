@@ -57,7 +57,8 @@ public class ScenarioContainerXYLayoutEditPolicy extends XYLayoutEditPolicy {
 		if (comppart != null && getHost() instanceof ScenarioBaseEditPart
 				&& ModelSupport.isValidTarget(comppart.getModel(),
 						((ScenarioBaseEditPart)getHost()).getModel())) {
-			Object oldParent=ModelSupport.getParent(comppart.getModel());
+			Object oldParent=ModelSupport.getParent(comppart.getScenarioDiagram().getScenario(),
+									comppart.getModel());
 			
 			ret = new AddCommand();
 			
@@ -83,7 +84,8 @@ public class ScenarioContainerXYLayoutEditPolicy extends XYLayoutEditPolicy {
 				
 				// Calculate the index position
 				int y = port.getClientArea().y + rect.y -
-					ViewSupport.getHeaderPadding(((ScenarioBaseEditPart)getHost()).getModel());
+					ViewSupport.getHeaderPadding(comppart.getScenarioDiagram().getScenario(),
+									((ScenarioBaseEditPart)getHost()).getModel());
 		
 				int index=0;
 				java.util.List list=ModelSupport.getChildren(((ScenarioBaseEditPart)getHost()).getModel());
@@ -184,7 +186,8 @@ public class ScenarioContainerXYLayoutEditPolicy extends XYLayoutEditPolicy {
 	
 			// Calculate the index position
 			int y=port.getClientArea().y + req.getLocation().y
-						- ViewSupport.getHeaderPadding(((ScenarioBaseEditPart)getHost()).getModel()); /* -
+						- ViewSupport.getHeaderPadding(comppart.getScenarioDiagram().getScenario(),
+									((ScenarioBaseEditPart)getHost()).getModel()); /* -
 						ViewSupport.INITIAL_YPADDING
 							- ViewSupport.YPADDING;*/
 			y -= ((ScenarioBaseEditPart)getHost()).getFigure().getBounds().y;

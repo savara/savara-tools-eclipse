@@ -25,6 +25,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.EditDomain;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.commands.CommandStack;
@@ -41,6 +42,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 
 import org.savara.tools.scenario.designer.dnd.ScenarioTemplateTransferDropTargetListener;
+import org.savara.tools.scenario.designer.model.ModelSupport;
 import org.savara.tools.scenario.designer.parts.*;
 import org.savara.tools.scenario.designer.simulate.SimulationEntity;
 import org.savara.tools.scenario.designer.view.GraphicalComponent;
@@ -130,6 +132,50 @@ public class ScenarioEditorPage extends AbstractEditorPage
         focus(getScenario());
     }
     
+    /**
+     * Refresh the editor page without a new input.
+     * 
+     */
+    public void refresh() {
+    	EditPart ep=getFocusEditPart();
+    	
+    	if (ep instanceof ScenarioEditPart) {
+    		//resetViewer();
+    		focus(ep.getModel());
+    	} else if (ep instanceof ScenarioBaseEditPart && ModelSupport.getParent(
+    			((ScenarioBaseEditPart)ep).getScenarioDiagram().getScenario(), ep.getModel()) != null) {
+    		ep.refresh();
+    	} else {
+    		resetViewer();
+    	}
+    }
+    
+    public Object getFocusComponent() {
+    	Object ret=null;
+    	
+    	java.util.List parts=m_viewer.getSelectedEditParts();
+    	if (parts.size() == 1) {
+    		EditPart part=(EditPart)parts.get(0);
+    		
+    		if (part instanceof ScenarioBaseEditPart) {
+    			ret = ((ScenarioBaseEditPart)part).getModel();
+    		}
+    	}
+    	
+    	return(ret);
+    }
+
+    public EditPart getFocusEditPart() {
+    	EditPart ret=null;
+    	
+    	java.util.List parts=m_viewer.getSelectedEditParts();
+    	if (parts.size() == 1) {
+    		ret=(EditPart)parts.get(0);
+    	}
+    	
+    	return(ret);
+    }
+
     protected void resetViewer() {
     	if (m_viewer != null &&
     			getScenario() != null) {

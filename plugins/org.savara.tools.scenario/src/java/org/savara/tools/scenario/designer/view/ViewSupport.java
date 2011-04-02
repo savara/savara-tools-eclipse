@@ -22,12 +22,47 @@ package org.savara.tools.scenario.designer.view;
 import java.util.logging.Logger;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.views.properties.IPropertySource;
 import org.savara.scenario.model.*;
 import org.savara.tools.scenario.designer.DesignerImages;
 import org.savara.tools.scenario.designer.model.*;
 
 public class ViewSupport {
+	
+	private static Logger logger = Logger.getLogger(ViewSupport.class.getName());
+	
+	public static int TYPES_INITIAL_YPADDING=26;
 
+	public static final int EVENT_GROUP_PADDING_X=8;
+	public static final int EVENT_GROUP_PADDING_Y=35;
+	public static final int PARTICIPANT_PADDING_Y=10;
+	public static final int HEADER_HEIGHT=60;
+	public static final int PADDING_Y=10;
+	//public static final int SIDEBAR_WIDTH=300;
+	public static final int ROLE_PADDING_X=200;
+
+	public static IPropertySource getPropertySource(Object model) {
+		IPropertySource ret=null;
+		
+		if (model instanceof Group) {
+			ret = new GroupPropertySource((Group)model);
+		} else if (model instanceof Import) {
+			ret = new ImportPropertySource((Import)model);
+		} else if (model instanceof Link) {
+			ret = new LinkPropertySource((Link)model);
+		} else if (model instanceof MessageEvent) {
+			ret = new MessageEventPropertySource((MessageEvent)model);
+		} else if (model instanceof Role) {
+			ret = new RolePropertySource((Role)model);
+		} else if (model instanceof Scenario) {
+			ret = new ScenarioPropertySource((Scenario)model);
+		} else if (model instanceof TimeElapsedEvent) {
+			ret = new TimeElapsedEventPropertySource((TimeElapsedEvent)model);
+		}
+		
+		return(ret);
+	}
+	
 	/**
 	 * This method returns the appropriate image for this scenario
 	 * component on the main display area.
@@ -181,7 +216,7 @@ public class ViewSupport {
 		}
 		
 		if (component instanceof Scenario) {
-			ret += getHeaderPadding(component);
+			ret += getHeaderPadding((Scenario)component, component);
 			
 			ret += 40; // Additional padding
 			
@@ -255,7 +290,7 @@ public class ViewSupport {
 		int ret=0;
 		
 		if (child instanceof Role) {
-			ret = getHeaderPadding(child);
+			ret = getHeaderPadding(diagram.getScenario(), child);
 			
 		} else {			
 			java.util.List children=ModelSupport.getChildren(parent);
@@ -263,7 +298,7 @@ public class ViewSupport {
 			if (children != null) {
 				int pos=children.indexOf(child);
 				
-				ret = getHeaderPadding(parent);
+				ret = getHeaderPadding(diagram.getScenario(), parent);
 	    		
 		    	if (pos > 0) {
 		    		
@@ -352,6 +387,15 @@ public class ViewSupport {
 				ret = ROLE_PADDING_X;
 			}
 			
+		} else if (child instanceof Group) {
+			// Return the default value
+			
+		} else if (child instanceof TimeElapsedEvent) {
+			ret = 5;
+		
+		} else if (child instanceof Import) {
+			ret = 5;
+
 		} else if (child instanceof Event) {
 			Event me=(Event)child;
 			
@@ -363,18 +407,14 @@ public class ViewSupport {
 				
 				// For each contained event group, we need to adjust
 				// the X position
-				Object cur=ModelSupport.getParent(me);
+				Object cur=ModelSupport.getParent(diagram.getScenario(), me);
 				while (cur != null && (cur instanceof Scenario) == false) {
 					ret -= EVENT_GROUP_PADDING_X;
-					cur=ModelSupport.getParent(cur);
+					cur=ModelSupport.getParent(diagram.getScenario(), cur);
 				}
 			} else {
 				ret = 50;
 			}
-		} else if (child instanceof TimeElapsedEvent) {
-			ret = 5;
-		} else if (child instanceof Import) {
-			ret = 5;
 		}
 		
 		return(ret);
@@ -457,7 +497,7 @@ public class ViewSupport {
 		return(ret);
 	}
 	
-	public static int getHeaderPadding(Object parent) {
+	public static int getHeaderPadding(Scenario scenario, Object parent) {
 		int ret=EVENT_GROUP_PADDING_Y;
 		
 		if (parent instanceof Scenario) {
@@ -473,11 +513,9 @@ public class ViewSupport {
 			
 			ret += 30; // For the name in the header
 			
-			/* TODO: GPB: Need to find scenario
-			if (((Role)parent).getScenario().getAuthor() != null) {
+			if (scenario.getAuthor() != null && scenario.getAuthor().trim().length() > 0) {
 				ret += 30;
 			}
-			*/
 		}
 		
 		return(ret);
@@ -495,16 +533,4 @@ public class ViewSupport {
 		// depth of the event groups
 		return(100);
 	}
-	
-	private static Logger logger = Logger.getLogger("org.pi4soa.service.test.designer.view");
-	
-	public static int TYPES_INITIAL_YPADDING=26;
-
-	public static final int EVENT_GROUP_PADDING_X=8;
-	public static final int EVENT_GROUP_PADDING_Y=35;
-	public static final int PARTICIPANT_PADDING_Y=10;
-	public static final int HEADER_HEIGHT=60;
-	public static final int PADDING_Y=10;
-	//public static final int SIDEBAR_WIDTH=300;
-	public static final int ROLE_PADDING_X=200;
 }

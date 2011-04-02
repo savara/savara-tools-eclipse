@@ -60,5 +60,7 @@ public class DesignerDefinitions {
     public static final String DESIGNER_RESOURCE="tsdesigner";
     
     public static final String BUSINESS_VIEW="businessView";
-    
+
+	public static final String SCENARIO_FILE_EXTENSION="scn";
+
 }

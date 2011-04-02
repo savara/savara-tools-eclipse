@@ -37,6 +37,11 @@ import org.savara.tools.scenario.designer.view.GraphicalComponent;
 public abstract class ScenarioBaseEditPart extends AbstractGraphicalEditPart
 						implements java.beans.PropertyChangeListener,
 							GraphicalComponent, SimulationEntity {
+	
+    private IPropertySource propertySource = null;
+    //private Notifier target;
+    private int m_logStartPosition=0;
+    private int m_logEndPosition=0;
 
     /**
      * This is the default constructor.
@@ -270,9 +275,8 @@ public abstract class ScenarioBaseEditPart extends AbstractGraphicalEditPart
         return super.getAdapter(key);
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.itso.sal330r.gefdemo.edit.WorkflowElementEditPart#getPropertySource()
-     */
+    protected abstract IPropertySource getPropertySource();
+    /*
     protected IPropertySource getPropertySource() {
         if (propertySource == null) {
            	propertySource = new org.savara.tools.scenario.designer.view.ScenarioPropertySource(getModel());
@@ -280,6 +284,7 @@ public abstract class ScenarioBaseEditPart extends AbstractGraphicalEditPart
         
         return propertySource;
     }
+    */
 
     /* TODO: GPB notification
     public void notifyChanged(Notification notification) {
@@ -440,9 +445,4 @@ public abstract class ScenarioBaseEditPart extends AbstractGraphicalEditPart
 	public int getLogEndPosition() {
 		return(m_logEndPosition);
 	}
-	
-    private IPropertySource propertySource = null;
-    //private Notifier target;
-    private int m_logStartPosition=0;
-    private int m_logEndPosition=0;
 }
