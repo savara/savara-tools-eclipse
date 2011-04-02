@@ -19,22 +19,20 @@ package org.savara.tools.scenario.designer.view;
 
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
-import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.savara.scenario.model.*;
 
 /**
  * This class implements the property source for a scenario.
  */
-public class ScenarioPropertySource implements IPropertySource {
+public class ImportPropertySource implements IPropertySource {
 
-	private static final String NAME_ID = "Name";
-	private static final String DESCRIPTION_ID = "Description";
-	private static final String AUTHOR_ID = "Author";
+	private static final String URL_ID = "URL";
+	private static final String GROUP_ID = "Group";
 
-    private org.savara.scenario.model.Scenario m_element=null;
+    private org.savara.scenario.model.Import m_element=null;
 
-	public ScenarioPropertySource(org.savara.scenario.model.Scenario element) {
+	public ImportPropertySource(org.savara.scenario.model.Import element) {
 		m_element = element;
 	}
 
@@ -54,11 +52,9 @@ public class ScenarioPropertySource implements IPropertySource {
 		java.util.Vector<IPropertyDescriptor> descriptors=new java.util.Vector<IPropertyDescriptor>();
 		
 		descriptors.add(new TextPropertyDescriptor(
-				NAME_ID,"Name"));
+				URL_ID,"URL"));
 		descriptors.add(new TextPropertyDescriptor(
-				DESCRIPTION_ID,"Description"));
-		descriptors.add(new PropertyDescriptor(
-				AUTHOR_ID,"Author"));
+				GROUP_ID,"Group"));
 				
 		ret = new IPropertyDescriptor[descriptors.size()];
 		descriptors.copyInto(ret);
@@ -72,12 +68,10 @@ public class ScenarioPropertySource implements IPropertySource {
 	public Object getPropertyValue(Object id) {
 		Object ret=null;
 		
-		if (id == NAME_ID) {
-			ret = getElement().getName();
-		} else if (id == DESCRIPTION_ID) {
-			ret = getElement().getDescription();
-		} else if (id == AUTHOR_ID) {
-			ret = getElement().getAuthor();
+		if (id == URL_ID) {
+			ret = getElement().getUrl();
+		} else if (id == GROUP_ID) {
+			ret = getElement().getGroup();
 		}
 
 		if (ret == null) {
@@ -108,17 +102,13 @@ public class ScenarioPropertySource implements IPropertySource {
 	 */
 	public void setPropertyValue(Object id, Object value) {
 		
-		if (id == NAME_ID) {
+		if (id == URL_ID) {
 			if (value instanceof String) {
-				getElement().setName((String)value);
+				getElement().setUrl((String)value);
 			}
-		} else if (id == DESCRIPTION_ID) {
+		} else if (id == GROUP_ID) {
 			if (value instanceof String) {
-				getElement().setDescription((String)value);
-			}			
-		} else if (id == AUTHOR_ID) {
-			if (value instanceof String) {
-				getElement().setAuthor((String)value);
+				getElement().setGroup((String)value);
 			}			
 		}
 	}
@@ -128,7 +118,7 @@ public class ScenarioPropertySource implements IPropertySource {
 	 * 
 	 * @return The element
 	 */
-	protected Scenario getElement() {
+	protected Import getElement() {
 		return(m_element);
 	}
 }

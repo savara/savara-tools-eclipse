@@ -28,6 +28,7 @@ import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.DropRequest;
+import org.eclipse.ui.views.properties.IPropertySource;
 import org.savara.scenario.model.*;
 import org.savara.tools.scenario.designer.figures.*;
 import org.savara.tools.scenario.designer.model.ModelSupport;
@@ -42,7 +43,9 @@ import org.savara.tools.scenario.designer.view.ViewSupport;
 public class MessageEventEditPart extends ScenarioBaseEditPart 
 					implements org.eclipse.gef.NodeEditPart {
 
-	public MessageEventEditPart(Object elem) {
+    private IPropertySource propertySource = null;
+
+    public MessageEventEditPart(Object elem) {
 		super(elem);
 	}
 	
@@ -105,20 +108,6 @@ public class MessageEventEditPart extends ScenarioBaseEditPart
 		return(-10);
 	}
 	
-	/* TODO: GPB: Way to handle notification
-    public void notifyChanged(Notification notification) {
-        int type = notification.getEventType();
-        
-        if (type != Notification.SET) {
-        	super.notifyChanged(notification);
-        } else {
-        	getFigure().invalidateTree();
-        	refresh();
-        	getFigure().repaint();
-        }
-    }
-    */
-
 	/**
 	 * @see org.eclipse.gef.editparts.AbstractEditPart#refreshVisuals()
 	 */
@@ -138,6 +127,8 @@ public class MessageEventEditPart extends ScenarioBaseEditPart
 		ViewSupport.setTooltip(getFigure(), getModel());
 
 		super.refreshVisuals();
+		
+		refreshLinks();
 	}
 
     public int getHeight() {
@@ -152,6 +143,17 @@ public class MessageEventEditPart extends ScenarioBaseEditPart
     	return(ret);
     }
     
+    /* (non-Javadoc)
+     * @see com.ibm.itso.sal330r.gefdemo.edit.WorkflowElementEditPart#getPropertySource()
+     */
+    protected IPropertySource getPropertySource() {
+        if (propertySource == null) {
+           	propertySource = new org.savara.tools.scenario.designer.view.MessageEventPropertySource((MessageEvent)getModel());
+        }
+        
+        return propertySource;
+    }
+
     public org.eclipse.gef.EditPart findEditPartForModel(Object model) {
     	org.eclipse.gef.EditPart ret=null;
     	
@@ -306,6 +308,20 @@ public class MessageEventEditPart extends ScenarioBaseEditPart
     	// Refresh any message links
     	java.util.List links=null;
     	
+    	links = getSourceConnections();
+    	for (int i=0; i < links.size(); i++) {
+    		LinkEditPart ep=(LinkEditPart)links.get(i);
+
+    		ep.refresh();
+    	}
+
+    	links = getTargetConnections();
+    	for (int i=0; i < links.size(); i++) {
+    		LinkEditPart ep=(LinkEditPart)links.get(i);
+
+    		ep.refresh();
+    	}
+
     	/* Not at present, as this may cause the link info
     	 * to be derived twice - after both the source and target
     	 * message events have been set

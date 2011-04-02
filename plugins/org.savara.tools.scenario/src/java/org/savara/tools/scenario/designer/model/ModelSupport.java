@@ -23,6 +23,8 @@ import java.util.logging.Logger;
 import org.savara.scenario.model.*;
 
 public class ModelSupport {
+	
+	private static Logger logger = Logger.getLogger(ModelSupport.class.getName());
 
 	public static java.util.List<Event> getChildren(Object component) {
 		java.util.List<Event> ret=null;
@@ -36,18 +38,51 @@ public class ModelSupport {
 		return(ret);
 	}
 	
-	public static Object getParent(Object component) {
+	public static void getEventsForRole(Role role, java.util.List<Event> events,
+							java.util.List<Event> results) {
+		for (Event event : events) {
+			if (event instanceof Group) {
+				getEventsForRole(role, ((Group)event).getEvent(), results);
+			} else if (event.getRole() == role) {
+				results.add(event);
+			}
+		}
+	}
+	
+	public static Object getParent(Scenario scenario, Object component) {
 		Object ret=null;
 		
-		// TODO: GPB: how to get parent???
-		
-		/*
-		if (component instanceof org.eclipse.emf.ecore.EObject) {
-			ret = ((org.eclipse.emf.ecore.EObject)component).eContainer();
-		//} else if (component instanceof Participant) {
-		//	ret = ((Participant)component).getDiagram();
+		// Need to scan the scenario as the components don't have reference to their parents
+		if (component instanceof Event) {
+			ret = getParentFromEventList(scenario, scenario.getEvent(), component);
+		} else if (component instanceof Link) {
+			if (scenario.getLink().contains(component)) {
+				ret = scenario;
+			}
+		} else if (component instanceof Role) {
+			if (scenario.getRole().contains(component)) {
+				ret = scenario;
+			}
 		}
-		*/
+		
+		return(ret);
+	}
+	
+	protected static Object getParentFromEventList(Object parent, java.util.List<Event> events,
+								Object component) {
+		Object ret=null;
+		
+		if (events.contains(component)) {
+			ret = parent;
+		} else {
+			for (int i=0; ret == null && i < events.size(); i++) {
+				Event evt=events.get(i);
+				
+				if (evt instanceof Group) {
+					ret = getParentFromEventList(evt, ((Group)evt).getEvent(), component);
+				}
+			}
+		}
 		
 		return(ret);
 	}
@@ -114,10 +149,8 @@ public class ModelSupport {
 			java.util.List list=null;
 			
 			if (parent instanceof Scenario &&
-					child instanceof Role) {
-				
-				// TODO: GPB: Need to get scenario???
-				//list = ((Role)child).getScenario().getParticipants();
+					child instanceof Role) {				
+				list = ((Scenario)parent).getRole();
 			} else {
 				list = getChildren(parent);		
 			}
@@ -154,15 +187,11 @@ public class ModelSupport {
 		return(ret);
 	}
 	
-	public static java.util.List getSourceConnections(Scenario scenario, Object component) {
-		java.util.List ret=new java.util.Vector();
+	public static java.util.List<Link> getSourceConnections(Scenario scenario, Object component) {
+		java.util.List<Link> ret=new java.util.Vector<Link>();
 		
 		if (component instanceof MessageEvent) {
-			/* TODO: GPB: Need to get scenario???
-			Scenario scenario = ((MessageEvent)component).getScenario();
-			*/
-			
-			java.util.List links=scenario.getLink();
+			java.util.List<Link> links=scenario.getLink();
 			
 			for (int i=0; i < links.size(); i++) {
 				Link link=(Link)links.get(i);
@@ -171,21 +200,16 @@ public class ModelSupport {
 					ret.add(link);
 				}
 			}
-			//*/
 		}
 		
 		return(ret);
 	}
 	
-	public static java.util.List getTargetConnections(Scenario scenario, Object component) {
-		java.util.List ret=new java.util.Vector();
+	public static java.util.List<Link> getTargetConnections(Scenario scenario, Object component) {
+		java.util.List<Link> ret=new java.util.Vector<Link>();
 		
 		if (component instanceof MessageEvent) {
-			/* TODO: GPB: Need to get scenario???
-			Scenario scenario = ((MessageEvent)component).getScenario();
-			*/
-			
-			java.util.List links=scenario.getLink();
+			java.util.List<Link> links=scenario.getLink();
 			
 			for (int i=0; i < links.size(); i++) {
 				Link link=(Link)links.get(i);
@@ -194,11 +218,8 @@ public class ModelSupport {
 					ret.add(link);
 				}
 			}
-			//*/
 		}
 		
 		return(ret);
 	}
-	
-	private static Logger logger = Logger.getLogger("org.pi4soa.service.test.designer.model");
 }

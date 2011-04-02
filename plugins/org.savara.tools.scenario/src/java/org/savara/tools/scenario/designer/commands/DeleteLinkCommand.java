@@ -45,25 +45,26 @@ public class DeleteLinkCommand
 	 * @see org.eclipse.gef.commands.Command#execute()
 	 */
 	public void execute() {
+		m_sourceParent = ModelSupport.getParent((Scenario)getParent(), m_sourceEvent);
+		m_targetParent = ModelSupport.getParent((Scenario)getParent(), m_targetEvent);
+		
 		m_index = m_parent.getLink().indexOf(m_child);
 		
-		m_parent.getLink().remove(m_child);
-		
-		/* TODO: GPB: need source and target links
 		if (m_sourceParent != null && m_sourceEvent != null &&
-				m_sourceEvent.getSourceMessageLinks().size() == 1) {
+				ModelSupport.getSourceConnections((Scenario)getParent(), m_sourceEvent).size() == 1) {
 			m_sourceEventIndex = ModelSupport.getChildIndex(m_sourceParent, m_sourceEvent);
 			
 			ModelSupport.removeChild(m_sourceParent, m_sourceEvent);		
 		}
 		
 		if (m_targetParent != null && m_targetEvent != null &&
-				m_targetEvent.getTargetMessageLinks().size() == 1) {
+				ModelSupport.getTargetConnections((Scenario)getParent(), m_targetEvent).size() == 1) {
 			m_targetEventIndex = ModelSupport.getChildIndex(m_targetParent, m_targetEvent);
 			
 			ModelSupport.removeChild(m_targetParent, m_targetEvent);		
 		}
-		*/
+		
+		m_parent.getLink().remove(m_child);
 		
 		m_child.setSource(null);
 		m_child.setTarget(null);	
@@ -82,15 +83,6 @@ public class DeleteLinkCommand
 		
 		m_sourceEvent = (MessageEvent)m_child.getSource();
 		m_targetEvent = (MessageEvent)m_child.getTarget();
-		
-		/* TODO: GPB: need parent
-		if (m_sourceEvent != null) {
-			m_sourceParent = m_sourceEvent.eContainer();
-		}
-		if (m_targetEvent != null) {
-			m_targetParent = m_targetEvent.eContainer();
-		}
-		*/
 	}
 	
 	public void setParent(Scenario newParent) {

@@ -42,6 +42,8 @@ import org.savara.tools.scenario.designer.view.ViewSupport;
  */
 public class RoleEditPart extends ScenarioBaseEditPart  
 					implements org.eclipse.gef.NodeEditPart {
+    
+	private IPropertySource propertySource = null;
 
 	public RoleEditPart(Object elem) {
 		super(elem);
@@ -154,8 +156,8 @@ public class RoleEditPart extends ScenarioBaseEditPart
 	 */
 	protected void refreshVisuals() {
 
-		((RoleFigure)getFigure()).setText(
-				ViewSupport.getName(getModel(), getScenarioDiagram()));
+		((RoleFigure)getFigure()).setText(" "+
+				ViewSupport.getName(getModel(), getScenarioDiagram())+" ");
 		
 		// Update the participant header width according to the
 		// width of the participant (governed by the text
@@ -172,8 +174,8 @@ public class RoleEditPart extends ScenarioBaseEditPart
 		((Label)((ParticipantFigure)getFigure()).getHeader()).setPreferredSize(100, 40);
 		((Label)((ParticipantFigure)getFigure()).getHeader()).setSize(100, 40);
 		((Label)((ParticipantFigure)getFigure()).getHeader()).setBounds(new org.eclipse.draw2d.geometry.Rectangle(0, 0, 100, 40));
-		((Label)((ParticipantFigure)getFigure()).getHeader()).setLabelAlignment(org.eclipse.draw2d.PositionConstants.CENTER);
 		*/
+		//((Label)((RoleFigure)getFigure()).getHeader()).setLabelAlignment(org.eclipse.draw2d.PositionConstants.CENTER);
 		//((ParticipantFigure)getFigure()).setBounds(new org.eclipse.draw2d.geometry.Rectangle(0, 0, 100, 40));
 		super.refreshVisuals();
 	}
@@ -182,7 +184,8 @@ public class RoleEditPart extends ScenarioBaseEditPart
     	int ret=getScenarioDiagram().getHeight();
     	
     	ret -= ViewSupport.PARTICIPANT_PADDING_Y*2 +
-    				ViewSupport.getHeaderPadding(getScenarioDiagram().getScenario());
+    				ViewSupport.getHeaderPadding(getScenarioDiagram().getScenario(),
+    								getScenarioDiagram().getScenario());
     	
     	return(ret);
     }
@@ -274,6 +277,4 @@ public class RoleEditPart extends ScenarioBaseEditPart
     public ConnectionAnchor getTargetConnectionAnchor() {
         return(((RoleFigure)getFigure()).getConnectionAnchor());
     }
-    
-	private IPropertySource propertySource = null;
 }

@@ -30,6 +30,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 //import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.editpolicies.RootComponentEditPolicy;
+import org.eclipse.ui.views.properties.IPropertySource;
 import org.savara.scenario.model.*;
 import org.savara.tools.scenario.designer.figures.ScenarioFigure;
 import org.savara.tools.scenario.designer.model.*;
@@ -64,7 +65,10 @@ public class ScenarioEditPart extends ScenarioBaseEditPart
     	return(this);
     }
     
-	
+    protected IPropertySource getPropertySource() {
+    	return(new org.savara.tools.scenario.designer.view.ScenarioPropertySource((Scenario)getModel()));
+    }
+
 	public org.savara.scenario.model.Scenario getScenario() {
 		return((org.savara.scenario.model.Scenario)getModel());
 	}

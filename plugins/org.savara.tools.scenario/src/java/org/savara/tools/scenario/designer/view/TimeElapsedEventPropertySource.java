@@ -19,22 +19,19 @@ package org.savara.tools.scenario.designer.view;
 
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
-import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.savara.scenario.model.*;
 
 /**
  * This class implements the property source for a scenario.
  */
-public class ScenarioPropertySource implements IPropertySource {
+public class TimeElapsedEventPropertySource implements IPropertySource {
 
-	private static final String NAME_ID = "Name";
-	private static final String DESCRIPTION_ID = "Description";
-	private static final String AUTHOR_ID = "Author";
+	private static final String DURATION_ID = "Duration";
 
-    private org.savara.scenario.model.Scenario m_element=null;
+    private org.savara.scenario.model.TimeElapsedEvent m_element=null;
 
-	public ScenarioPropertySource(org.savara.scenario.model.Scenario element) {
+	public TimeElapsedEventPropertySource(org.savara.scenario.model.TimeElapsedEvent element) {
 		m_element = element;
 	}
 
@@ -54,12 +51,8 @@ public class ScenarioPropertySource implements IPropertySource {
 		java.util.Vector<IPropertyDescriptor> descriptors=new java.util.Vector<IPropertyDescriptor>();
 		
 		descriptors.add(new TextPropertyDescriptor(
-				NAME_ID,"Name"));
-		descriptors.add(new TextPropertyDescriptor(
-				DESCRIPTION_ID,"Description"));
-		descriptors.add(new PropertyDescriptor(
-				AUTHOR_ID,"Author"));
-				
+				DURATION_ID,"Duration"));
+
 		ret = new IPropertyDescriptor[descriptors.size()];
 		descriptors.copyInto(ret);
 		
@@ -72,12 +65,8 @@ public class ScenarioPropertySource implements IPropertySource {
 	public Object getPropertyValue(Object id) {
 		Object ret=null;
 		
-		if (id == NAME_ID) {
-			ret = getElement().getName();
-		} else if (id == DESCRIPTION_ID) {
-			ret = getElement().getDescription();
-		} else if (id == AUTHOR_ID) {
-			ret = getElement().getAuthor();
+		if (id == DURATION_ID) {
+			ret = getElement().getDuration();
 		}
 
 		if (ret == null) {
@@ -108,18 +97,10 @@ public class ScenarioPropertySource implements IPropertySource {
 	 */
 	public void setPropertyValue(Object id, Object value) {
 		
-		if (id == NAME_ID) {
+		if (id == DURATION_ID) {
 			if (value instanceof String) {
-				getElement().setName((String)value);
+				getElement().setDuration((String)value);
 			}
-		} else if (id == DESCRIPTION_ID) {
-			if (value instanceof String) {
-				getElement().setDescription((String)value);
-			}			
-		} else if (id == AUTHOR_ID) {
-			if (value instanceof String) {
-				getElement().setAuthor((String)value);
-			}			
 		}
 	}
 	
@@ -128,7 +109,7 @@ public class ScenarioPropertySource implements IPropertySource {
 	 * 
 	 * @return The element
 	 */
-	protected Scenario getElement() {
+	protected TimeElapsedEvent getElement() {
 		return(m_element);
 	}
 }

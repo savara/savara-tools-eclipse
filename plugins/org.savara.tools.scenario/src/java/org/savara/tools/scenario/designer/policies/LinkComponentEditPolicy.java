@@ -24,6 +24,7 @@ import org.eclipse.gef.editpolicies.ComponentEditPolicy;
 import org.eclipse.gef.requests.GroupRequest;
 import org.savara.scenario.model.*;
 import org.savara.tools.scenario.designer.commands.DeleteLinkCommand;
+import org.savara.tools.scenario.designer.parts.LinkEditPart;
 
 /**
  * This is the component edit policy.
@@ -40,6 +41,10 @@ public class LinkComponentEditPolicy extends ComponentEditPolicy {
 		
 		if (child instanceof Link) {
 			deleteCmd.setChild((Link)child);
+			
+			if (getHost() instanceof LinkEditPart) {
+				deleteCmd.setParent(((LinkEditPart)getHost()).getScenarioDiagram().getScenario());
+			}
 			
 			// TODO: GPB - how to find scenario
 			//deleteCmd.setParent(((Link)child).getScenario());

@@ -19,6 +19,8 @@
  */
 package org.savara.tools.scenario.designer.editor.properties;
 
+import java.util.EventObject;
+
 import org.eclipse.ui.views.properties.tabbed.*;
 import org.eclipse.gef.commands.*;
 
@@ -42,6 +44,16 @@ public class DesignerTabbedPropertySheetPage extends TabbedPropertySheetPage {
 		
 		m_commandStack = commandStack;
 		m_contributor = contributor;
+		
+		// Do a refresh for now, in case doing an undo on the model, as the
+		// property sheet does not get updated by direct model changes
+		m_commandStack.addCommandStackListener(new CommandStackListener() {
+			@Override
+			public void commandStackChanged(EventObject arg0) {
+				DesignerTabbedPropertySheetPage.this.refresh();
+			}
+			
+		});
 	}
 	
 	/**
