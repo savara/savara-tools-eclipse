@@ -17,7 +17,7 @@
  * Change History:
  * Feb 22, 2005 : Initial version created by gary
  */
-package org.savara.tools.scenario.simulation;
+package org.savara.tools.scenario.designer.simulate;
 
 import java.io.IOException;
 import java.util.logging.Logger;
