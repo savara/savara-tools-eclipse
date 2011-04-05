@@ -23,15 +23,13 @@ package org.savara.tools.scenario.designer.simulate;
 import java.util.StringTokenizer;
 //import java.util.logging.Logger;
 
-import org.savara.scenario.simulation.ScenarioSimulator;
 import org.eclipse.swt.widgets.Display;
-import org.savara.tools.scenario.simulation.ScenarioSimulationLauncher;
 
 /**
  * This class is derived from the scenario simulation launcher with the
  * ability to present the results in a graphical form.
  */
-public class ScenarioDesignerSimulationLauncher extends ScenarioSimulationLauncher {
+public class ScenarioDesignerSimulationLauncher  {
 
 	public ScenarioDesignerSimulationLauncher(Display display,
 			org.savara.scenario.model.Scenario scenario,

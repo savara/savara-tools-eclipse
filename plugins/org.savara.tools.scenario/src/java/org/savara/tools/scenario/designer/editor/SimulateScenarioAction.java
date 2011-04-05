@@ -21,16 +21,8 @@ package org.savara.tools.scenario.designer.editor;
 
 import java.util.logging.Logger;
 
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationType;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.debug.core.Launch;
 import org.eclipse.ui.IWorkbenchPart;
 import org.savara.tools.scenario.designer.simulate.*;
-import org.savara.tools.scenario.simulation.ScenarioSimulationLaunchConfigurationConstants;
-
 
 /**
  * This class provides the 'create message links' action implementation.
@@ -90,6 +82,13 @@ public class SimulateScenarioAction extends org.eclipse.gef.ui.actions.Selection
     	org.savara.scenario.model.Scenario scenario=
     			((ScenarioDesigner)getWorkbenchPart()).getScenario();
 
+		ScenarioSimulationDialog ssd=
+			new ScenarioSimulationDialog(getWorkbenchPart().getSite().getShell());
+	
+		//ssd.setScenarioFile()
+		ssd.open();
+
+   /*
     	org.savara.tools.scenario.designer.simulate.ScenarioDesignerSimulationLauncher launcher=
     		new org.savara.tools.scenario.designer.simulate.ScenarioDesignerSimulationLauncher(
     				getWorkbenchPart().getSite().getShell().getDisplay(),
@@ -121,14 +120,6 @@ public class SimulateScenarioAction extends org.eclipse.gef.ui.actions.Selection
 			workingCopy.setAttribute(ScenarioSimulationLaunchConfigurationConstants.ATTR_SCENARIO,
 					((ScenarioDesigner)getWorkbenchPart()).getFile().getProjectRelativePath().toString());
 			
-			/*
-			String services=getServiceList();
-			if (services != null) {
-				workingCopy.setAttribute(ScenarioTestLaunchConfigurationConstants.ATTR_EXECUTE_SERVICES,
-						services);
-			}
-			*/
-				
 			ILaunchConfiguration configuration=workingCopy.doSave();
 		
 
@@ -146,16 +137,7 @@ public class SimulateScenarioAction extends org.eclipse.gef.ui.actions.Selection
 			
 			e.printStackTrace();
 		}
-    	/*
-    	org.pi4soa.service.test.designer.tools.CreateMessageLinksTool tool=
-    		new org.pi4soa.service.test.designer.tools.CreateMessageLinksTool(scenario);
-    	
-    	tool.run();
-    	
-    	if (tool.isScenarioChanged()) {
-    		((ScenarioEditor)getWorkbenchPart()).setDirty(true);
-    	}
-    	*/
+		*/
     }
     
     private static Logger logger = Logger.getLogger("org.pi4soa.service.test.designer.editor");	

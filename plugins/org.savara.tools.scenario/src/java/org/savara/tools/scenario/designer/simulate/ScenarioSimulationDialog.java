@@ -17,7 +17,6 @@
  */
 package org.savara.tools.scenario.designer.simulate;
 
-import org.eclipse.draw2d.Figure;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -36,15 +35,16 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.dialogs.FileSelectionDialog;
 
 public class ScenarioSimulationDialog extends Dialog {
 
+	private Button m_sameModelButton=null;
+	private Button m_sameSimulatorButton=null;
 	private java.util.List<Text> m_models=new java.util.Vector<Text>();
 	private java.util.List<Button> m_browseButtons=new java.util.Vector<Button>();
+	private java.util.List<Combo> m_modelRoles=new java.util.Vector<Combo>();
 	private java.util.List<Combo> m_simulatorTypes=new java.util.Vector<Combo>();
 	
 	public static void main(String[] args) {
@@ -74,56 +74,39 @@ public class ScenarioSimulationDialog extends Dialog {
     	form.marginWidth = form.marginHeight = 8;
     	dialog.setLayout(form);
     	
-    	final Button sameModelButton=new Button(dialog, SWT.CHECK);
-    	sameModelButton.setText("Use same model for all roles");
+    	m_sameModelButton=new Button(dialog, SWT.CHECK);
+    	m_sameModelButton.setText("Use same model for all roles");
+    	m_sameModelButton.setSelection(true);
     	
     	FormData sameModelButtonData = new FormData();
     	sameModelButtonData.top = new FormAttachment(0);
-    	sameModelButton.setLayoutData(sameModelButtonData);
+    	m_sameModelButton.setLayoutData(sameModelButtonData);
     	
-    	sameModelButton.addSelectionListener(new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-				widgetSelected(arg0);
-			}
-			public void widgetSelected(SelectionEvent arg0) {
-				for (int i=1; i < m_models.size(); i++) {
-					if (sameModelButton.getSelection()) {
-						m_models.get(i).setText(m_models.get(0).getText());
-						m_models.get(i).setEnabled(false);
-						m_models.get(i).setEditable(false);
-					} else {
-						m_models.get(i).setEnabled(true);
-						m_models.get(i).setEditable(true);
-					}
-				}
-			}  		
-    	});
-    	
-    	final Button sameSimulatorButton=new Button(dialog, SWT.CHECK);
-    	sameSimulatorButton.setText("Use same simulator for all roles");
+    	m_sameSimulatorButton=new Button(dialog, SWT.CHECK);
+    	m_sameSimulatorButton.setText("Use same simulator for all roles");
+    	m_sameSimulatorButton.setSelection(true);
     	
     	FormData sameSimulatorButtonData = new FormData();
     	sameSimulatorButtonData.top = new FormAttachment(0);
-    	sameSimulatorButtonData.left = new FormAttachment(sameModelButton, 10);
-    	sameSimulatorButton.setLayoutData(sameSimulatorButtonData);
+    	sameSimulatorButtonData.left = new FormAttachment(m_sameModelButton, 10);
+    	m_sameSimulatorButton.setLayoutData(sameSimulatorButtonData);
     	
-    	sameSimulatorButton.addSelectionListener(new SelectionListener() {
+    	m_sameModelButton.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent arg0) {
 				widgetSelected(arg0);
 			}
 			public void widgetSelected(SelectionEvent arg0) {
-				for (int i=1; i < m_simulatorTypes.size(); i++) {
-					if (sameSimulatorButton.getSelection()) {
-						m_simulatorTypes.get(i).setEnabled(false);
-						m_simulatorTypes.get(i).select(m_simulatorTypes.get(0).getSelectionIndex());
-					} else {
-						m_simulatorTypes.get(i).setEnabled(true);
-						
-						// TODO: Need to reset the list of simulator types based
-						// on the model
-						initializeSimulatorTypes(m_simulatorTypes.get(i), m_models.get(i));
-					}
-				}
+				updateModel();
+				updateSimulatorTypes();
+			}  		
+    	});
+    	
+    	m_sameSimulatorButton.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				widgetSelected(arg0);
+			}
+			public void widgetSelected(SelectionEvent arg0) {
+				updateSimulatorTypes();
 			}  		
     	});
     	
@@ -143,7 +126,7 @@ public class ScenarioSimulationDialog extends Dialog {
         mainArea.setLayout(rowLayout);
     	
     	FormData mainAreaData = new FormData();
-    	mainAreaData.top = new FormAttachment(sameModelButton, 10);
+    	mainAreaData.top = new FormAttachment(m_sameModelButton, 10);
     	mainAreaData.left = new FormAttachment(0);
     	//mainAreaData.right = new FormAttachment(10);
     	mainAreaData.width = 450;
@@ -164,7 +147,7 @@ public class ScenarioSimulationDialog extends Dialog {
         	groupform.marginWidth = groupform.marginHeight = 8;
         	rolePanel.setLayout(groupform);
         	
-    		rolePanel.setLayoutData(new RowData(440, 70));
+    		rolePanel.setLayoutData(new RowData(440, 100));
     		
     		Label modelLabel=new Label(rolePanel, SWT.NONE);
     		modelLabel.setText("Model:");
@@ -186,7 +169,7 @@ public class ScenarioSimulationDialog extends Dialog {
 				public void modifyText(ModifyEvent arg0) {
 					
 					if (model == m_models.get(0) &&
-							sameModelButton.getSelection()) {
+							m_sameModelButton.getSelection()) {
 						for (int i=1; i < m_models.size(); i++) {
 							m_models.get(i).setText(model.getText());
 						}
@@ -228,15 +211,41 @@ public class ScenarioSimulationDialog extends Dialog {
         	modelRoleLabelData.top = new FormAttachment(modelLabel, 12);
         	modelRoleLabel.setLayoutData(modelRoleLabelData);
         	
+        	final Combo modelRole=new Combo(rolePanel, SWT.NONE);
+        	modelRole.add("Fred");
+        	modelRole.add("Joe");
+    		m_modelRoles.add(modelRole);
+    		
+        	FormData modelRoleData = new FormData();
+        	modelRoleData.left = new FormAttachment(modelRoleLabel, 5);
+        	modelRoleData.right = new FormAttachment(100);
+        	modelRoleData.top = new FormAttachment(model, 5);
+        	modelRole.setLayoutData(modelRoleData);
+        	
+        	modelRole.addSelectionListener(new SelectionListener() {
+				public void widgetDefaultSelected(SelectionEvent arg0) {
+					widgetSelected(arg0);
+				}
+				public void widgetSelected(SelectionEvent arg0) {
+				}
+        	});
+        	
+    		Label simulatorLabel=new Label(rolePanel, SWT.NONE);
+    		simulatorLabel.setText("Simulator:");
+    		
+        	FormData simulatorLabelData = new FormData();
+        	simulatorLabelData.top = new FormAttachment(modelRoleLabel, 12);
+        	simulatorLabel.setLayoutData(simulatorLabelData);
+        	
         	final Combo simulatorType=new Combo(rolePanel, SWT.NONE);
     		simulatorType.add("Don't Simulate");
     		simulatorType.add("WS-CDL Simulator");
     		m_simulatorTypes.add(simulatorType);
     		
         	FormData simulatorTypeData = new FormData();
-        	simulatorTypeData.left = new FormAttachment(modelRoleLabel, 5);
+        	simulatorTypeData.left = new FormAttachment(simulatorLabel, 5);
         	simulatorTypeData.right = new FormAttachment(100);
-        	simulatorTypeData.top = new FormAttachment(model, 5);
+        	simulatorTypeData.top = new FormAttachment(modelRole, 5);
         	simulatorType.setLayoutData(simulatorTypeData);
         	
         	simulatorType.addSelectionListener(new SelectionListener() {
@@ -245,13 +254,15 @@ public class ScenarioSimulationDialog extends Dialog {
 				}
 				public void widgetSelected(SelectionEvent arg0) {
 					if (simulatorType == m_simulatorTypes.get(0) &&
-							sameSimulatorButton.getSelection()) {
+							m_sameSimulatorButton.getSelection()) {
 						for (int i=1; i < m_simulatorTypes.size(); i++) {
 							m_simulatorTypes.get(i).select(simulatorType.getSelectionIndex());
 						}
 					}
 				}
         	});
+        	
+        	initializeSimulatorTypes(simulatorType, model);
     	}
     	
     	Button okButton = new Button (dialog, SWT.PUSH);
@@ -300,6 +311,9 @@ public class ScenarioSimulationDialog extends Dialog {
 			}
     	});
     	
+    	updateModel();
+    	updateSimulatorTypes();
+    	
     	dialog.open();
     	Display display = parent.getDisplay();
     	while (!dialog.isDisposed()) {
@@ -314,5 +328,40 @@ public class ScenarioSimulationDialog extends Dialog {
     	
     	simulatorTypes.add("No Simulator");
     	simulatorTypes.add("WS-CDL Simulator");
+    	
+    	simulatorTypes.select(0);
+    }
+    
+    protected void updateSimulatorTypes() {
+		for (int i=1; i < m_simulatorTypes.size(); i++) {
+			if (m_sameSimulatorButton.getSelection()) {
+				m_simulatorTypes.get(i).setEnabled(false);
+				m_simulatorTypes.get(i).select(m_simulatorTypes.get(0).getSelectionIndex());
+			} else {
+				m_simulatorTypes.get(i).setEnabled(true);
+				
+				// TODO: Need to reset the list of simulator types based
+				// on the model
+				initializeSimulatorTypes(m_simulatorTypes.get(i), m_models.get(i));
+			}
+		}
+    }
+    
+    protected void updateModel() {
+		for (int i=1; i < m_models.size(); i++) {
+			if (m_sameModelButton.getSelection()) {
+				m_models.get(i).setText(m_models.get(0).getText());
+				m_models.get(i).setEnabled(false);
+				m_models.get(i).setEditable(false);
+				
+				m_sameSimulatorButton.setSelection(true);
+				m_sameSimulatorButton.setEnabled(true);
+			} else {
+				m_models.get(i).setEnabled(true);
+				m_models.get(i).setEditable(true);
+				m_sameSimulatorButton.setSelection(false);
+				m_sameSimulatorButton.setEnabled(false);
+			}
+		}
     }
 }
