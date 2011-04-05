@@ -21,6 +21,8 @@ package org.savara.tools.scenario.designer.view;
 
 import java.util.logging.Logger;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.savara.scenario.model.*;
@@ -133,7 +135,10 @@ public class ViewSupport {
 					if (i > 0) {
 						label += ",";
 					}
-					label += ((MessageEvent)link.getSource()).getParameter().get(i).getType();
+					
+					String type=QName.valueOf(((MessageEvent)link.getSource()).getParameter().get(i).getType()).getLocalPart();
+					
+					label += type;
 				}
 				
 				label += ")";

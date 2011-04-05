@@ -15,29 +15,32 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.tools.scenario.designer.editor.properties;
+package org.savara.tools.scenario.designer.commands;
 
 import org.eclipse.ui.views.properties.*;
 
 /**
- * This class implements the remove from list command.
+ * This class implements the down list command.
  */
-public class RemoveFromListCommand
+public class MoveDownListPropertyCommand
 			extends org.eclipse.gef.commands.Command {
 	
 	private IPropertySource m_propertySource=null;
     private IPropertyDescriptor m_propertyDescriptor=null;
-    private Object m_value=null;
-    private int m_removeIndex=-1;
+    private int m_index=-1;
 	
-	public RemoveFromListCommand() {
+	public MoveDownListPropertyCommand() {
 	}
 		
 	public void execute() { 	
-        java.util.List<Object> list=(java.util.List<Object>)
+        @SuppressWarnings("unchecked")
+		java.util.List<Object> list=(java.util.List<Object>)
         			m_propertySource.getPropertyValue(m_propertyDescriptor.getId());
         
-        m_value = list.remove(m_removeIndex);
+        list.add(m_index+1,list.remove(m_index));
+        
+        // Apply list back as property, to ensure applied to both ends of link, if relevant
+        m_propertySource.setPropertyValue(m_propertyDescriptor.getId(), list);
 	}
 	
 	public void redo() {	
@@ -45,7 +48,7 @@ public class RemoveFromListCommand
 	}
 	
 	public void setIndex(int index) {
-		m_removeIndex = index;
+		m_index = index;
 	}
 	
 	/**
@@ -66,13 +69,15 @@ public class RemoveFromListCommand
 	}
 	
 	public void undo() {
-		if (m_removeIndex != -1 && m_value != null) {
-	        java.util.List<Object> list=(java.util.List<Object>)
+		if (m_index != -1) {
+	        @SuppressWarnings("unchecked")
+			java.util.List<Object> list=(java.util.List<Object>)
 						m_propertySource.getPropertyValue(m_propertyDescriptor.getId());
 
-	        list.add(m_removeIndex, m_value);
+	        list.add(m_index,list.remove(m_index+1));
 	        
-	        m_removeIndex = -1;
+	        // Apply list back as property, to ensure applied to both ends of link, if relevant
+	        m_propertySource.setPropertyValue(m_propertyDescriptor.getId(), list);
 		}
 	}
 }

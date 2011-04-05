@@ -96,8 +96,8 @@ public class ParametersPropertySection extends AbstractPropertySection {
 
 		protected Object createNewObject() {
 			Parameter param=new Parameter();
-			param.setType("PType"+System.currentTimeMillis());
-			param.setValue("http://ptype"+System.currentTimeMillis());
+			param.setType("");
+			param.setValue("");
 			
 			ParameterEditor pe=new ParameterEditor(getPart().getSite().getShell());
 			

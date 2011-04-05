@@ -17,7 +17,7 @@
  * Change History:
  * 18 Jan, 2008 : Initial version created by gary
  */
-package org.savara.tools.scenario.designer.editor.properties;
+package org.savara.tools.scenario.designer.commands;
 
 import org.eclipse.ui.views.properties.*;
 

@@ -31,6 +31,10 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertyConstants;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
+import org.savara.tools.scenario.designer.commands.AddToListPropertyCommand;
+import org.savara.tools.scenario.designer.commands.MoveDownListPropertyCommand;
+import org.savara.tools.scenario.designer.commands.MoveUpListPropertyCommand;
+import org.savara.tools.scenario.designer.commands.RemoveFromListPropertyCommand;
 
 /**
  * This is a default property section implementation used for
@@ -133,8 +137,8 @@ public abstract class AbstractListPropertySection extends AbstractDesignerProper
             	if (newValue != null) {
             		
             		// Perform add to list command
-                	AddToListCommand command=
-            			new AddToListCommand();
+                	AddToListPropertyCommand command=
+            			new AddToListPropertyCommand();
 	            	command.setPropertySource(getPropertySource());
 	            	command.setPropertyDescriptor(getPropertyDescriptor());
 	            	command.setValue(newValue);
@@ -167,8 +171,8 @@ public abstract class AbstractListPropertySection extends AbstractDesignerProper
             	if (m_widget.getSelectionIndex() != -1) {
             		
             		// Perform remove from list command
-                	RemoveFromListCommand command=
-            			new RemoveFromListCommand();
+                	RemoveFromListPropertyCommand command=
+            			new RemoveFromListPropertyCommand();
 	            	command.setPropertySource(getPropertySource());
 	            	command.setPropertyDescriptor(getPropertyDescriptor());
 	            	command.setIndex(m_widget.getSelectionIndex());
@@ -203,8 +207,8 @@ public abstract class AbstractListPropertySection extends AbstractDesignerProper
             	if (index != -1) {
             		
             		// Perform up list command
-                	UpListCommand command=
-            			new UpListCommand();
+                	MoveUpListPropertyCommand command=
+            			new MoveUpListPropertyCommand();
 	            	command.setPropertySource(getPropertySource());
 	            	command.setPropertyDescriptor(getPropertyDescriptor());
 	            	command.setIndex(m_widget.getSelectionIndex());
@@ -241,8 +245,8 @@ public abstract class AbstractListPropertySection extends AbstractDesignerProper
             	if (index != -1) {
             		
             		// Perform down list command
-                	DownListCommand command=
-            			new DownListCommand();
+                	MoveDownListPropertyCommand command=
+            			new MoveDownListPropertyCommand();
 	            	command.setPropertySource(getPropertySource());
 	            	command.setPropertyDescriptor(getPropertyDescriptor());
 	            	command.setIndex(m_widget.getSelectionIndex());
