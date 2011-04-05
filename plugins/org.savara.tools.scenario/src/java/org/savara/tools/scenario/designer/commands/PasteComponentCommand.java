@@ -38,9 +38,9 @@ public class PasteComponentCommand
 	public void execute() {
 		
 		// Check if child is a scenario event
-		if (m_child instanceof Event &&
+		if (m_child instanceof RoleEvent &&
 				m_role != null) {
-			((Event)m_child).setRole(m_role);
+			((RoleEvent)m_child).setRole(m_role);
 		}
 		
 		// note that the model adds the ports to the node in this call

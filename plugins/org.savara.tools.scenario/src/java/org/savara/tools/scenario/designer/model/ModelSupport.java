@@ -43,7 +43,8 @@ public class ModelSupport {
 		for (Event event : events) {
 			if (event instanceof Group) {
 				getEventsForRole(role, ((Group)event).getEvent(), results);
-			} else if (event.getRole() == role) {
+			} else if (event instanceof RoleEvent &&
+					((RoleEvent)event).getRole() == role) {
 				results.add(event);
 			}
 		}
