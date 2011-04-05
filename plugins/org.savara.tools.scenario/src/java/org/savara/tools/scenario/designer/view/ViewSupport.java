@@ -252,13 +252,11 @@ public class ViewSupport {
 			}
 			
 		} else if (component instanceof TimeElapsedEvent) {
-			/* TODO: GPB: Need to get parent of the event
-
-			ret = getWidth(((TimeElapsedEvent)component).eContainer(),
+			ret = getWidth(ModelSupport.getParent(diagram.getScenario(), component),
 					diagram);
 			
 			ret -= 10;
-			*/
+
 		} else {
 			java.util.List children=ModelSupport.getChildren(component);
 			boolean f_foundSubGroup = false;
