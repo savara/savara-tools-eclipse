@@ -62,8 +62,9 @@ public class SimulationEntityFocusAction extends org.eclipse.gef.ui.actions.Sele
 		}
 		
 		if (text != null) {
-			((ScenarioDesigner)getWorkbenchPart()).
-						getSimulationLogPage().setText(text);
+			// Comment out while not displaying simulation log
+			//((ScenarioDesigner)getWorkbenchPart()).
+			//			getSimulationLogPage().setText(text);
 		}
 	}
 	

@@ -122,10 +122,13 @@ public class ScenarioDesigner
             setPageText(m_scenarioEditorPageID,
             		getScenarioEditorPage().getPageName());
 
+			// Comment out while not displaying simulation log
+            /*
             m_simulationLogPageID = addPage(new SimulationLogPage(this), getEditorInput());
             setPageText(m_simulationLogPageID,
         			getSimulationLogPage().getPageName());
-
+			*/
+            
             // add command stacks
             getMultiPageCommandStackListener().addCommandStack(
             		getScenarioEditorPage().getCommandStack2());
@@ -209,6 +212,8 @@ public class ScenarioDesigner
      * 
      * @return The simulation log page
      */
+	// Comment out while not displaying simulation log
+    /*
     protected SimulationLogPage getSimulationLogPage() {
     	if (m_simulationLogPageID == -1) {
     		return(null);
@@ -1049,7 +1054,8 @@ public class ScenarioDesigner
     private KeyHandler m_sharedKeyHandler=null;
     private SelectionSynchronizer m_synchronizer=null;
     private int m_scenarioEditorPageID=-1;
-    private int m_simulationLogPageID=-1;
+	// Comment out while not displaying simulation log
+    //private int m_simulationLogPageID=-1;
     private DelegatingCommandStack m_delegatingCommandStack=null;
     private DelegatingZoomManager m_delegatingZoomManager=null;    
     private org.savara.scenario.model.Scenario m_scenario=null;

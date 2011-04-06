@@ -264,7 +264,7 @@ public class ScenarioSimulationDialog extends Dialog {
 				public void widgetSelected(SelectionEvent arg0) {
 					FileDialog fd=new FileDialog(dialog);
 					
-					fd.setFileName(m_scenarioFile.getParentFile().getAbsolutePath());
+					fd.setFileName(m_scenarioFile.getAbsolutePath());
 					
 					String path=fd.open();
 					
@@ -282,8 +282,6 @@ public class ScenarioSimulationDialog extends Dialog {
         	modelRoleLabel.setLayoutData(modelRoleLabelData);
         	
         	final Combo modelRole=new Combo(rolePanel, SWT.READ_ONLY);
-        	modelRole.add("Fred");
-        	modelRole.add("Joe");
     		m_modelRoles.add(modelRole);
     		
         	FormData modelRoleData = new FormData();

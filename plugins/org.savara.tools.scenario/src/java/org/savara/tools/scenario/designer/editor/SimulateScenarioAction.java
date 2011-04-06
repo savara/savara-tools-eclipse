@@ -19,6 +19,7 @@
  */
 package org.savara.tools.scenario.designer.editor;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.ui.IWorkbenchPart;
@@ -85,59 +86,20 @@ public class SimulateScenarioAction extends org.eclipse.gef.ui.actions.Selection
 		ScenarioSimulationDialog ssd=
 			new ScenarioSimulationDialog(getWorkbenchPart().getSite().getShell());
 	
-		//ssd.setScenarioFile()
-		ssd.open();
-
-   /*
-    	org.savara.tools.scenario.designer.simulate.ScenarioDesignerSimulationLauncher launcher=
-    		new org.savara.tools.scenario.designer.simulate.ScenarioDesignerSimulationLauncher(
-    				getWorkbenchPart().getSite().getShell().getDisplay(),
-    				scenario, ((ScenarioDesigner)getWorkbenchPart()).getScenarioSimulation());
-    	
 		try {
-			ILaunchManager manager =
-				DebugPlugin.getDefault().getLaunchManager();
+			ssd.initializeScenario(((ScenarioDesigner)getWorkbenchPart()).getFile().getRawLocation().toFile());
 			
-			ILaunchConfigurationType type =
-				manager.getLaunchConfigurationType(
-			      	ScenarioSimulationLaunchConfigurationConstants.LAUNCH_CONFIG_TYPE);
-			ILaunchConfiguration[] configurations =
-			      manager.getLaunchConfigurations(type);
+			ScenarioSimulation view=((ScenarioDesigner)getWorkbenchPart()).getScenarioSimulation();
+			UISimulationHandler handler=new UISimulationHandler(view);
 			
-			for (int i = 0; i < configurations.length; i++) {
-				ILaunchConfiguration configuration = configurations[i];
-				if (configuration.getName().equals(PI4SOA_SCENARIO_TEST)) {
-					configuration.delete();
-					break;
-				}
-			}
-						
-			ILaunchConfigurationWorkingCopy workingCopy =
-			      type.newInstance(null, PI4SOA_SCENARIO_TEST);
+			ssd.setSimulationHandler(handler);
+	
+			ssd.open();
 
-			workingCopy.setAttribute(ScenarioSimulationLaunchConfigurationConstants.ATTR_PROJECT_NAME,
-					((ScenarioDesigner)getWorkbenchPart()).getFile().getProject().getName());
-			workingCopy.setAttribute(ScenarioSimulationLaunchConfigurationConstants.ATTR_SCENARIO,
-					((ScenarioDesigner)getWorkbenchPart()).getFile().getProjectRelativePath().toString());
-			
-			ILaunchConfiguration configuration=workingCopy.doSave();
-		
-
-			Launch launch=new Launch(configuration, LAUNCH_MODE, null);
-			
-			launcher.launch(configuration, LAUNCH_MODE, launch, null);
-
-			ScenarioSimulation view=((ScenarioDesigner)getWorkbenchPart()).getScenarioSimulation();	
-			view.startSimulation();
-			
-			((ScenarioDesigner)getWorkbenchPart()).updateEditPartActions();
-			
+	    	((ScenarioDesigner)getWorkbenchPart()).updateEditPartActions();
 		} catch(Exception e) {
-			logger.severe("Failed to launch scenario tester: "+e);
-			
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Failed to initialize simulation", e);
 		}
-		*/
     }
     
     private static Logger logger = Logger.getLogger("org.pi4soa.service.test.designer.editor");	
