@@ -145,7 +145,9 @@ public class ViewSupport {
 			}
 			
 			if (faultName != null) {
-				label += " fault "+faultName;
+				String type=QName.valueOf(faultName).getLocalPart();
+				
+				label += " fault "+type;
 			}
 			
 			if (label.length() > 0) {
