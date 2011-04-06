@@ -26,6 +26,20 @@ public class ModelSupport {
 	
 	private static Logger logger = Logger.getLogger(ModelSupport.class.getName());
 
+	public static boolean isSame(Object component1, Object component2) {
+		boolean ret=(component1 == component2);
+		
+		if (!ret) {
+			if (component1 instanceof Event && component2 instanceof Event) {
+				ret = ((Event)component1).getId().equals(((Event)component2).getId());
+			} else if (component1 instanceof Role && component2 instanceof Role) {
+				ret = ((Role)component1).getId().equals(((Role)component2).getId());
+			}
+		}
+		
+		return(ret);
+	}
+	
 	public static java.util.List<Event> getChildren(Object component) {
 		java.util.List<Event> ret=null;
 		
@@ -43,7 +57,8 @@ public class ModelSupport {
 		for (Event event : events) {
 			if (event instanceof Group) {
 				getEventsForRole(role, ((Group)event).getEvent(), results);
-			} else if (event.getRole() == role) {
+			} else if (event instanceof RoleEvent &&
+					((RoleEvent)event).getRole() == role) {
 				results.add(event);
 			}
 		}

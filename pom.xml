@@ -15,7 +15,7 @@
         <parent>
                 <groupId>org.jboss.tools</groupId>
                 <artifactId>org.jboss.tools.parent.pom</artifactId>
-        	<version>0.0.3-SNAPSHOT</version>
+        	<version>0.0.2-SNAPSHOT</version>
         </parent>
 
         <!-- Don't use Savara's own local parent-pom.xml. ~nickb

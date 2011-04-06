@@ -41,6 +41,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 import org.savara.tools.scenario.designer.DesignerDefinitions;
+import org.savara.tools.scenario.designer.model.ModelSupport;
 
 /**
  * This class provides the common features associated with all
@@ -402,7 +403,7 @@ public abstract class AbstractEditorPage extends EditorPart {
     	
     	if (component != null && editpart != null) {
     		
-    		if (editpart.getModel().equals(component)) {
+    		if (ModelSupport.isSame(editpart.getModel(), component)) {
     			ret = editpart;
     		} else {
     			

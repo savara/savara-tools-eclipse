@@ -19,18 +19,11 @@
  */
 package org.savara.tools.scenario.designer.editor;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationType;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.debug.core.Launch;
 import org.eclipse.ui.IWorkbenchPart;
 import org.savara.tools.scenario.designer.simulate.*;
-import org.savara.tools.scenario.simulation.ScenarioSimulationLaunchConfigurationConstants;
-
 
 /**
  * This class provides the 'create message links' action implementation.
@@ -90,72 +83,23 @@ public class SimulateScenarioAction extends org.eclipse.gef.ui.actions.Selection
     	org.savara.scenario.model.Scenario scenario=
     			((ScenarioDesigner)getWorkbenchPart()).getScenario();
 
-    	org.savara.tools.scenario.designer.simulate.ScenarioDesignerSimulationLauncher launcher=
-    		new org.savara.tools.scenario.designer.simulate.ScenarioDesignerSimulationLauncher(
-    				getWorkbenchPart().getSite().getShell().getDisplay(),
-    				scenario, ((ScenarioDesigner)getWorkbenchPart()).getScenarioSimulation());
-    	
+		ScenarioSimulationDialog ssd=
+			new ScenarioSimulationDialog(getWorkbenchPart().getSite().getShell());
+	
 		try {
-			ILaunchManager manager =
-				DebugPlugin.getDefault().getLaunchManager();
+			ssd.initializeScenario(((ScenarioDesigner)getWorkbenchPart()).getFile().getRawLocation().toFile());
 			
-			ILaunchConfigurationType type =
-				manager.getLaunchConfigurationType(
-			      	ScenarioSimulationLaunchConfigurationConstants.LAUNCH_CONFIG_TYPE);
-			ILaunchConfiguration[] configurations =
-			      manager.getLaunchConfigurations(type);
+			ScenarioSimulation view=((ScenarioDesigner)getWorkbenchPart()).getScenarioSimulation();
+			UISimulationHandler handler=new UISimulationHandler(view);
 			
-			for (int i = 0; i < configurations.length; i++) {
-				ILaunchConfiguration configuration = configurations[i];
-				if (configuration.getName().equals(PI4SOA_SCENARIO_TEST)) {
-					configuration.delete();
-					break;
-				}
-			}
-						
-			ILaunchConfigurationWorkingCopy workingCopy =
-			      type.newInstance(null, PI4SOA_SCENARIO_TEST);
+			ssd.setSimulationHandler(handler);
+	
+			ssd.open();
 
-			workingCopy.setAttribute(ScenarioSimulationLaunchConfigurationConstants.ATTR_PROJECT_NAME,
-					((ScenarioDesigner)getWorkbenchPart()).getFile().getProject().getName());
-			workingCopy.setAttribute(ScenarioSimulationLaunchConfigurationConstants.ATTR_SCENARIO,
-					((ScenarioDesigner)getWorkbenchPart()).getFile().getProjectRelativePath().toString());
-			
-			/*
-			String services=getServiceList();
-			if (services != null) {
-				workingCopy.setAttribute(ScenarioTestLaunchConfigurationConstants.ATTR_EXECUTE_SERVICES,
-						services);
-			}
-			*/
-				
-			ILaunchConfiguration configuration=workingCopy.doSave();
-		
-
-			Launch launch=new Launch(configuration, LAUNCH_MODE, null);
-			
-			launcher.launch(configuration, LAUNCH_MODE, launch, null);
-
-			ScenarioSimulation view=((ScenarioDesigner)getWorkbenchPart()).getScenarioSimulation();	
-			view.startSimulation();
-			
-			((ScenarioDesigner)getWorkbenchPart()).updateEditPartActions();
-			
+	    	((ScenarioDesigner)getWorkbenchPart()).updateEditPartActions();
 		} catch(Exception e) {
-			logger.severe("Failed to launch scenario tester: "+e);
-			
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Failed to initialize simulation", e);
 		}
-    	/*
-    	org.pi4soa.service.test.designer.tools.CreateMessageLinksTool tool=
-    		new org.pi4soa.service.test.designer.tools.CreateMessageLinksTool(scenario);
-    	
-    	tool.run();
-    	
-    	if (tool.isScenarioChanged()) {
-    		((ScenarioEditor)getWorkbenchPart()).setDirty(true);
-    	}
-    	*/
     }
     
     private static Logger logger = Logger.getLogger("org.pi4soa.service.test.designer.editor");	

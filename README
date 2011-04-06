@@ -8,7 +8,7 @@ Building the project
 
 You need to checkout the build component of the jbosstools project into an appropriate folder, e.g.
 
-	svn co http://anonsvn.jboss.org/repos/jbosstools/branches/3.3.indigo/build/
+	svn co http://anonsvn.jboss.org/repos/jbosstools/trunk/build
 
 and then build the parent pom, e.g.
 

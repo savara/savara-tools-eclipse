@@ -15,21 +15,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.tools.scenario.designer.editor.properties;
+package org.savara.tools.scenario.designer.commands;
 
 import org.eclipse.ui.views.properties.*;
 
 /**
- * This class implements the up list command.
+ * This class implements the add to list command.
  */
-public class UpListCommand
+public class AddToListPropertyCommand
 			extends org.eclipse.gef.commands.Command {
 	
 	private IPropertySource m_propertySource=null;
     private IPropertyDescriptor m_propertyDescriptor=null;
-    private int m_index=-1;
+    private Object m_value=null;
+    private int m_addedIndex=-1;
 	
-	public UpListCommand() {
+	public AddToListPropertyCommand() {
 	}
 		
 	public void execute() { 	
@@ -37,15 +38,19 @@ public class UpListCommand
 		java.util.List<Object> list=(java.util.List<Object>)
         			m_propertySource.getPropertyValue(m_propertyDescriptor.getId());
         
-        list.add(m_index-1,list.remove(m_index));
+        m_addedIndex = list.size();
+        list.add(m_value);
+        
+        // Apply list back as property, to ensure applied to both ends of link, if relevant
+        m_propertySource.setPropertyValue(m_propertyDescriptor.getId(), list);
 	}
 	
 	public void redo() {	
 		execute();
 	}
 	
-	public void setIndex(int index) {
-		m_index = index;
+	public void setValue(Object value) {
+		m_value = value;
 	}
 	
 	/**
@@ -57,6 +62,10 @@ public class UpListCommand
 		return(null);
 	}
 	
+	public Object getValue() {
+		return(m_value);
+	}
+	
 	public void setPropertySource(IPropertySource source) {
 		m_propertySource = source;
 	}
@@ -66,12 +75,17 @@ public class UpListCommand
 	}
 	
 	public void undo() {
-		if (m_index != -1) {
+		if (m_addedIndex != -1) {
 	        @SuppressWarnings("unchecked")
 			java.util.List<Object> list=(java.util.List<Object>)
 						m_propertySource.getPropertyValue(m_propertyDescriptor.getId());
 
-	        list.add(m_index,list.remove(m_index-1));
+	        list.remove(m_addedIndex);
+	        
+	        m_addedIndex = -1;
+	        
+	        // Apply list back as property, to ensure applied to both ends of link, if relevant
+	        m_propertySource.setPropertyValue(m_propertyDescriptor.getId(), list);
 		}
 	}
 }

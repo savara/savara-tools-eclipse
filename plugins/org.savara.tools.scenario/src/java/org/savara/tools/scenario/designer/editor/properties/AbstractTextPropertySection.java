@@ -33,6 +33,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertyConstants;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
+import org.savara.tools.scenario.designer.commands.SetPropertyCommand;
 
 /**
  * This is an abstract property section implementation used for

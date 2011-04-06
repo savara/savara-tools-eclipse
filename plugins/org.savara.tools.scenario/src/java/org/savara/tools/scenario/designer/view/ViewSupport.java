@@ -21,6 +21,8 @@ package org.savara.tools.scenario.designer.view;
 
 import java.util.logging.Logger;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.savara.scenario.model.*;
@@ -133,14 +135,19 @@ public class ViewSupport {
 					if (i > 0) {
 						label += ",";
 					}
-					label += ((MessageEvent)link.getSource()).getParameter().get(i).getType();
+					
+					String type=QName.valueOf(((MessageEvent)link.getSource()).getParameter().get(i).getType()).getLocalPart();
+					
+					label += type;
 				}
 				
 				label += ")";
 			}
 			
 			if (faultName != null) {
-				label += " fault "+faultName;
+				String type=QName.valueOf(faultName).getLocalPart();
+				
+				label += " fault "+type;
 			}
 			
 			if (label.length() > 0) {
@@ -247,13 +254,11 @@ public class ViewSupport {
 			}
 			
 		} else if (component instanceof TimeElapsedEvent) {
-			/* TODO: GPB: Need to get parent of the event
-
-			ret = getWidth(((TimeElapsedEvent)component).eContainer(),
+			ret = getWidth(ModelSupport.getParent(diagram.getScenario(), component),
 					diagram);
 			
 			ret -= 10;
-			*/
+
 		} else {
 			java.util.List children=ModelSupport.getChildren(component);
 			boolean f_foundSubGroup = false;
@@ -396,11 +401,10 @@ public class ViewSupport {
 		} else if (child instanceof Import) {
 			ret = 5;
 
-		} else if (child instanceof Event) {
-			Event me=(Event)child;
+		} else if (child instanceof RoleEvent) {
+			RoleEvent me=(RoleEvent)child;
 			
-			Role participant=getRoleForEvent(
-					diagram.getScenario().getRole(), me);
+			Role participant=(Role)me.getRole();
 			
 			if (participant != null) {
 				ret = getChildXPosition(null, participant, diagram);
@@ -419,48 +423,6 @@ public class ViewSupport {
 		
 		return(ret);
 	}	
-	
-	/**
-	 * This method returns the participant associated with the
-	 * supplied scenario event. If a participant type is not
-	 * defined, then a participant will not be returned.
-	 * 
-	 * @param list The list of participants
-	 * @param evt The scenario event
-	 * @return The participant, or null if not found
-	 */
-	public static Role getRoleForEvent(java.util.List list,
-					Event evt) {
-		Role ret=(Role)evt.getRole();
-		
-		/* 9/6/08 - phased out participant type name/instance
-		if (evt.getParticipant() == null &&
-				org.pi4soa.common.util.NamesUtil.isSet(evt.getParticipantTypeName())) {
-			
-			for (int i=0; ret == null && i < list.size(); i++) {
-				ret = (Participant)list.get(i);
-				
-				if ((evt.getParticipantTypeName() == null &&
-						ret.getType() != null) ||
-					(evt.getParticipantTypeName() != null &&
-							evt.getParticipantTypeName().equals(ret.getType()) == false)) {
-					ret = null;
-				} else if ((evt.getParticipantInstance() == null &&
-						ret.getInstance() != null) ||
-						(evt.getParticipantInstance() != null &&
-					evt.getParticipantInstance().equals(ret.getInstance()) == false)) {
-					ret = null;
-				}
-			}
-			
-			if (ret != null) {
-				evt.setParticipant(ret);
-			}
-		}
-		*/
-		
-		return(ret);
-	}
 	
 	public static int getNewParticipantIndex(int x,
 						ScenarioDiagram diagram) {

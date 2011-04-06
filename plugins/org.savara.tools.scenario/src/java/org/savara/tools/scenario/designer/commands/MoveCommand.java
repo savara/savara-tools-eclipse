@@ -61,11 +61,11 @@ public class MoveCommand extends Command {
 		m_oldIndex = list.indexOf(m_component);
 
 		// Check if child is a scenario event
-		if (m_component instanceof Event &&
+		if (m_component instanceof RoleEvent &&
 				m_participant != null) {
-			m_oldParticipant = (Role)((Event)m_component).getRole();
+			m_oldParticipant = (Role)((RoleEvent)m_component).getRole();
 			
-			((Event)m_component).setRole(m_participant);
+			((RoleEvent)m_component).setRole(m_participant);
 		}
 		
 		// Remove from old container
@@ -103,9 +103,9 @@ public class MoveCommand extends Command {
 		ModelSupport.removeChild(m_container, m_component);
 		
 		// Check if child is a scenario event
-		if (m_component instanceof Event &&
+		if (m_component instanceof RoleEvent &&
 				m_participant != null) {
-			((Event)m_component).setRole(m_oldParticipant);
+			((RoleEvent)m_component).setRole(m_oldParticipant);
 		}
 		
 		// Add to old container

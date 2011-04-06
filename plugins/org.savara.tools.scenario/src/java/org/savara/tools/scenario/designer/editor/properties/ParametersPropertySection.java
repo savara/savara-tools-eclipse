@@ -17,6 +17,8 @@
  */
 package org.savara.tools.scenario.designer.editor.properties;
 
+import java.util.logging.Logger;
+
 import org.eclipse.ui.views.properties.tabbed.AbstractPropertySection;
 
 import org.eclipse.jface.viewers.ISelection;
@@ -37,6 +39,8 @@ public class ParametersPropertySection extends AbstractPropertySection {
 		new ParameterListPropertySection("parameter",
 				"Parameters", "Parameters", 0, 100);
 
+	private static final Logger logger=Logger.getLogger(ParametersPropertySection.class.getName());
+	
 	public ParametersPropertySection() {
 	}
 	
@@ -94,10 +98,16 @@ public class ParametersPropertySection extends AbstractPropertySection {
 			super(property, displayName, label, start, end);
 		}
 
+		/**
+		 * This method requests a new list object to add to the
+		 * list.
+		 * 
+		 * @return The new object, or null if no object to add
+		 */
 		protected Object createNewObject() {
 			Parameter param=new Parameter();
-			param.setType("PType"+System.currentTimeMillis());
-			param.setValue("http://ptype"+System.currentTimeMillis());
+			param.setType("");
+			param.setValue("");
 			
 			ParameterEditor pe=new ParameterEditor(getPart().getSite().getShell());
 			
@@ -106,7 +116,31 @@ public class ParametersPropertySection extends AbstractPropertySection {
 			return((Parameter)pe.open());
 		}
 		
-	    protected String getDisplayValue(Object sourceValue) {
+		/**
+		 * This method requests that the supplied object be edited.
+		 * 
+		 * @param obj The object to edit
+		 * @return Changed object, or null if not changed
+		 */
+		protected Object editObject(Object obj) {
+			
+			if ((obj instanceof Parameter) == false) {
+				logger.severe("Edited object was not parameter");
+				return(false);
+			}
+			
+			Parameter p=new Parameter();
+			p.setType(((Parameter)obj).getType());
+			p.setValue(((Parameter)obj).getValue());
+			
+			ParameterEditor pe=new ParameterEditor(getPart().getSite().getShell());
+			
+			pe.setParameter(p);
+			
+			return(pe.open());
+		}
+
+		protected String getDisplayValue(Object sourceValue) {
 	    	String ret="";
 
 	    	if (sourceValue instanceof Parameter) {

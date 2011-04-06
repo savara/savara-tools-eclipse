@@ -61,7 +61,9 @@ import org.savara.tools.scenario.designer.DesignerDefinitions;
  */
 public class NewScenarioWizard extends Wizard implements INewWizard {
 
-    /**
+    private static final String EDITOR_ID = "org.savara.tools.scenario.designer.ScenarioDesignerID";
+
+	/**
      * This method initializes the wizard.
      * 
      * @param workbench The workbench
@@ -141,7 +143,7 @@ public class NewScenarioWizard extends Wizard implements INewWizard {
 			try {
 				page.openEditor
 					(new FileEditorInput(modelFile),
-					 m_workbench.getEditorRegistry().getDefaultEditor(modelFile.getFullPath().toString()).getId());
+					EDITOR_ID);
 			}
 			catch (PartInitException exception) {
 				MessageDialog.openError(workbenchWindow.getShell(),
