@@ -17,6 +17,10 @@
  */
 package org.savara.tools.scenario.designer.simulate;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -37,24 +41,71 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.savara.scenario.model.Role;
+import org.savara.scenario.model.Scenario;
+import org.savara.scenario.simulation.DefaultSimulationContext;
+import org.savara.scenario.simulation.RoleSimulator;
+import org.savara.scenario.simulation.RoleSimulatorFactory;
+import org.savara.scenario.simulation.ScenarioSimulator;
+import org.savara.scenario.simulation.ScenarioSimulatorFactory;
+import org.savara.scenario.simulation.SimulationContext;
+import org.savara.scenario.simulation.SimulationHandler;
+import org.savara.scenario.simulation.SimulationModel;
+import org.savara.scenario.util.ScenarioModelUtil;
+//import org.savara.scenario.simulation.TestRoleSimulator;
+//import org.savara.scenario.simulator.cdm.CDMRoleSimulator;
+//import org.savara.scenario.simulator.cdm.TestSimulationHandler;
+//import java.io.File;
 
 public class ScenarioSimulationDialog extends Dialog {
 
+	private static final String DON_T_SIMULATE = "Don't Simulate";
+	
 	private Button m_sameModelButton=null;
 	private Button m_sameSimulatorButton=null;
 	private java.util.List<Text> m_models=new java.util.Vector<Text>();
 	private java.util.List<Button> m_browseButtons=new java.util.Vector<Button>();
 	private java.util.List<Combo> m_modelRoles=new java.util.Vector<Combo>();
 	private java.util.List<Combo> m_simulatorTypes=new java.util.Vector<Combo>();
+	private java.io.File m_scenarioFile=null;
+	private java.util.List<SimulationModel> m_simulationModels=new java.util.Vector<SimulationModel>();
+	private Scenario m_scenario=null;
+	private SimulationHandler m_handler=null;
+	private boolean m_simulate=false;
+	private java.util.Map<Role,RoleSimulator> m_roleSimulators=new java.util.HashMap<Role,RoleSimulator>();
+	private java.util.Map<Role,SimulationContext> m_contexts=new java.util.HashMap<Role,SimulationContext>();
+		
+	private static final Logger logger=Logger.getLogger(ScenarioSimulationDialog.class.getName());
 	
+	/*
 	public static void main(String[] args) {
 		Display display = new Display ();
 		Shell shell = new Shell(display);
+		
+		// Register dummy role simulators
+		RoleSimulator rs1=new CDMRoleSimulator();
+		RoleSimulator rs2=new TestRoleSimulator("Test Simulator 2", true);
+		
+		RoleSimulatorFactory.register(rs1);
+		RoleSimulatorFactory.register(rs2);
 
 		ScenarioSimulationDialog ssd=new ScenarioSimulationDialog(shell);
 		
-		ssd.open();
+		TestSimulationHandler handler=new TestSimulationHandler();
+		
+		try {
+			ssd.initializeScenario(new java.io.File(args[0]));
+			
+			ssd.setSimulationHandler(handler);
+		
+			ssd.open();
+			
+			System.out.println(handler);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
+	*/
 
 	public ScenarioSimulationDialog(Shell parent, int style) {
         super (parent, style);
@@ -62,6 +113,20 @@ public class ScenarioSimulationDialog extends Dialog {
     
     public ScenarioSimulationDialog(Shell parent) {
     	this (parent, 0);
+    }
+    
+    public void initializeScenario(java.io.File scenarioFile) throws IOException {
+    	m_scenarioFile = scenarioFile;
+    	
+    	java.io.InputStream is=new java.io.FileInputStream(m_scenarioFile);
+    	
+    	m_scenario = ScenarioModelUtil.deserialize(is);
+    	
+    	is.close();
+    }
+    
+    public void setSimulationHandler(SimulationHandler handler) {
+    	m_handler = handler;
     }
     
     public Object open() {
@@ -96,8 +161,8 @@ public class ScenarioSimulationDialog extends Dialog {
 				widgetSelected(arg0);
 			}
 			public void widgetSelected(SelectionEvent arg0) {
-				updateModel();
-				updateSimulatorTypes();
+				updateSameModel();
+				updateSameSimulatorTypes();
 			}  		
     	});
     	
@@ -106,7 +171,7 @@ public class ScenarioSimulationDialog extends Dialog {
 				widgetSelected(arg0);
 			}
 			public void widgetSelected(SelectionEvent arg0) {
-				updateSimulatorTypes();
+				updateSameSimulatorTypes();
 			}  		
     	});
     	
@@ -133,15 +198,9 @@ public class ScenarioSimulationDialog extends Dialog {
     	//mainAreaData.height = 300;
     	mainArea.setLayoutData(mainAreaData);
     	
-    	java.util.List<String> roles=new java.util.Vector<String>();
-    	roles.add("Buyer");
-    	roles.add("Seller");
-    	roles.add("CreditAgency");
-    	roles.add("Other");
-    	
-    	for (int i=0; i < roles.size(); i++) {
+    	for (int i=0; i < m_scenario.getRole().size(); i++) {
     		Group rolePanel=new Group(mainArea, SWT.NONE);
-    		rolePanel.setText(roles.get(i));
+    		rolePanel.setText(m_scenario.getRole().get(i).getName());
     		
         	FormLayout groupform = new FormLayout();
         	groupform.marginWidth = groupform.marginHeight = 8;
@@ -168,14 +227,23 @@ public class ScenarioSimulationDialog extends Dialog {
         	model.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent arg0) {
 					
+					updateModel(m_models.indexOf(model));
+					
 					if (model == m_models.get(0) &&
 							m_sameModelButton.getSelection()) {
 						for (int i=1; i < m_models.size(); i++) {
 							m_models.get(i).setText(model.getText());
+							updateModel(i);
 						}
 					}
 				}        		
         	});
+        	
+        	try {
+        		m_simulationModels.add(new SimulationModel(null, null));
+        	} catch(Exception e) {
+        		logger.log(Level.SEVERE, "Failed to initialize simulation model", e);
+        	}
         	
     		final Button browseButton=new Button(rolePanel, SWT.NONE);
     		m_browseButtons.add(browseButton);
@@ -196,6 +264,8 @@ public class ScenarioSimulationDialog extends Dialog {
 				public void widgetSelected(SelectionEvent arg0) {
 					FileDialog fd=new FileDialog(dialog);
 					
+					fd.setFileName(m_scenarioFile.getParentFile().getAbsolutePath());
+					
 					String path=fd.open();
 					
 					if (path != null) {
@@ -211,7 +281,7 @@ public class ScenarioSimulationDialog extends Dialog {
         	modelRoleLabelData.top = new FormAttachment(modelLabel, 12);
         	modelRoleLabel.setLayoutData(modelRoleLabelData);
         	
-        	final Combo modelRole=new Combo(rolePanel, SWT.NONE);
+        	final Combo modelRole=new Combo(rolePanel, SWT.READ_ONLY);
         	modelRole.add("Fred");
         	modelRole.add("Joe");
     		m_modelRoles.add(modelRole);
@@ -237,9 +307,7 @@ public class ScenarioSimulationDialog extends Dialog {
         	simulatorLabelData.top = new FormAttachment(modelRoleLabel, 12);
         	simulatorLabel.setLayoutData(simulatorLabelData);
         	
-        	final Combo simulatorType=new Combo(rolePanel, SWT.NONE);
-    		simulatorType.add("Don't Simulate");
-    		simulatorType.add("WS-CDL Simulator");
+        	final Combo simulatorType=new Combo(rolePanel, SWT.READ_ONLY);
     		m_simulatorTypes.add(simulatorType);
     		
         	FormData simulatorTypeData = new FormData();
@@ -262,7 +330,7 @@ public class ScenarioSimulationDialog extends Dialog {
 				}
         	});
         	
-        	initializeSimulatorTypes(simulatorType, model);
+        	updateModel(i);
     	}
     	
     	Button okButton = new Button (dialog, SWT.PUSH);
@@ -293,9 +361,10 @@ public class ScenarioSimulationDialog extends Dialog {
 			}
 
 			public void widgetSelected(SelectionEvent arg0) {
-				//m_parameter.setType(m_type.getText());
-				//m_parameter.setValue(m_value.getText());
-				//m_ok = true;
+				initSimulation();
+				
+				m_simulate = true;
+				
 				dialog.dispose();
 			}	    		
     	});
@@ -311,8 +380,8 @@ public class ScenarioSimulationDialog extends Dialog {
 			}
     	});
     	
-    	updateModel();
-    	updateSimulatorTypes();
+    	updateSameModel();
+    	updateSameSimulatorTypes();
     	
     	dialog.open();
     	Display display = parent.getDisplay();
@@ -320,37 +389,36 @@ public class ScenarioSimulationDialog extends Dialog {
     		if (!display.readAndDispatch()) display.sleep();
     	}
     	
+    	if (m_simulate) {
+			// Run the simulation
+			runSimulation();
+    	}
+    	
     	return(null);
     }
 
-    protected void initializeSimulatorTypes(Combo simulatorTypes, Text modelPath) {
-    	simulatorTypes.removeAll();
-    	
-    	simulatorTypes.add("No Simulator");
-    	simulatorTypes.add("WS-CDL Simulator");
-    	
-    	simulatorTypes.select(0);
-    }
-    
-    protected void updateSimulatorTypes() {
+    protected void updateSameSimulatorTypes() {
 		for (int i=1; i < m_simulatorTypes.size(); i++) {
 			if (m_sameSimulatorButton.getSelection()) {
 				m_simulatorTypes.get(i).setEnabled(false);
-				m_simulatorTypes.get(i).select(m_simulatorTypes.get(0).getSelectionIndex());
+				int index=m_simulatorTypes.get(i).indexOf(m_simulatorTypes.get(0).getText());
+				if (index == -1) {
+					index = 0;
+				}
+				m_simulatorTypes.get(i).select(index);
 			} else {
 				m_simulatorTypes.get(i).setEnabled(true);
-				
-				// TODO: Need to reset the list of simulator types based
-				// on the model
-				initializeSimulatorTypes(m_simulatorTypes.get(i), m_models.get(i));
 			}
 		}
     }
     
-    protected void updateModel() {
+    protected void updateSameModel() {
 		for (int i=1; i < m_models.size(); i++) {
 			if (m_sameModelButton.getSelection()) {
 				m_models.get(i).setText(m_models.get(0).getText());
+				
+				m_simulationModels.set(i, m_simulationModels.get(0));
+				
 				m_models.get(i).setEnabled(false);
 				m_models.get(i).setEditable(false);
 				
@@ -362,6 +430,123 @@ public class ScenarioSimulationDialog extends Dialog {
 				m_sameSimulatorButton.setSelection(false);
 				m_sameSimulatorButton.setEnabled(false);
 			}
+			
+			updateModel(i);
+		}
+    }
+    
+    protected void updateModel(int index) {
+    	
+    	// Initialize the simulation model
+    	java.io.InputStream is=null;
+    	
+    	try {
+    		is = new java.io.FileInputStream(m_models.get(index).getText());
+    	} catch(Exception e) {
+    		logger.log(Level.FINE, "Unable to get input stream for '"+
+    						m_models.get(index).getText()+"'", e);
+    	}
+    	
+    	try {
+    		SimulationModel sm=new SimulationModel(m_models.get(index).getText().trim(), is);
+    		m_simulationModels.set(index, sm);
+    	} catch(Exception e) {
+    		logger.log(Level.SEVERE, "Failed to initialize simulation model for '"+
+					m_models.get(index).getText()+"'", e);    		
+    	}
+    	
+    	m_simulatorTypes.get(index).removeAll();
+    	
+    	m_simulatorTypes.get(index).add(DON_T_SIMULATE);
+    	
+    	java.util.List<RoleSimulator> rsims=RoleSimulatorFactory.getRoleSimulators();
+    	for (RoleSimulator rsim : rsims) {
+    		Object model=rsim.getSupportedModel(m_simulationModels.get(index));
+    		if (model != null) {
+    			m_simulatorTypes.get(index).add(rsim.getName());
+    			
+    			m_modelRoles.get(index).removeAll();
+    			
+    			java.util.List<Role> roles=rsim.getModelRoles(model);
+    			int mainDefaultRole=-1;
+    			int secondaryDefaultRole=-1;
+    			
+    			for (Role role : roles) {    				
+    				if (role.getName().endsWith(m_scenario.getRole().get(index).getName())) {
+    					mainDefaultRole = m_modelRoles.get(index).getItemCount();
+    				}
+    				
+    				if (role.getName().indexOf(m_scenario.getRole().get(index).getName()) != -1) {
+    					secondaryDefaultRole = m_modelRoles.get(index).getItemCount();
+    				}
+
+    				m_modelRoles.get(index).add(role.getName());
+    			}
+    			
+    			if (mainDefaultRole != -1) {
+    				m_modelRoles.get(index).select(mainDefaultRole);
+    			} else if (secondaryDefaultRole != -1) {
+    				m_modelRoles.get(index).select(secondaryDefaultRole);
+    			}
+    		}
+    	}
+    	
+    	m_simulatorTypes.get(index).select(m_simulatorTypes.get(index).getItemCount() > 0 ? 1 : 0);
+    }
+    
+    protected void initSimulation() {
+		try {
+			for (int i=0; i < m_scenario.getRole().size(); i++) {
+				RoleSimulator rsim=RoleSimulatorFactory.getRoleSimulator(m_simulatorTypes.get(i).getText());
+				
+				if (rsim != null) {
+					Object model=rsim.getSupportedModel(m_simulationModels.get(i));
+					
+					if (model != null) {
+						java.util.List<Role> roles=rsim.getModelRoles(model);
+						Role selected=null;
+						
+						for (int j=0; selected == null && j < roles.size(); j++) {
+							if (roles.get(j).getName().equals(m_modelRoles.get(i).getText())) {
+								selected = roles.get(j);
+							}
+						}
+						
+						if (selected != null || roles.size() == 0) {
+							m_roleSimulators.put(m_scenario.getRole().get(i), rsim);
+							
+							DefaultSimulationContext context=new DefaultSimulationContext(m_scenarioFile);
+							
+							if (roles.size() == 0) {
+								context.setModel(model);
+							} else {
+								context.setModel(rsim.getModelForRole(model, selected));
+							}
+							
+							rsim.initialize(context);
+							
+							m_contexts.put(m_scenario.getRole().get(i), context);
+						} else {
+							logger.severe("Missing role '"+m_modelRoles.get(i).getText()+"'");
+						}
+					}
+				}
+			}
+			
+		} catch(Exception e) {
+			logger.log(Level.SEVERE, "Failed to initialise simulation", e);
+		}
+    }
+    
+    protected void runSimulation() {
+		try {
+			// Create the simulator
+			ScenarioSimulator ssim=ScenarioSimulatorFactory.getScenarioSimulator();
+			
+			ssim.simulate(m_scenario, m_roleSimulators, m_contexts, m_handler);
+			
+		} catch(Exception e) {
+			logger.log(Level.SEVERE, "Failed to simulate", e);
 		}
     }
 }
