@@ -17,7 +17,7 @@
  * Change History:
  * Feb 23, 2005 : Initial version created by gary
  */
-package org.savara.tools.scenario.simulation;
+package org.savara.tools.scenario.designer.simulate;
 
 import java.util.StringTokenizer;
 
@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Display;
  * This class is derived from the scenario test launcher with the
  * ability to present the results in a graphical form.
  */
-public class ScenarioSimulationUILauncher extends ScenarioSimulationLauncher {
+public class ScenarioSimulationUILauncher {
 
 	public ScenarioSimulationUILauncher(Display display,
 					Tree results, Text output) {
@@ -42,6 +42,7 @@ public class ScenarioSimulationUILauncher extends ScenarioSimulationLauncher {
 		m_results = results;
 		m_output = output;
 		
+		/*
 		m_results.addSelectionListener(new SelectionListener() {
 			
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -64,6 +65,7 @@ public class ScenarioSimulationUILauncher extends ScenarioSimulationLauncher {
 				widgetSelected(e);
 			}
 		});
+		*/
 	}
 	
 	/**

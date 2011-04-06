@@ -15,38 +15,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.tools.scenario.designer.editor.properties;
+package org.savara.tools.scenario.designer.commands;
 
 import org.eclipse.ui.views.properties.*;
 
 /**
- * This class implements the add to list command.
+ * This class implements the remove from list command.
  */
-public class AddToListCommand
+public class RemoveFromListPropertyCommand
 			extends org.eclipse.gef.commands.Command {
 	
 	private IPropertySource m_propertySource=null;
     private IPropertyDescriptor m_propertyDescriptor=null;
     private Object m_value=null;
-    private int m_addedIndex=-1;
+    private int m_removeIndex=-1;
 	
-	public AddToListCommand() {
+	public RemoveFromListPropertyCommand() {
 	}
 		
 	public void execute() { 	
-        java.util.List<Object> list=(java.util.List<Object>)
+        @SuppressWarnings("unchecked")
+		java.util.List<Object> list=(java.util.List<Object>)
         			m_propertySource.getPropertyValue(m_propertyDescriptor.getId());
         
-        m_addedIndex = list.size();
-        list.add(m_value);
+        m_value = list.remove(m_removeIndex);
+        
+        // Apply list back as property, to ensure applied to both ends of link, if relevant
+        m_propertySource.setPropertyValue(m_propertyDescriptor.getId(), list);
 	}
 	
 	public void redo() {	
 		execute();
 	}
 	
-	public void setValue(Object value) {
-		m_value = value;
+	public void setIndex(int index) {
+		m_removeIndex = index;
 	}
 	
 	/**
@@ -58,10 +61,6 @@ public class AddToListCommand
 		return(null);
 	}
 	
-	public Object getValue() {
-		return(m_value);
-	}
-	
 	public void setPropertySource(IPropertySource source) {
 		m_propertySource = source;
 	}
@@ -71,13 +70,17 @@ public class AddToListCommand
 	}
 	
 	public void undo() {
-		if (m_addedIndex != -1) {
-	        java.util.List<Object> list=(java.util.List<Object>)
+		if (m_removeIndex != -1 && m_value != null) {
+	        @SuppressWarnings("unchecked")
+			java.util.List<Object> list=(java.util.List<Object>)
 						m_propertySource.getPropertyValue(m_propertyDescriptor.getId());
 
-	        list.remove(m_addedIndex);
+	        list.add(m_removeIndex, m_value);
 	        
-	        m_addedIndex = -1;
+	        m_removeIndex = -1;
+	        
+	        // Apply list back as property, to ensure applied to both ends of link, if relevant
+	        m_propertySource.setPropertyValue(m_propertyDescriptor.getId(), list);
 		}
 	}
 }

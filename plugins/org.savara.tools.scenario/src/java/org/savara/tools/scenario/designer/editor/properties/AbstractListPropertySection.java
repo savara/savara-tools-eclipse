@@ -31,6 +31,11 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertyConstants;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
+import org.savara.tools.scenario.designer.commands.AddToListPropertyCommand;
+import org.savara.tools.scenario.designer.commands.ChangeListPropertyCommand;
+import org.savara.tools.scenario.designer.commands.MoveDownListPropertyCommand;
+import org.savara.tools.scenario.designer.commands.MoveUpListPropertyCommand;
+import org.savara.tools.scenario.designer.commands.RemoveFromListPropertyCommand;
 
 /**
  * This is a default property section implementation used for
@@ -43,6 +48,7 @@ public abstract class AbstractListPropertySection extends AbstractDesignerProper
     private java.util.List<Object> m_values=null;
     private List m_widget=null;
     private Button m_addButton=null;
+    private Button m_editButton=null;
     private Button m_removeButton=null;
     private Button m_upButton=null;
     private Button m_downButton=null;
@@ -89,11 +95,11 @@ public abstract class AbstractListPropertySection extends AbstractDesignerProper
         data = new FormData();
         data.left = new FormAttachment(getStartPercentage(), getTextGap());
         
-       	data.right = new FormAttachment(getEndPercentage(), -80);        	
+       	data.right = new FormAttachment(getEndPercentage(), -120);        	
         data.top = new FormAttachment(getTopPercentage(), ITabbedPropertyConstants.VSPACE);
         
-        data.width = 300;
-        data.height = 150;
+        data.width = 500;
+        data.height = 110;
         
         m_widget.setLayoutData(data);
         
@@ -115,14 +121,12 @@ public abstract class AbstractListPropertySection extends AbstractDesignerProper
         
         data = new FormData();
         
-        data.width = 100;
+        data.width = 120;
         
         data.left = new FormAttachment(m_widget, 5);
-       	data.right = new FormAttachment(getEndPercentage(), 0);        	
-        //data.right = new FormAttachment(m_widget,
-         //       -ITabbedPropertyConstants.HSPACE);
+       	data.right = new FormAttachment(getEndPercentage(), -58);        	
         data.top = new FormAttachment(0, ITabbedPropertyConstants.VSPACE);
-        //data.top = new FormAttachment(m_widget, 40, SWT.CENTER);
+
         m_addButton.setLayoutData(data);
         
         m_addButton.addSelectionListener(new SelectionAdapter() {
@@ -133,8 +137,8 @@ public abstract class AbstractListPropertySection extends AbstractDesignerProper
             	if (newValue != null) {
             		
             		// Perform add to list command
-                	AddToListCommand command=
-            			new AddToListCommand();
+                	AddToListPropertyCommand command=
+            			new AddToListPropertyCommand();
 	            	command.setPropertySource(getPropertySource());
 	            	command.setPropertyDescriptor(getPropertyDescriptor());
 	            	command.setValue(newValue);
@@ -148,17 +152,48 @@ public abstract class AbstractListPropertySection extends AbstractDesignerProper
             }
         });
         
+        m_editButton = getWidgetFactory().createButton(composite, "Edit", SWT.PUSH);
+        
+        data = new FormData();
+        data.width = 120;
+        data.left = new FormAttachment(m_widget, 5);
+       	data.right = new FormAttachment(getEndPercentage(), -58);        	
+        data.top = new FormAttachment(m_addButton, 1);
+
+        m_editButton.setLayoutData(data);
+        
+        m_editButton.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent event) {
+            	Object changedObj=null;
+            	
+            	if (m_widget.getSelectionIndex() != -1 &&
+            			(changedObj=editObject(m_values.get(m_widget.getSelectionIndex()))) != null) {
+            		
+            		// Perform change list property command
+                	ChangeListPropertyCommand command=
+            			new ChangeListPropertyCommand();
+	            	command.setPropertySource(getPropertySource());
+	            	command.setPropertyDescriptor(getPropertyDescriptor());
+	            	command.setValue(changedObj);
+	            	command.setIndex(m_widget.getSelectionIndex());
+	            	
+	            	getCommandStack().execute(command);
+            	}
+            	
+            	refresh();
+            	
+            	checkStatus();
+            }
+        });
+        
         m_removeButton = getWidgetFactory().createButton(composite, "Remove", SWT.PUSH);
         
         data = new FormData();
-        data.width = 100;
+        data.width = 120;
         data.left = new FormAttachment(m_widget, 5);
-       	data.right = new FormAttachment(getEndPercentage(), 0);        	
-        //data.right = new FormAttachment(m_widget,
-         //       -ITabbedPropertyConstants.HSPACE);
-        data.top = new FormAttachment(m_addButton, 1);
-        //data.top = new FormAttachment(0, ITabbedPropertyConstants.VSPACE);
-        //data.top = new FormAttachment(m_widget, 40, SWT.CENTER);
+       	data.right = new FormAttachment(getEndPercentage(), -40);        	
+        data.top = new FormAttachment(m_editButton, 1);
+
         m_removeButton.setLayoutData(data);
         
         m_removeButton.addSelectionListener(new SelectionAdapter() {
@@ -167,8 +202,8 @@ public abstract class AbstractListPropertySection extends AbstractDesignerProper
             	if (m_widget.getSelectionIndex() != -1) {
             		
             		// Perform remove from list command
-                	RemoveFromListCommand command=
-            			new RemoveFromListCommand();
+                	RemoveFromListPropertyCommand command=
+            			new RemoveFromListPropertyCommand();
 	            	command.setPropertySource(getPropertySource());
 	            	command.setPropertyDescriptor(getPropertyDescriptor());
 	            	command.setIndex(m_widget.getSelectionIndex());
@@ -185,14 +220,11 @@ public abstract class AbstractListPropertySection extends AbstractDesignerProper
         m_upButton = getWidgetFactory().createButton(composite, "Up", SWT.PUSH);
         
         data = new FormData();
-        data.width = 100;
-        data.left = new FormAttachment(m_widget, 5);
+        data.width = 120;
+        data.left = new FormAttachment(m_addButton, 1);
        	data.right = new FormAttachment(getEndPercentage(), 0);        	
-        //data.right = new FormAttachment(m_widget,
-         //       -ITabbedPropertyConstants.HSPACE);
-        data.top = new FormAttachment(m_removeButton, 1);
-        //data.top = new FormAttachment(0, ITabbedPropertyConstants.VSPACE);
-        //data.top = new FormAttachment(m_widget, 40, SWT.CENTER);
+        data.top = new FormAttachment(0, ITabbedPropertyConstants.VSPACE);
+
         m_upButton.setLayoutData(data);
         
         m_upButton.addSelectionListener(new SelectionAdapter() {
@@ -203,8 +235,8 @@ public abstract class AbstractListPropertySection extends AbstractDesignerProper
             	if (index != -1) {
             		
             		// Perform up list command
-                	UpListCommand command=
-            			new UpListCommand();
+                	MoveUpListPropertyCommand command=
+            			new MoveUpListPropertyCommand();
 	            	command.setPropertySource(getPropertySource());
 	            	command.setPropertyDescriptor(getPropertyDescriptor());
 	            	command.setIndex(m_widget.getSelectionIndex());
@@ -223,14 +255,11 @@ public abstract class AbstractListPropertySection extends AbstractDesignerProper
         m_downButton = getWidgetFactory().createButton(composite, "Down", SWT.PUSH);
         
         data = new FormData();
-        data.width = 100;
-        //data.left = new FormAttachment(getStartPercentage(), -30);
-        data.left = new FormAttachment(m_widget, 5);
+        data.width = 120;
+        data.left = new FormAttachment(m_editButton, 1);
        	data.right = new FormAttachment(getEndPercentage(), 0);        	
-        //data.right = new FormAttachment(m_widget,
-        //        -ITabbedPropertyConstants.HSPACE);
         data.top = new FormAttachment(m_upButton, 1);
-        //data.top = new FormAttachment(m_widget, 40, SWT.CENTER);
+
         m_downButton.setLayoutData(data);
         
         m_downButton.addSelectionListener(new SelectionAdapter() {
@@ -241,8 +270,8 @@ public abstract class AbstractListPropertySection extends AbstractDesignerProper
             	if (index != -1) {
             		
             		// Perform down list command
-                	DownListCommand command=
-            			new DownListCommand();
+                	MoveDownListPropertyCommand command=
+            			new MoveDownListPropertyCommand();
 	            	command.setPropertySource(getPropertySource());
 	            	command.setPropertyDescriptor(getPropertyDescriptor());
 	            	command.setIndex(m_widget.getSelectionIndex());
@@ -273,11 +302,26 @@ public abstract class AbstractListPropertySection extends AbstractDesignerProper
         });
 	}
 	
+	/**
+	 * This method requests a new list object to add to the
+	 * list.
+	 * 
+	 * @return The new object, or null if no object to add
+	 */
 	protected abstract Object createNewObject();
+	
+	/**
+	 * This method requests that the supplied object be edited.
+	 * 
+	 * @param obj The object to edit
+	 * @return Changed object, or null if not changed
+	 */
+	protected abstract Object editObject(Object obj);
 	
 	protected void checkStatus() {
 		
 		if (m_widget.getSelectionCount() > 0) {
+			m_editButton.setEnabled(true);
 			m_removeButton.setEnabled(true);
 			
 			int index=m_widget.getSelectionIndex();
@@ -285,6 +329,7 @@ public abstract class AbstractListPropertySection extends AbstractDesignerProper
 			m_upButton.setEnabled(index > 0);
 			m_downButton.setEnabled(index < m_widget.getItemCount()-1);
 		} else {
+			m_editButton.setEnabled(false);
 			m_removeButton.setEnabled(false);
 	        m_upButton.setEnabled(false);
 	        m_downButton.setEnabled(false);

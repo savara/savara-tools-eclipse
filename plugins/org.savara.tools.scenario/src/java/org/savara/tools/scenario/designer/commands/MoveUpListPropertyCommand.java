@@ -15,21 +15,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.tools.scenario.designer.editor.properties;
+package org.savara.tools.scenario.designer.commands;
 
 import org.eclipse.ui.views.properties.*;
 
 /**
- * This class implements the down list command.
+ * This class implements the up list command.
  */
-public class DownListCommand
+public class MoveUpListPropertyCommand
 			extends org.eclipse.gef.commands.Command {
 	
 	private IPropertySource m_propertySource=null;
     private IPropertyDescriptor m_propertyDescriptor=null;
     private int m_index=-1;
 	
-	public DownListCommand() {
+	public MoveUpListPropertyCommand() {
 	}
 		
 	public void execute() { 	
@@ -37,7 +37,10 @@ public class DownListCommand
 		java.util.List<Object> list=(java.util.List<Object>)
         			m_propertySource.getPropertyValue(m_propertyDescriptor.getId());
         
-        list.add(m_index+1,list.remove(m_index));
+        list.add(m_index-1,list.remove(m_index));
+        
+        // Apply list back as property, to ensure applied to both ends of link, if relevant
+        m_propertySource.setPropertyValue(m_propertyDescriptor.getId(), list);
 	}
 	
 	public void redo() {	
@@ -71,7 +74,10 @@ public class DownListCommand
 			java.util.List<Object> list=(java.util.List<Object>)
 						m_propertySource.getPropertyValue(m_propertyDescriptor.getId());
 
-	        list.add(m_index,list.remove(m_index+1));
+	        list.add(m_index,list.remove(m_index-1));
+	        
+	        // Apply list back as property, to ensure applied to both ends of link, if relevant
+	        m_propertySource.setPropertyValue(m_propertyDescriptor.getId(), list);
 		}
 	}
 }

@@ -48,11 +48,11 @@ public class AddCommand extends Command {
 		java.util.List list=ModelSupport.getChildren(m_oldParent);
 		
 		// Check if child is a scenario event
-		if (m_child instanceof Event &&
+		if (m_child instanceof RoleEvent &&
 				m_role != null) {
-			m_oldRole = (Role)((Event)m_child).getRole();
+			m_oldRole = (Role)((RoleEvent)m_child).getRole();
 			
-			((Event)m_child).setRole(m_role);
+			((RoleEvent)m_child).setRole(m_role);
 		}
 		
 		m_oldIndex = list.indexOf(m_child);
@@ -89,9 +89,9 @@ public class AddCommand extends Command {
 		ModelSupport.removeChild(m_newParent, m_child);
 
 		// Check if child is a scenario event
-		if (m_child instanceof Event &&
+		if (m_child instanceof RoleEvent &&
 				m_role != null) {
-			((Event)m_child).setRole(m_oldRole);
+			((RoleEvent)m_child).setRole(m_oldRole);
 		}
 		
 		ModelSupport.addChild(m_oldParent, m_child, m_oldIndex);

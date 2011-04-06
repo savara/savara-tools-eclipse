@@ -33,6 +33,10 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		
+		// Force the org.savara.tools.common plugin to be started
+		org.savara.tools.common.ArtifactType at=
+				org.savara.tools.common.ArtifactType.ServiceContract;
 	}
 
 	/*

@@ -14,9 +14,9 @@ Require-Bundle: org.eclipse.ui,
  org.savara.protocol,
  org.savara.contract,
  org.savara.common
-Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: www.savara.org
 Export-Package: org.savara.tools.common,
  org.savara.tools.common.generation,
  org.savara.tools.common.logging
+Bundle-ActivationPolicy: lazy

@@ -38,7 +38,7 @@
       	priority="normal">
       <describer class="org.eclipse.core.runtime.content.XMLRootElementContentDescriber2">
       	<parameter name="element"
-          	value="{http://www.savara.org/scenario}Scenario"/>
+          	value="{http://www.savara.org/scenario}scenario"/>
       </describer>
     </content-type>
   </extension>

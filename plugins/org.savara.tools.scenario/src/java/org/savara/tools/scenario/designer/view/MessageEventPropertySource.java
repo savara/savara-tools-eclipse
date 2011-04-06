@@ -116,6 +116,7 @@ public class MessageEventPropertySource implements IPropertySource {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.views.properties.IPropertySource#setPropertyValue(java.lang.Object, java.lang.Object)
 	 */
+	@SuppressWarnings("unchecked")
 	public void setPropertyValue(Object id, Object value) {
 		
 		if (id == OPERATION_ID) {
@@ -127,7 +128,10 @@ public class MessageEventPropertySource implements IPropertySource {
 				getElement().setFaultName((String)value);
 			}			
 		} else if (id == PARAMETERS_ID) {
-			throw new UnsupportedOperationException("Cannot set parameters list");			
+			if (value instanceof java.util.List && value != getElement().getParameter()) {
+				getElement().getParameter().clear();
+				getElement().getParameter().addAll((java.util.List<Parameter>)value);
+			}
 		} else if (id == ERROR_EXPECTED_ID) {
 			if (value instanceof Boolean) {
 				getElement().setErrorExpected((Boolean)value);

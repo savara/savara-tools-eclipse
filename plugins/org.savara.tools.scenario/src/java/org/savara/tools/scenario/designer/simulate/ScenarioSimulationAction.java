@@ -17,11 +17,12 @@
  * Change History:
  * Feb 22, 2005 : Initial version created by gary
  */
-package org.savara.tools.scenario.simulation;
+package org.savara.tools.scenario.designer.simulate;
 
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -49,6 +50,15 @@ public class ScenarioSimulationAction implements IObjectActionDelegate {
 			StructuredSelection sel=(StructuredSelection)m_selection;
 			
 			IResource res=(IResource)sel.getFirstElement();
+			
+			if (res instanceof IFile) {
+				
+				ScenarioSimulationDialog ssd=
+					new ScenarioSimulationDialog(m_targetPart.getSite().getShell());
+			
+				//ssd.setScenarioFile()
+				ssd.open();
+			}
 			
             // Make sure there are no markers associated
             // with the resource
