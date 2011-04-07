@@ -11,8 +11,7 @@
       id = "org.savara.tools.scenario.designer.editor.ScenarioModelWizardID"
       name = "Scenario"
       class = "org.savara.tools.scenario.designer.editor.NewScenarioWizard"
-      category = "org.savara.Wizard.category.ID"
-      icon = "icons/full/obj16/ScenarioFile.gif">
+      category = "org.savara.Wizard.category.ID">
       <description>Create a new Scenario</description>
       <selection class = "org.eclipse.core.resources.IResource" />
     </wizard>
@@ -21,6 +20,7 @@
     <editor
           class="org.savara.tools.scenario.designer.editor.ScenarioDesigner"
           contributorClass="org.savara.tools.scenario.designer.editor.DesignerActionBarContributor"
+	  icon = "icons/full/obj16/ScenarioFile.gif"
           name="Scenario Designer"
           id="org.savara.tools.scenario.designer.ScenarioDesignerID">
      <contentTypeBinding
