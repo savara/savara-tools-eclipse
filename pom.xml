@@ -108,6 +108,28 @@
 			</releases>
 		</repository>
 		<repository>
+			<id>graphiti</id>
+			<url>http://download.eclipse.org/graphiti/updates/0.7.1/</url>
+			<layout>p2</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>bpmn2editor</id>
+			<url>http://codehoop.com/bpmn2</url>
+			<layout>p2</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+		<repository>
 			<id>eclipse-helios</id>
 			<url>http://download.eclipse.org/releases/helios</url>
 			<layout>p2</layout>
