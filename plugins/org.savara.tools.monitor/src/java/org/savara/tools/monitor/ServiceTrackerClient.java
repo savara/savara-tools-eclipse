@@ -17,6 +17,7 @@
  */
 package org.savara.tools.monitor;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -165,7 +166,7 @@ public class ServiceTrackerClient extends org.pi4soa.service.tracker.jms.JMSServ
 			
 			if (m_activity.getParameter().size() > 0) {				
 				ret.setType(m_activity.getParameter().get(0).getType());
-				ret.setValue(m_activity.getParameter().get(0).getValue());
+				ret.setValue((Serializable)m_activity.getParameter().get(0).getAny());
 			}
 			
 			return(ret);
@@ -179,7 +180,7 @@ public class ServiceTrackerClient extends org.pi4soa.service.tracker.jms.JMSServ
 		public String getDetails() {
 			// Only return first value, if parameter defined
 			if (m_activity.getParameter().size() > 0) {
-				return(m_activity.getParameter().get(0).getValue());
+				return(m_activity.getParameter().get(0).getAny().toString());
 			}
 			return(null);
 		}
