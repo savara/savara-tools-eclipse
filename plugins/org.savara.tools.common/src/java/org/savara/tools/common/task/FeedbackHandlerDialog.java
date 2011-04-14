@@ -15,17 +15,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.tools.common.logging;
+package org.savara.tools.common.task;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.scribble.common.logging.CachedJournal;
+import org.savara.common.task.DefaultFeedbackHandler;
 
-public class JournalDialog extends CachedJournal {
+public class FeedbackHandlerDialog extends DefaultFeedbackHandler {
 	
 	private Shell m_shell=null;
 
-	public JournalDialog(Shell shell) {
+	public FeedbackHandlerDialog(Shell shell) {
 		m_shell = shell;
 	}
 	

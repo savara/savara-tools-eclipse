@@ -18,5 +18,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: www.savara.org
 Export-Package: org.savara.tools.common,
  org.savara.tools.common.generation,
- org.savara.tools.common.logging
+ org.savara.tools.common.task
 Bundle-ActivationPolicy: lazy

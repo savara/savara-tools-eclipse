@@ -32,16 +32,17 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
+import org.savara.common.task.DefaultFeedbackHandler;
+import org.savara.common.task.FeedbackHandler;
 import org.savara.contract.model.Contract;
 import org.savara.protocol.contract.generator.ContractGenerator;
 import org.savara.protocol.contract.generator.ContractGeneratorFactory;
+import org.savara.protocol.util.JournalProxy;
 import org.savara.protocol.util.ProtocolServices;
 //import org.savara.tools.common.generation.Generator;
 import org.savara.tools.common.ArtifactType;
 import org.savara.tools.common.generation.Generator;
-import org.savara.tools.common.logging.JournalDialog;
-import org.scribble.common.logging.CachedJournal;
-import org.scribble.common.logging.Journal;
+import org.savara.tools.common.task.FeedbackHandlerDialog;
 import org.scribble.protocol.model.*;
 
 /**
@@ -148,11 +149,11 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 	 * @param res The file
 	 */
 	protected void initialize(IFile res) {
-		Journal journal=new CachedJournal();
+		FeedbackHandler journal=new DefaultFeedbackHandler();
 		
 		try {
 			m_protocolModel = ProtocolServices.getParserManager().parse(res.getFileExtension(),
-								res.getContents(), journal, null);
+								res.getContents(), new JournalProxy(journal), null);
 			
 			if (m_protocolModel == null) {
 				logger.error("Unable to load model");
@@ -232,7 +233,7 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 				
 				if (cg != null) {
 					Contract c=cg.generate(m_protocolModel.getProtocol(),
-							null, role, new CachedJournal());
+							null, role, new DefaultFeedbackHandler());
 					
 					if (c != null && c.getInterfaces().size() == 0) {
 						f_server = false;
@@ -436,7 +437,7 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 	public void okPressed() {
 		
 		try {
-			JournalDialog journal=new JournalDialog(Display.getCurrent().getActiveShell());			
+			FeedbackHandlerDialog journal=new FeedbackHandlerDialog(Display.getCurrent().getActiveShell());			
 			
 			for (int i=0; i < m_roles.size(); i++) {
 				
