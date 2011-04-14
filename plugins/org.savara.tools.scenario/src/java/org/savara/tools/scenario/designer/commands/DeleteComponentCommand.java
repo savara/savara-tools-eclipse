@@ -49,7 +49,7 @@ public class DeleteComponentCommand
 		
 		if (m_child instanceof MessageEvent) {
 			
-			java.util.List list=ModelSupport.getSourceConnections(m_scenario, m_child);
+			java.util.List<Link> list=ModelSupport.getSourceConnections(m_scenario, m_child);
 			
 			for (int i=list.size()-1; i >= 0; i--) {
 				Link link=(Link)list.get(i);
@@ -75,11 +75,12 @@ public class DeleteComponentCommand
 			// Construct deletion commands for each nessage event
 			// related to the participant
 			
-			java.util.List<Event> results=new java.util.Vector();
+			java.util.List<Event> results=new java.util.Vector<Event>();
 			
 			ModelSupport.getEventsForRole((Role)m_child, m_scenario.getEvent(), results);
 			
-			for (Event event : results) {
+			for (int i=results.size()-1; i >= 0; i--) {
+				Event event=results.get(i);
 				DeleteComponentCommand command=
 					new DeleteComponentCommand();
 				

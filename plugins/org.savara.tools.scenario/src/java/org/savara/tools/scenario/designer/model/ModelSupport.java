@@ -106,11 +106,13 @@ public class ModelSupport {
 		int ret=0;
 		
 		if (child instanceof Role) {
-			// TODO: GPB: Need to get scenario??
-			//ret = ((Participant)child).getScenario().
-			//		getParticipants().indexOf(child);
+			if (parent instanceof Scenario) {
+				ret = ((Scenario)parent).getRole().indexOf(child);
+			} else {
+				logger.warning("Invalid parent ("+parent+") for child of type 'Role'");
+			}
 		} else {
-			java.util.List children=getChildren(parent);
+			java.util.List<Event> children=getChildren(parent);
 		
 			ret = children.indexOf(child);
 		}
