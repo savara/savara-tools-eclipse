@@ -38,6 +38,7 @@ import org.savara.bpel.model.*;
 import org.savara.bpel.util.BPELModelUtil;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
+import org.savara.common.task.FeedbackHandler;
 import org.savara.common.util.XMLUtils;
 import org.savara.contract.model.Contract;
 import org.savara.contract.model.Interface;
@@ -48,7 +49,6 @@ import org.savara.tools.common.ArtifactType;
 import org.savara.tools.common.generation.AbstractGenerator;
 import org.savara.wsdl.generator.WSDLGeneratorFactory;
 import org.savara.wsdl.generator.soap.SOAPDocLitWSDLBinding;
-import org.scribble.common.logging.Journal;
 import org.scribble.protocol.model.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jst.common.project.facet.WtpUtils;
@@ -123,31 +123,31 @@ public class BPELGeneratorImpl extends AbstractGenerator {
 	 * @param role The role
 	 * @param projectName The optional project name
 	 * @param modelResource The resource associated with the model
-	 * @param journal The journal for reporting issues
+	 * @param handler The feedback handler for reporting issues
 	 */
 	public void generate(ProtocolModel model, Role role, String projectName,
-						IResource modelResource, Journal journal) {
+						IResource modelResource, FeedbackHandler handler) {
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug("Generate local model '"+role+"' for: "+model);
 		}
 		
-		ProtocolModel local=getProtocolModelForRole(model, role, modelResource, journal);
+		ProtocolModel local=getProtocolModelForRole(model, role, modelResource, handler);
 		
 		if (local != null) {
 			// TODO: Obtain model generator from manager class (SAVARA-156)
 			ProtocolToBPELModelGenerator generator=new ProtocolToBPELModelGenerator();
 			
-			Object target=generator.generate(local, journal, null);
+			Object target=generator.generate(local, handler, null);
 			
 			if (target instanceof TProcess) {
 				try {
-					generateRoleProject(model, projectName, role, (TProcess)target, local, modelResource,
-								journal);
+					generateRoleProject(model, projectName, role, (TProcess)target,
+							local, modelResource, handler);
 				} catch(Exception e) {
 					logger.error("Failed to create BPEL project '"+projectName+"'", e);
 					
-					journal.error(MessageFormat.format(
+					handler.error(MessageFormat.format(
 							java.util.PropertyResourceBundle.getBundle(
 							"org.savara.tools.bpel.Messages").
 								getString("SAVARATB-00001"), projectName), null);
@@ -158,7 +158,7 @@ public class BPELGeneratorImpl extends AbstractGenerator {
 	
 	protected void generateRoleProject(ProtocolModel model, String projectName, Role role,
 			TProcess bpelProcess, ProtocolModel localcm,
-					IResource resource, Journal journal) throws Exception {
+					IResource resource, FeedbackHandler journal) throws Exception {
 		
 		final IProject proj=createProject(resource, projectName, journal);
 		
@@ -220,7 +220,7 @@ public class BPELGeneratorImpl extends AbstractGenerator {
 	}
 	
 	protected void generateWSDL(ProtocolModel model, Role role, IProject proj, ProtocolModel localcm,
-						IResource resource, Journal journal) throws Exception {		
+						IResource resource, FeedbackHandler journal) throws Exception {		
 		
 		ContractGenerator cg=ContractGeneratorFactory.getContractGenerator();
 		Contract contract=null;
@@ -432,7 +432,7 @@ public class BPELGeneratorImpl extends AbstractGenerator {
 	}
 	
 	protected void generatePartnerLinkTypes(ProtocolModel model, Role role, IProject proj, ProtocolModel localcm,
-			TProcess bpelProcess, Journal journal) throws Exception {	
+			TProcess bpelProcess, FeedbackHandler journal) throws Exception {	
 		
 		org.w3c.dom.Document doc=javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();;
 		
@@ -638,7 +638,7 @@ public class BPELGeneratorImpl extends AbstractGenerator {
 	
 	
 	protected void generateBPELDeploy(ProtocolModel model, Role role, IProject proj, ProtocolModel localcm,
-							TProcess bpelProcess, Journal journal) throws Exception {	
+							TProcess bpelProcess, FeedbackHandler journal) throws Exception {	
 		
 		org.w3c.dom.Document doc=javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();;
 		
@@ -760,7 +760,7 @@ public class BPELGeneratorImpl extends AbstractGenerator {
 		return(modelName+"_"+role.getName()+suffix+".wsdl");
 	}
 			
-	protected IProject createProject(IResource resource, String projectName, Journal journal)
+	protected IProject createProject(IResource resource, String projectName, FeedbackHandler journal)
 								throws Exception {
 		// Create project
 		IProject project = resource.getWorkspace().getRoot().getProject(projectName);

@@ -37,10 +37,10 @@ import org.savara.protocol.contract.generator.ContractGenerator;
 import org.savara.protocol.contract.generator.ContractGeneratorFactory;
 import org.savara.tools.common.ArtifactType;
 import org.savara.tools.common.generation.AbstractGenerator;
+import org.savara.common.task.FeedbackHandler;
 import org.savara.common.util.XMLUtils;
 import org.savara.wsdl.generator.WSDLGeneratorFactory;
 import org.savara.wsdl.generator.soap.SOAPDocLitWSDLBinding;
-import org.scribble.common.logging.Journal;
 import org.scribble.protocol.model.ProtocolModel;
 import org.scribble.protocol.model.Role;
 
@@ -82,7 +82,7 @@ public class WSDLGeneratorImpl extends AbstractGenerator {
 	 * @param journal The journal for reporting issues
 	 */
 	public void generate(ProtocolModel model, Role role, String projectName,
-						IResource modelResource, Journal journal) {
+						IResource modelResource, FeedbackHandler journal) {
 
 		Contract contract=null;
 		ContractGenerator cg=ContractGeneratorFactory.getContractGenerator();

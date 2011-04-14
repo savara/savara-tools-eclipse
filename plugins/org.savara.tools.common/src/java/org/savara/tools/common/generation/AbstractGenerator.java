@@ -19,8 +19,9 @@ package org.savara.tools.common.generation;
 
 import org.eclipse.core.resources.IResource;
 import org.savara.common.model.annotation.AnnotationDefinitions;
+import org.savara.common.task.FeedbackHandler;
+import org.savara.protocol.util.JournalProxy;
 import org.savara.protocol.util.ProtocolServices;
-import org.scribble.common.logging.Journal;
 import org.scribble.common.resource.DefaultResourceLocator;
 import org.scribble.protocol.DefaultProtocolContext;
 import org.scribble.protocol.model.ProtocolModel;
@@ -62,18 +63,18 @@ public abstract class AbstractGenerator implements Generator {
 	 * @param global The global model
 	 * @param role The role
 	 * @param resource The resource associated with the model
-	 * @param journal The journal
+	 * @param handler The handler
 	 * @return The local model associated with the role
 	 */
 	protected ProtocolModel getProtocolModelForRole(ProtocolModel global, Role role, IResource resource,
-									Journal journal) {
+									FeedbackHandler handler) {
 		ProtocolModel ret=null;
 		
 		DefaultProtocolContext context=new DefaultProtocolContext(ProtocolServices.getParserManager(),
 				new DefaultResourceLocator(resource.getParent().getFullPath().toFile()));
 
 		ret = ProtocolServices.getProtocolProjector().project(global,
-						role, journal, context);
+						role, new JournalProxy(handler), context);
 
 		if (ret != null) {
 			// TODO: SAVARA-167 - issue when projection is based on a sub-protocol

@@ -19,7 +19,7 @@ package org.savara.tools.common.generation;
 
 import org.eclipse.core.resources.IResource;
 import org.savara.tools.common.ArtifactType;
-import org.scribble.common.logging.Journal;
+import org.savara.common.task.FeedbackHandler;
 import org.scribble.protocol.model.ProtocolModel;
 import org.scribble.protocol.model.Role;
 
@@ -55,7 +55,7 @@ public interface Generator {
 	 * @param journal The journal for reporting issues
 	 */
 	public void generate(ProtocolModel model, Role role, String projectName,
-						IResource modelResource, Journal journal);
+						IResource modelResource, FeedbackHandler journal);
 	
 	/**
 	 * This method returns the artifact type that will be generated.
