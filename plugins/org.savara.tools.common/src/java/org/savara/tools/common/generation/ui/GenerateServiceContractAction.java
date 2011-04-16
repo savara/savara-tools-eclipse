@@ -17,7 +17,9 @@
  */
 package org.savara.tools.common.generation.ui;
 
-import org.apache.commons.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.IAction;
@@ -36,7 +38,7 @@ import org.savara.tools.common.ArtifactType;
  */
 public class GenerateServiceContractAction implements IObjectActionDelegate {
 
-	private static Log logger = LogFactory.getLog(GenerateServiceContractAction.class);
+	private static Logger logger = Logger.getLogger(GenerateServiceContractAction.class.getName());
 	
 	private ISelection m_selection=null;
     private IWorkbenchPart m_targetPart=null;
@@ -64,7 +66,7 @@ public class GenerateServiceContractAction implements IObjectActionDelegate {
 				try {
 					dialog.open();
 				} catch(Throwable e) {
-					logger.error("Failed to open generate dialog", e);
+					logger.log(Level.SEVERE, "Failed to open generate dialog", e);
 				}
 			}
 		}
