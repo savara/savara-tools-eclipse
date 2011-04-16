@@ -19,8 +19,9 @@ package org.savara.tools.common.generation.ui;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.apache.commons.logging.*;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -51,7 +52,7 @@ import org.scribble.protocol.model.*;
  */
 public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 
-	private static Log logger = LogFactory.getLog(GenerateDialog.class);
+	private static Logger logger = Logger.getLogger(GenerateDialog.class.getName());
 
 	private IFile m_file=null;
 	private ProtocolModel m_protocolModel=null;
@@ -86,10 +87,10 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 								if (am instanceof Generator) {
 									GenerateDialog.addGenerator((Generator)am);
 								} else {
-									logger.error("Failed to load generator: "+am);
+									logger.severe("Failed to load generator: "+am);
 								}
 							} catch(Exception e) {
-								logger.error("Failed to load generator", e);
+								logger.log(Level.SEVERE, "Failed to load generator", e);
 							}
 						}
 					}
@@ -156,11 +157,11 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 								res.getContents(), new JournalProxy(journal), null);
 			
 			if (m_protocolModel == null) {
-				logger.error("Unable to load model");
+				logger.severe("Unable to load model");
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
-			logger.error("Failed to parse model", e);
+			logger.log(Level.SEVERE, "Failed to parse model", e);
 		}
 	}
 	
@@ -237,8 +238,8 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 					
 					if (c != null && c.getInterfaces().size() == 0) {
 						f_server = false;
-						if (logger.isDebugEnabled()) {
-							logger.debug("Role "+role+" is not a service");
+						if (logger.isLoggable(Level.FINE)) {
+							logger.fine("Role "+role+" is not a service");
 						}
 					}
 				}
@@ -485,6 +486,6 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 		mbox.setMessage(mesg);
 		mbox.open();
 		
-		logger.error(mesg, ex);
+		logger.log(Level.SEVERE, mesg, ex);
 	}
 }

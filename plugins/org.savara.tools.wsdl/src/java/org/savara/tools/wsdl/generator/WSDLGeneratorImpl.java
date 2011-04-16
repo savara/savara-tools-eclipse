@@ -18,8 +18,9 @@
 package org.savara.tools.wsdl.generator;
 
 import java.text.MessageFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.apache.commons.logging.*;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
@@ -51,7 +52,7 @@ public class WSDLGeneratorImpl extends AbstractGenerator {
 
 	private static final String GENERATOR_NAME = "WSDL";
 
-	private static Log logger = LogFactory.getLog(WSDLGeneratorImpl.class);
+	private static Logger logger = Logger.getLogger(WSDLGeneratorImpl.class.getName());
 	
 	public WSDLGeneratorImpl() {
 		super(GENERATOR_NAME);
@@ -231,7 +232,7 @@ public class WSDLGeneratorImpl extends AbstractGenerator {
 				}
 			}
 		} catch(Exception e) {
-			logger.error("Failed to create WSDL", e);
+			logger.log(Level.SEVERE, "Failed to create WSDL", e);
 			
 			journal.error(MessageFormat.format(
 					java.util.PropertyResourceBundle.getBundle(

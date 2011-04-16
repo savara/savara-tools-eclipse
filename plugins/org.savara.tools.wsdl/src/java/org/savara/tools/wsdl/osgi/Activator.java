@@ -1,6 +1,8 @@
 package org.savara.tools.wsdl.osgi;
 
-import org.apache.commons.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -16,6 +18,8 @@ public class Activator extends AbstractUIPlugin {
 
 	// The shared instance
 	private static Activator plugin;
+	
+	private static Logger logger = Logger.getLogger(Activator.class.getName());
 	
 	/**
 	 * The constructor
@@ -65,9 +69,7 @@ public class Activator extends AbstractUIPlugin {
 			getDefault().getLog().log(status);
 		}
 		
-		logger.error("LOG ERROR: "+mesg+
+		logger.log(Level.SEVERE, "LOG ERROR: "+mesg+
 				(t == null ? "" : ": "+t), t);
 	}
-	
-	private static Log logger = LogFactory.getLog(Activator.class);
 }

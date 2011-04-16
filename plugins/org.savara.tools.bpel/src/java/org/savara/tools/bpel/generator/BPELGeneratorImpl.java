@@ -19,6 +19,8 @@ package org.savara.tools.bpel.generator;
 
 import java.io.ByteArrayOutputStream;
 import java.text.MessageFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,7 +29,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.logging.*;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -91,7 +92,7 @@ public class BPELGeneratorImpl extends AbstractGenerator {
 	private static final String XMLNS_PLNK = "xmlns:plnk";	
 	private static final String BPEL_PATH = "bpelContent";
 
-	private static Log logger = LogFactory.getLog(BPELGeneratorImpl.class);
+	private static Logger logger = Logger.getLogger(BPELGeneratorImpl.class.getName());
 
 	/**
 	 * This is the constructor for the generator.
@@ -128,8 +129,8 @@ public class BPELGeneratorImpl extends AbstractGenerator {
 	public void generate(ProtocolModel model, Role role, String projectName,
 						IResource modelResource, FeedbackHandler handler) {
 		
-		if (logger.isDebugEnabled()) {
-			logger.debug("Generate local model '"+role+"' for: "+model);
+		if (logger.isLoggable(Level.FINE)) {
+			logger.fine("Generate local model '"+role+"' for: "+model);
 		}
 		
 		ProtocolModel local=getProtocolModelForRole(model, role, modelResource, handler);
@@ -145,7 +146,7 @@ public class BPELGeneratorImpl extends AbstractGenerator {
 					generateRoleProject(model, projectName, role, (TProcess)target,
 							local, modelResource, handler);
 				} catch(Exception e) {
-					logger.error("Failed to create BPEL project '"+projectName+"'", e);
+					logger.log(Level.SEVERE, "Failed to create BPEL project '"+projectName+"'", e);
 					
 					handler.error(MessageFormat.format(
 							java.util.PropertyResourceBundle.getBundle(
