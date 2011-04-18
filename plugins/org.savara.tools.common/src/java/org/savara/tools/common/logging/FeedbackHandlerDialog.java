@@ -15,11 +15,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.tools.common.task;
+package org.savara.tools.common.logging;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.savara.common.task.DefaultFeedbackHandler;
+import org.savara.common.logging.DefaultFeedbackHandler;
 
 public class FeedbackHandlerDialog extends DefaultFeedbackHandler {
 	

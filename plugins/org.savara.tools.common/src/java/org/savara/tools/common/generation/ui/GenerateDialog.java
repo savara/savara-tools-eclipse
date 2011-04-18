@@ -33,8 +33,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
-import org.savara.common.task.DefaultFeedbackHandler;
-import org.savara.common.task.FeedbackHandler;
+import org.savara.common.logging.DefaultFeedbackHandler;
+import org.savara.common.logging.FeedbackHandler;
 import org.savara.contract.model.Contract;
 import org.savara.protocol.contract.generator.ContractGenerator;
 import org.savara.protocol.contract.generator.ContractGeneratorFactory;
@@ -43,7 +43,7 @@ import org.savara.protocol.util.ProtocolServices;
 //import org.savara.tools.common.generation.Generator;
 import org.savara.tools.common.ArtifactType;
 import org.savara.tools.common.generation.Generator;
-import org.savara.tools.common.task.FeedbackHandlerDialog;
+import org.savara.tools.common.logging.FeedbackHandlerDialog;
 import org.scribble.protocol.model.*;
 
 /**

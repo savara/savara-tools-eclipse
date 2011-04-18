@@ -37,9 +37,10 @@ import org.eclipse.core.resources.IResource;
 import org.savara.bpel.generator.ProtocolToBPELModelGenerator;
 import org.savara.bpel.model.*;
 import org.savara.bpel.util.BPELModelUtil;
+import org.savara.common.logging.FeedbackHandler;
+import org.savara.common.logging.MessageFormatter;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
-import org.savara.common.task.FeedbackHandler;
 import org.savara.common.util.XMLUtils;
 import org.savara.contract.model.Contract;
 import org.savara.contract.model.Interface;
@@ -148,10 +149,8 @@ public class BPELGeneratorImpl extends AbstractGenerator {
 				} catch(Exception e) {
 					logger.log(Level.SEVERE, "Failed to create BPEL project '"+projectName+"'", e);
 					
-					handler.error(MessageFormat.format(
-							java.util.PropertyResourceBundle.getBundle(
-							"org.savara.tools.bpel.Messages").
-								getString("SAVARATB-00001"), projectName), null);
+					handler.error(MessageFormatter.format("org.savara.tools.bpel", "SAVARA-BPELTOOLS-00001",
+										projectName), null);
 				}
 			}
 		}

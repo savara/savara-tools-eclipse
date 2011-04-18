@@ -17,7 +17,6 @@
  */
 package org.savara.tools.wsdl.generator;
 
-import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,7 +37,8 @@ import org.savara.protocol.contract.generator.ContractGenerator;
 import org.savara.protocol.contract.generator.ContractGeneratorFactory;
 import org.savara.tools.common.ArtifactType;
 import org.savara.tools.common.generation.AbstractGenerator;
-import org.savara.common.task.FeedbackHandler;
+import org.savara.common.logging.FeedbackHandler;
+import org.savara.common.logging.MessageFormatter;
 import org.savara.common.util.XMLUtils;
 import org.savara.wsdl.generator.WSDLGeneratorFactory;
 import org.savara.wsdl.generator.soap.SOAPDocLitWSDLBinding;
@@ -234,10 +234,8 @@ public class WSDLGeneratorImpl extends AbstractGenerator {
 		} catch(Exception e) {
 			logger.log(Level.SEVERE, "Failed to create WSDL", e);
 			
-			journal.error(MessageFormat.format(
-					java.util.PropertyResourceBundle.getBundle(
-					"org.savara.tools.wsdl.Messages").
-						getString("SAVARATW-00001"), (Object[])null), null);
+			journal.error(MessageFormatter.format("org.savara.tools.wsdl",
+								"SAVARA-WDSLTOOLS-00001"), null);
 		}
 	}
 }
