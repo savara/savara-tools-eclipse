@@ -19,7 +19,7 @@ package org.savara.tools.common.generation;
 
 import org.eclipse.core.resources.IResource;
 import org.savara.tools.common.ArtifactType;
-import org.savara.common.task.FeedbackHandler;
+import org.savara.common.logging.FeedbackHandler;
 import org.scribble.protocol.model.ProtocolModel;
 import org.scribble.protocol.model.Role;
 

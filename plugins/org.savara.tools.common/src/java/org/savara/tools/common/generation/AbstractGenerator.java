@@ -18,8 +18,8 @@
 package org.savara.tools.common.generation;
 
 import org.eclipse.core.resources.IResource;
+import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.model.annotation.AnnotationDefinitions;
-import org.savara.common.task.FeedbackHandler;
 import org.savara.protocol.util.JournalProxy;
 import org.savara.protocol.util.ProtocolServices;
 import org.scribble.common.resource.DefaultResourceLocator;
