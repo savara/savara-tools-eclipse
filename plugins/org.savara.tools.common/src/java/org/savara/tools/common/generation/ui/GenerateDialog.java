@@ -44,6 +44,8 @@ import org.savara.protocol.util.ProtocolServices;
 import org.savara.tools.common.ArtifactType;
 import org.savara.tools.common.generation.Generator;
 import org.savara.tools.common.logging.FeedbackHandlerDialog;
+import org.scribble.common.resource.Content;
+import org.scribble.common.resource.FileContent;
 import org.scribble.protocol.model.*;
 
 /**
@@ -153,8 +155,10 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 		FeedbackHandler journal=new DefaultFeedbackHandler();
 		
 		try {
-			m_protocolModel = ProtocolServices.getParserManager().parse(res.getFileExtension(),
-								res.getContents(), new JournalProxy(journal), null);
+			Content content=new FileContent(res.getProjectRelativePath().toFile());
+			
+			m_protocolModel = ProtocolServices.getParserManager().parse(content,
+							new JournalProxy(journal), null);
 			
 			if (m_protocolModel == null) {
 				logger.severe("Unable to load model");
