@@ -155,7 +155,7 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 		FeedbackHandler journal=new DefaultFeedbackHandler();
 		
 		try {
-			Content content=new FileContent(res.getProjectRelativePath().toFile());
+			Content content=new FileContent(res.getRawLocation().toFile());
 			
 			m_protocolModel = ProtocolServices.getParserManager().parse(content,
 							new JournalProxy(journal), null);
