@@ -234,7 +234,8 @@ public class WSDLGeneratorImpl extends AbstractGenerator {
 		} catch(Exception e) {
 			logger.log(Level.SEVERE, "Failed to create WSDL", e);
 			
-			journal.error(MessageFormatter.format("org.savara.tools.wsdl",
+			journal.error(MessageFormatter.format(java.util.PropertyResourceBundle.getBundle(
+					"org.savara.tools.wsdl.Messages"),
 								"SAVARA-WDSLTOOLS-00001"), null);
 		}
 	}

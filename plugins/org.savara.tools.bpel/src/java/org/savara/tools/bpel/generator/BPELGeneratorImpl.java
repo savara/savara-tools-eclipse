@@ -18,7 +18,6 @@
 package org.savara.tools.bpel.generator;
 
 import java.io.ByteArrayOutputStream;
-import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -149,7 +148,8 @@ public class BPELGeneratorImpl extends AbstractGenerator {
 				} catch(Exception e) {
 					logger.log(Level.SEVERE, "Failed to create BPEL project '"+projectName+"'", e);
 					
-					handler.error(MessageFormatter.format("org.savara.tools.bpel", "SAVARA-BPELTOOLS-00001",
+					handler.error(MessageFormatter.format(java.util.PropertyResourceBundle.getBundle(
+							"org.savara.tools.bpel.Messages"), "SAVARA-BPELTOOLS-00001",
 										projectName), null);
 				}
 			}
