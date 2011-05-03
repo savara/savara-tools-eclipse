@@ -1117,7 +1117,7 @@ public class ScenarioDesigner
 		public void createControl(Composite parent){
 			pageBook = new PageBook(parent, SWT.NONE);
 			overview = new Canvas(pageBook, SWT.NONE);
-			pageBook.showPage(outline);
+			//pageBook.showPage(outline);
 			configureOutlineViewer();
 		}
 		
