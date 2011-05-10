@@ -87,7 +87,7 @@ public class SimulateScenarioAction extends org.eclipse.gef.ui.actions.Selection
 			new ScenarioSimulationDialog(getWorkbenchPart().getSite().getShell());
 	
 		try {
-			ssd.initializeScenario(((ScenarioDesigner)getWorkbenchPart()).getFile().getRawLocation().toFile());
+			ssd.initializeScenario(((ScenarioDesigner)getWorkbenchPart()).getFile());
 			
 			ScenarioSimulation view=((ScenarioDesigner)getWorkbenchPart()).getScenarioSimulation();
 			UISimulationHandler handler=new UISimulationHandler(view);

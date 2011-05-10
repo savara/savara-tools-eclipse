@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -41,6 +43,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.internal.Workbench;
 import org.savara.scenario.model.Role;
 import org.savara.scenario.model.Scenario;
 import org.savara.scenario.simulation.DefaultSimulationContext;
@@ -51,23 +54,26 @@ import org.savara.scenario.simulation.ScenarioSimulatorFactory;
 import org.savara.scenario.simulation.SimulationContext;
 import org.savara.scenario.simulation.SimulationHandler;
 import org.savara.scenario.simulation.SimulationModel;
+import org.savara.scenario.simulation.TestSimulationHandler;
 import org.savara.scenario.util.ScenarioModelUtil;
-//import org.savara.scenario.simulation.TestRoleSimulator;
-//import org.savara.scenario.simulator.cdm.CDMRoleSimulator;
-//import org.savara.scenario.simulator.cdm.TestSimulationHandler;
-//import java.io.File;
+import org.savara.scenario.simulation.TestRoleSimulator;
+import org.savara.tools.scenario.designer.editor.ScenarioDesigner;
+import org.savara.tools.scenario.osgi.Activator;
 
 public class ScenarioSimulationDialog extends Dialog {
+
+	private static final QualifiedName MODELS_QUALIFIED_NAME = new QualifiedName(Activator.PLUGIN_ID, "models");
 
 	private static final String DON_T_SIMULATE = "Don't Simulate";
 	
 	private Button m_sameModelButton=null;
 	private Button m_sameSimulatorButton=null;
-	private java.util.List<Text> m_models=new java.util.Vector<Text>();
+	private java.util.List<Combo> m_models=new java.util.Vector<Combo>();
 	private java.util.List<Button> m_browseButtons=new java.util.Vector<Button>();
 	private java.util.List<Combo> m_modelRoles=new java.util.Vector<Combo>();
 	private java.util.List<Combo> m_simulatorTypes=new java.util.Vector<Combo>();
 	private java.io.File m_scenarioFile=null;
+	private IFile m_scenarioIFile=null;
 	private java.util.List<SimulationModel> m_simulationModels=new java.util.Vector<SimulationModel>();
 	private Scenario m_scenario=null;
 	private SimulationHandler m_handler=null;
@@ -77,13 +83,12 @@ public class ScenarioSimulationDialog extends Dialog {
 		
 	private static final Logger logger=Logger.getLogger(ScenarioSimulationDialog.class.getName());
 	
-	/*
 	public static void main(String[] args) {
 		Display display = new Display ();
 		Shell shell = new Shell(display);
 		
 		// Register dummy role simulators
-		RoleSimulator rs1=new CDMRoleSimulator();
+		RoleSimulator rs1=new TestRoleSimulator("Test Simulator 1", true);
 		RoleSimulator rs2=new TestRoleSimulator("Test Simulator 2", true);
 		
 		RoleSimulatorFactory.register(rs1);
@@ -100,12 +105,10 @@ public class ScenarioSimulationDialog extends Dialog {
 		
 			ssd.open();
 			
-			System.out.println(handler);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
-	*/
 
 	public ScenarioSimulationDialog(Shell parent, int style) {
         super (parent, style);
@@ -123,6 +126,29 @@ public class ScenarioSimulationDialog extends Dialog {
     	m_scenario = ScenarioModelUtil.deserialize(is);
     	
     	is.close();
+    }
+    
+    protected java.io.File getScenarioFile() {
+    	if (m_scenarioFile != null) {
+    		return(m_scenarioFile);
+    	} else if (m_scenarioIFile != null) {
+    		return(m_scenarioIFile.getRawLocation().toFile());
+    	}
+    	return(null);
+    }
+    
+    public void initializeScenario(IFile scenarioFile) throws IOException {
+    	m_scenarioIFile = scenarioFile;
+    	
+    	try {
+	    	java.io.InputStream is=m_scenarioIFile.getContents();
+	    	
+	    	m_scenario = ScenarioModelUtil.deserialize(is);
+	    	
+	    	is.close();
+    	} catch(Exception e) {
+    		throw new IOException("Failed to load scenario", e);
+    	}
     }
     
     public void setSimulationHandler(SimulationHandler handler) {
@@ -215,8 +241,15 @@ public class ScenarioSimulationDialog extends Dialog {
         	modelLabelData.top = new FormAttachment(5);
         	modelLabel.setLayoutData(modelLabelData);
         	
-    		final Text model=new Text(rolePanel, SWT.NONE);
+    		final Combo model=new Combo(rolePanel, SWT.NONE);
     		m_models.add(model);
+    		
+    		// Initialize model
+    		initializeModels(model);
+    		
+    		if (model.getItemCount() > 0) {
+    			model.select(0);
+    		}
     		
         	FormData modelData = new FormData();
         	modelData.left = new FormAttachment(modelLabel, 5);
@@ -264,7 +297,7 @@ public class ScenarioSimulationDialog extends Dialog {
 				public void widgetSelected(SelectionEvent arg0) {
 					FileDialog fd=new FileDialog(dialog);
 					
-					fd.setFileName(m_scenarioFile.getAbsolutePath());
+					fd.setFileName(getScenarioFile().getAbsolutePath());
 					
 					String path=fd.open();
 					
@@ -363,6 +396,8 @@ public class ScenarioSimulationDialog extends Dialog {
 				
 				m_simulate = true;
 				
+				saveModels();
+				
 				dialog.dispose();
 			}	    		
     	});
@@ -394,6 +429,72 @@ public class ScenarioSimulationDialog extends Dialog {
     	
     	return(null);
     }
+    
+    protected void initializeModels(Combo models) {
+    	if (m_scenarioIFile != null) {
+    		try {
+	    		String modelList=m_scenarioIFile.getPersistentProperty(
+	    					MODELS_QUALIFIED_NAME);
+	    		
+	    		if (modelList != null) {
+		    		String[] names=modelList.split(",");
+		    		
+		    		if (names != null) {
+		    			for (int i=0; i < names.length; i++) {
+		    				java.io.File f=new java.io.File(names[i]);
+		    				
+		    				if (f.exists()) {
+		    					models.add(names[i]);
+		    				}
+		    			}
+		    		}
+	    		}
+    		} catch(Exception e) {
+    			logger.severe("Failed to get list of models associated with scenario '"+
+    					m_scenarioIFile.getName()+"'");
+    		}
+    	}
+    }
+    
+    protected void saveModels() {
+    	if (m_scenarioIFile != null) {
+    		try {
+    			java.util.List<String> modelFiles=new java.util.Vector<String>();
+    	
+    			// First add the selected models
+    			for (Combo model : m_models) {
+    				if (modelFiles.contains(model.getText()) == false) {
+    					modelFiles.add(model.getText());
+    				}
+    			}
+    			
+    			// Add remaining entries
+    			for (Combo model : m_models) {
+    				for (int i=0; i < model.getItemCount(); i++) {
+	    				if (modelFiles.contains(model.getItem(i)) == false) {
+	    					modelFiles.add(model.getItem(i));
+	    				}
+    				}
+    			}
+    			
+    			String str=null;
+    			
+    			for (String name : modelFiles) {
+    				if (str == null) {
+    					str = name;
+    				} else {
+    					str += ","+name;
+    				}
+    			}
+    			
+    			m_scenarioIFile.setPersistentProperty(MODELS_QUALIFIED_NAME, str);
+   			
+    		} catch(Exception e) {
+    			logger.severe("Failed to save list of models associated with scenario '"+
+    					m_scenarioIFile.getName()+"'");
+    		}
+    	}
+    }
 
     protected void updateSameSimulatorTypes() {
 		for (int i=1; i < m_simulatorTypes.size(); i++) {
@@ -418,13 +519,13 @@ public class ScenarioSimulationDialog extends Dialog {
 				m_simulationModels.set(i, m_simulationModels.get(0));
 				
 				m_models.get(i).setEnabled(false);
-				m_models.get(i).setEditable(false);
+				//m_models.get(i).setEditable(false);
 				
 				m_sameSimulatorButton.setSelection(true);
 				m_sameSimulatorButton.setEnabled(true);
 			} else {
 				m_models.get(i).setEnabled(true);
-				m_models.get(i).setEditable(true);
+				//m_models.get(i).setEditable(true);
 				m_sameSimulatorButton.setSelection(false);
 				m_sameSimulatorButton.setEnabled(false);
 			}
@@ -513,7 +614,7 @@ public class ScenarioSimulationDialog extends Dialog {
 						if (selected != null || roles.size() == 0) {
 							m_roleSimulators.put(m_scenario.getRole().get(i), rsim);
 							
-							DefaultSimulationContext context=new DefaultSimulationContext(m_scenarioFile);
+							DefaultSimulationContext context=new DefaultSimulationContext(getScenarioFile());
 							
 							if (roles.size() == 0) {
 								context.setModel(model);
