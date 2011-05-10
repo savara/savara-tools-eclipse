@@ -24,15 +24,17 @@ import java.util.logging.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.layout.RowData;
-import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -42,8 +44,6 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.internal.Workbench;
 import org.savara.scenario.model.Role;
 import org.savara.scenario.model.Scenario;
 import org.savara.scenario.simulation.DefaultSimulationContext;
@@ -57,7 +57,6 @@ import org.savara.scenario.simulation.SimulationModel;
 import org.savara.scenario.simulation.TestSimulationHandler;
 import org.savara.scenario.util.ScenarioModelUtil;
 import org.savara.scenario.simulation.TestRoleSimulator;
-import org.savara.tools.scenario.designer.editor.ScenarioDesigner;
 import org.savara.tools.scenario.osgi.Activator;
 
 public class ScenarioSimulationDialog extends Dialog {
@@ -158,29 +157,25 @@ public class ScenarioSimulationDialog extends Dialog {
     public Object open() {
     	Shell parent = getParent();
     	
-    	final Shell dialog = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+    	final Shell dialog = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE);
     	dialog.setText("Scenario Simulation");
     	
-    	FormLayout form = new FormLayout();
-    	form.marginWidth = form.marginHeight = 8;
-    	dialog.setLayout(form);
     	
-    	m_sameModelButton=new Button(dialog, SWT.CHECK);
+    	dialog.setLayout(new FillLayout());
+    	
+    	// Construct main area
+    	ScrolledComposite scrollingArea=new ScrolledComposite(dialog, SWT.H_SCROLL | SWT.V_SCROLL|SWT.BORDER);
+
+    	Composite mainArea=new Composite(scrollingArea, SWT.NONE);
+    	mainArea.setLayout(new GridLayout());
+
+    	m_sameModelButton=new Button(mainArea, SWT.CHECK);
     	m_sameModelButton.setText("Use same model for all roles");
     	m_sameModelButton.setSelection(true);
     	
-    	FormData sameModelButtonData = new FormData();
-    	sameModelButtonData.top = new FormAttachment(0);
-    	m_sameModelButton.setLayoutData(sameModelButtonData);
-    	
-    	m_sameSimulatorButton=new Button(dialog, SWT.CHECK);
+    	m_sameSimulatorButton=new Button(mainArea, SWT.CHECK);
     	m_sameSimulatorButton.setText("Use same simulator for all roles");
     	m_sameSimulatorButton.setSelection(true);
-    	
-    	FormData sameSimulatorButtonData = new FormData();
-    	sameSimulatorButtonData.top = new FormAttachment(0);
-    	sameSimulatorButtonData.left = new FormAttachment(m_sameModelButton, 10);
-    	m_sameSimulatorButton.setLayoutData(sameSimulatorButtonData);
     	
     	m_sameModelButton.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent arg0) {
@@ -201,44 +196,22 @@ public class ScenarioSimulationDialog extends Dialog {
 			}  		
     	});
     	
-    	// Construct main area
-    	Composite mainArea=new Composite(dialog, SWT.NONE); //SWT.V_SCROLL);
-
-        RowLayout rowLayout = new RowLayout();
-        rowLayout.wrap = false;
-        rowLayout.pack = false;
-        rowLayout.justify = true;
-        rowLayout.type = SWT.VERTICAL;
-        rowLayout.marginLeft = 5;
-        rowLayout.marginTop = 5;
-        rowLayout.marginRight = 5;
-        rowLayout.marginBottom = 5;
-        rowLayout.spacing = 0;
-        mainArea.setLayout(rowLayout);
-    	
-    	FormData mainAreaData = new FormData();
-    	mainAreaData.top = new FormAttachment(m_sameModelButton, 10);
-    	mainAreaData.left = new FormAttachment(0);
-    	//mainAreaData.right = new FormAttachment(10);
-    	mainAreaData.width = 450;
-    	//mainAreaData.height = 300;
-    	mainArea.setLayoutData(mainAreaData);
-    	
+    	Color blue = parent.getDisplay().getSystemColor(SWT.COLOR_BLUE);
+   	
     	for (int i=0; i < m_scenario.getRole().size(); i++) {
     		Group rolePanel=new Group(mainArea, SWT.NONE);
     		rolePanel.setText(m_scenario.getRole().get(i).getName());
+    		rolePanel.setForeground(blue);
     		
         	FormLayout groupform = new FormLayout();
         	groupform.marginWidth = groupform.marginHeight = 8;
         	rolePanel.setLayout(groupform);
         	
-    		rolePanel.setLayoutData(new RowData(440, 100));
-    		
     		Label modelLabel=new Label(rolePanel, SWT.NONE);
     		modelLabel.setText("Model:");
     		
         	FormData modelLabelData = new FormData();
-        	modelLabelData.top = new FormAttachment(5);
+        	modelLabelData.top = new FormAttachment(6);
         	modelLabel.setLayoutData(modelLabelData);
         	
     		final Combo model=new Combo(rolePanel, SWT.NONE);
@@ -252,7 +225,7 @@ public class ScenarioSimulationDialog extends Dialog {
     		}
     		
         	FormData modelData = new FormData();
-        	modelData.left = new FormAttachment(modelLabel, 5);
+        	modelData.left = new FormAttachment(modelLabel, 36);
         	//modelData.right = new FormAttachment(0);
         	modelData.width = 340;
         	model.setLayoutData(modelData);
@@ -311,7 +284,7 @@ public class ScenarioSimulationDialog extends Dialog {
     		modelRoleLabel.setText("Model Role:");
     		
         	FormData modelRoleLabelData = new FormData();
-        	modelRoleLabelData.top = new FormAttachment(modelLabel, 12);
+        	modelRoleLabelData.top = new FormAttachment(modelLabel, 15);
         	modelRoleLabel.setLayoutData(modelRoleLabelData);
         	
         	final Combo modelRole=new Combo(rolePanel, SWT.READ_ONLY);
@@ -320,7 +293,7 @@ public class ScenarioSimulationDialog extends Dialog {
         	FormData modelRoleData = new FormData();
         	modelRoleData.left = new FormAttachment(modelRoleLabel, 5);
         	modelRoleData.right = new FormAttachment(100);
-        	modelRoleData.top = new FormAttachment(model, 5);
+        	modelRoleData.top = new FormAttachment(model, 4);
         	modelRole.setLayoutData(modelRoleData);
         	
         	modelRole.addSelectionListener(new SelectionListener() {
@@ -335,14 +308,14 @@ public class ScenarioSimulationDialog extends Dialog {
     		simulatorLabel.setText("Simulator:");
     		
         	FormData simulatorLabelData = new FormData();
-        	simulatorLabelData.top = new FormAttachment(modelRoleLabel, 12);
+        	simulatorLabelData.top = new FormAttachment(modelRoleLabel, 15);
         	simulatorLabel.setLayoutData(simulatorLabelData);
         	
         	final Combo simulatorType=new Combo(rolePanel, SWT.READ_ONLY);
     		m_simulatorTypes.add(simulatorType);
     		
         	FormData simulatorTypeData = new FormData();
-        	simulatorTypeData.left = new FormAttachment(simulatorLabel, 5);
+        	simulatorTypeData.left = new FormAttachment(simulatorLabel, 13);
         	simulatorTypeData.right = new FormAttachment(100);
         	simulatorTypeData.top = new FormAttachment(modelRole, 5);
         	simulatorType.setLayoutData(simulatorTypeData);
@@ -364,24 +337,25 @@ public class ScenarioSimulationDialog extends Dialog {
         	updateModel(i);
     	}
     	
-    	Button okButton = new Button (dialog, SWT.PUSH);
-    	okButton.setText ("&OK");
-    	Button cancelButton = new Button (dialog, SWT.PUSH);
+    	Group buttonGroup=new Group(mainArea, SWT.NONE);
+    	
+    	GridLayout gl=new GridLayout();
+    	gl.numColumns = 2;
+    	buttonGroup.setLayout(gl);
+    	
+    	Button okButton = new Button (buttonGroup, SWT.PUSH);
+    	okButton.setText ("&Simulate");
+    	Button cancelButton = new Button (buttonGroup, SWT.PUSH);
     	cancelButton.setText ("&Cancel");
     	
-    	FormData okData = new FormData();
-    	okData.top = new FormAttachment(mainArea, 8);
-    	okData.left = new FormAttachment(0, 150);
-    	okData.width = 80;
-    	okButton.setLayoutData(okData);
+    	buttonGroup.setSize(buttonGroup.computeSize(SWT.DEFAULT, SWT.DEFAULT, true));
+    	buttonGroup.layout();
     	
-    	FormData cancelData = new FormData();
-    	cancelData.left = new FormAttachment(okButton, 8);
-    	cancelData.top = new FormAttachment(mainArea, 8);
-    	cancelData.width = 80;
-    	cancelButton.setLayoutData(cancelData);
+    	mainArea.setSize(mainArea.computeSize(SWT.DEFAULT, SWT.DEFAULT, true));
     	
-    	dialog.setDefaultButton(okButton);
+    	scrollingArea.setContent(mainArea);
+    	
+        dialog.setDefaultButton(okButton);
     	dialog.pack();
     	dialog.open();
 
