@@ -54,9 +54,9 @@ import org.savara.scenario.simulation.ScenarioSimulatorFactory;
 import org.savara.scenario.simulation.SimulationContext;
 import org.savara.scenario.simulation.SimulationHandler;
 import org.savara.scenario.simulation.SimulationModel;
-import org.savara.scenario.simulation.TestSimulationHandler;
+//import org.savara.scenario.simulation.TestSimulationHandler;
 import org.savara.scenario.util.ScenarioModelUtil;
-import org.savara.scenario.simulation.TestRoleSimulator;
+//import org.savara.scenario.simulation.TestRoleSimulator;
 import org.savara.tools.scenario.osgi.Activator;
 
 public class ScenarioSimulationDialog extends Dialog {
@@ -82,20 +82,22 @@ public class ScenarioSimulationDialog extends Dialog {
 		
 	private static final Logger logger=Logger.getLogger(ScenarioSimulationDialog.class.getName());
 	
+	/*
 	public static void main(String[] args) {
 		Display display = new Display ();
 		Shell shell = new Shell(display);
 		
 		// Register dummy role simulators
-		RoleSimulator rs1=new TestRoleSimulator("Test Simulator 1", true);
-		RoleSimulator rs2=new TestRoleSimulator("Test Simulator 2", true);
+		RoleSimulator rs1=new org.savara.scenario.simulation.TestRoleSimulator("Test Simulator 1", true);
+		RoleSimulator rs2=new org.savara.scenario.simulation.TestRoleSimulator("Test Simulator 2", true);
 		
 		RoleSimulatorFactory.register(rs1);
 		RoleSimulatorFactory.register(rs2);
 
 		ScenarioSimulationDialog ssd=new ScenarioSimulationDialog(shell);
 		
-		TestSimulationHandler handler=new TestSimulationHandler();
+		org.savara.scenario.simulation.TestSimulationHandler handler=
+				new org.savara.scenario.simulation.TestSimulationHandler();
 		
 		try {
 			ssd.initializeScenario(new java.io.File(args[0]));
@@ -108,6 +110,7 @@ public class ScenarioSimulationDialog extends Dialog {
 			e.printStackTrace();
 		}
 	}
+	*/
 
 	public ScenarioSimulationDialog(Shell parent, int style) {
         super (parent, style);
