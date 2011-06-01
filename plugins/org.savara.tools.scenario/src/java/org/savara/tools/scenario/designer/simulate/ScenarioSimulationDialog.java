@@ -23,6 +23,12 @@ import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationType;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.core.Launch;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ModifyEvent;
@@ -49,17 +55,19 @@ import org.savara.scenario.model.Scenario;
 import org.savara.scenario.simulation.DefaultSimulationContext;
 import org.savara.scenario.simulation.RoleSimulator;
 import org.savara.scenario.simulation.RoleSimulatorFactory;
-import org.savara.scenario.simulation.ScenarioSimulator;
-import org.savara.scenario.simulation.ScenarioSimulatorFactory;
 import org.savara.scenario.simulation.SimulationContext;
-import org.savara.scenario.simulation.SimulationHandler;
 import org.savara.scenario.simulation.SimulationModel;
-//import org.savara.scenario.simulation.TestSimulationHandler;
+import org.savara.scenario.simulation.model.RoleDetails;
+import org.savara.scenario.simulation.model.Simulation;
+import org.savara.scenario.simulation.model.SimulatorDetails;
 import org.savara.scenario.util.ScenarioModelUtil;
-//import org.savara.scenario.simulation.TestRoleSimulator;
+import org.savara.scenario.util.SimulationModelUtil;
 import org.savara.tools.scenario.osgi.Activator;
 
 public class ScenarioSimulationDialog extends Dialog {
+
+	private static final String SCENARIO_SIMULATOR_MAIN = "ScenarioSimulatorMain";
+	private static final String LAUNCH_MODE = "run";
 
 	private static final QualifiedName MODELS_QUALIFIED_NAME = new QualifiedName(Activator.PLUGIN_ID, "models");
 
@@ -75,10 +83,11 @@ public class ScenarioSimulationDialog extends Dialog {
 	private IFile m_scenarioIFile=null;
 	private java.util.List<SimulationModel> m_simulationModels=new java.util.Vector<SimulationModel>();
 	private Scenario m_scenario=null;
-	private SimulationHandler m_handler=null;
+	private org.savara.tools.scenario.designer.editor.ScenarioDesigner m_designer=null;
 	private boolean m_simulate=false;
 	private java.util.Map<Role,RoleSimulator> m_roleSimulators=new java.util.HashMap<Role,RoleSimulator>();
 	private java.util.Map<Role,SimulationContext> m_contexts=new java.util.HashMap<Role,SimulationContext>();
+	private Simulation m_simulation=new Simulation();
 		
 	private static final Logger logger=Logger.getLogger(ScenarioSimulationDialog.class.getName());
 	
@@ -153,8 +162,8 @@ public class ScenarioSimulationDialog extends Dialog {
     	}
     }
     
-    public void setSimulationHandler(SimulationHandler handler) {
-    	m_handler = handler;
+    public void setScenarioDesigner(org.savara.tools.scenario.designer.editor.ScenarioDesigner designer) {
+    	m_designer = designer;
     }
     
     public Object open() {
@@ -571,11 +580,24 @@ public class ScenarioSimulationDialog extends Dialog {
     }
     
     protected void initSimulation() {
-		try {
+		try {			
+			m_simulation.setScenario(getScenarioFile().getAbsolutePath());
+			
+			java.util.List<RoleSimulator> simulators=new java.util.Vector<RoleSimulator>();
+			
 			for (int i=0; i < m_scenario.getRole().size(); i++) {
 				RoleSimulator rsim=RoleSimulatorFactory.getRoleSimulator(m_simulatorTypes.get(i).getText());
 				
 				if (rsim != null) {
+					if (simulators.contains(rsim) == false) {
+						simulators.add(rsim);
+					}
+					
+					RoleDetails roleDetails=new RoleDetails();
+					roleDetails.setSimulator(rsim.getName());
+					roleDetails.setScenarioRole(m_scenario.getRole().get(i).getName());	
+					roleDetails.setModel(m_simulationModels.get(i).getName());
+					
 					Object model=rsim.getSupportedModel(m_simulationModels.get(i));
 					
 					if (model != null) {
@@ -596,17 +618,27 @@ public class ScenarioSimulationDialog extends Dialog {
 							if (roles.size() == 0) {
 								context.setModel(model);
 							} else {
+								roleDetails.setModelRole(selected.getName());
+								
 								context.setModel(rsim.getModelForRole(model, selected));
 							}
-							
-							rsim.initialize(context);
 							
 							m_contexts.put(m_scenario.getRole().get(i), context);
 						} else {
 							logger.severe("Missing role '"+m_modelRoles.get(i).getText()+"'");
 						}
 					}
+					
+					m_simulation.getRoles().add(roleDetails);
 				}
+			}
+			
+			for (RoleSimulator rsim : simulators) {
+				SimulatorDetails sd=new SimulatorDetails();
+				sd.setClassName(rsim.getClass().getName());
+				sd.setName(rsim.getName());
+				
+				m_simulation.getSimulators().add(sd);
 			}
 			
 		} catch(Exception e) {
@@ -615,14 +647,67 @@ public class ScenarioSimulationDialog extends Dialog {
     }
     
     protected void runSimulation() {
+    	ScenarioDesignerSimulationLauncher launcher=
+        		new ScenarioDesignerSimulationLauncher(getParent().getDisplay(),
+        				m_scenario, m_designer.getScenarioSimulation());
+        	
 		try {
-			// Create the simulator
-			ScenarioSimulator ssim=ScenarioSimulatorFactory.getScenarioSimulator();
+			ILaunchManager manager =
+				DebugPlugin.getDefault().getLaunchManager();
 			
-			ssim.simulate(m_scenario, m_roleSimulators, m_contexts, m_handler);
+			ILaunchConfigurationType type =
+				manager.getLaunchConfigurationType(
+			      	ScenarioSimulationLaunchConfigurationConstants.LAUNCH_CONFIG_TYPE);
+			ILaunchConfiguration[] configurations =
+			      manager.getLaunchConfigurations(type);
+			
+			for (int i = 0; i < configurations.length; i++) {
+				ILaunchConfiguration configuration = configurations[i];
+				if (configuration.getName().equals(SCENARIO_SIMULATOR_MAIN)) {
+					configuration.delete();
+					break;
+				}
+			}
+						
+			ILaunchConfigurationWorkingCopy workingCopy =
+			      type.newInstance(null, SCENARIO_SIMULATOR_MAIN);
+
+			workingCopy.setAttribute(ScenarioSimulationLaunchConfigurationConstants.ATTR_PROJECT_NAME,
+					m_designer.getFile().getProject().getName());
+			workingCopy.setAttribute(ScenarioSimulationLaunchConfigurationConstants.ATTR_SCENARIO,
+					m_designer.getFile().getProjectRelativePath().toString());
+			
+			java.io.File simulationFile=getSimulationFile();
+			
+			workingCopy.setAttribute(ScenarioSimulationLaunchConfigurationConstants.ATTR_SIMULATION_FILE,
+								simulationFile.getAbsolutePath());
+			
+			ILaunchConfiguration configuration=workingCopy.doSave();		
+
+			Launch launch=new Launch(configuration, LAUNCH_MODE, null);
+			
+			launcher.launch(configuration, LAUNCH_MODE, launch, null);
+
+			ScenarioSimulation view=m_designer.getScenarioSimulation();	
+			view.startSimulation();
+			
+			m_designer.updateEditPartActions();
 			
 		} catch(Exception e) {
 			logger.log(Level.SEVERE, "Failed to simulate", e);
 		}
+    }
+    
+    protected java.io.File getSimulationFile() throws Exception {
+    	java.io.File ret=java.io.File.createTempFile("savara", ".simulation");
+    	ret.deleteOnExit();
+    	
+    	java.io.FileOutputStream os=new java.io.FileOutputStream(ret);
+    	
+    	SimulationModelUtil.serialize(m_simulation, os);
+    	
+    	os.close();
+    	
+    	return(ret);
     }
 }

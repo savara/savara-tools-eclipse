@@ -32,6 +32,8 @@ import org.savara.tools.scenario.designer.simulate.*;
 public class SimulateScenarioAction extends org.eclipse.gef.ui.actions.SelectionAction {
 
 	public static final String ID = "org.pi4soa.service.test.designer.editor.SimulateScenarioID";
+    
+    private static Logger logger = Logger.getLogger(SimulateScenarioAction.class.getName());	
 
 	/**
 	 * Creates a <code>CreateMessageLinksAction</code> and 
@@ -80,19 +82,13 @@ public class SimulateScenarioAction extends org.eclipse.gef.ui.actions.Selection
      */
     public void run() {
         
-    	org.savara.scenario.model.Scenario scenario=
-    			((ScenarioDesigner)getWorkbenchPart()).getScenario();
-
 		ScenarioSimulationDialog ssd=
 			new ScenarioSimulationDialog(getWorkbenchPart().getSite().getShell());
 	
 		try {
 			ssd.initializeScenario(((ScenarioDesigner)getWorkbenchPart()).getFile());
 			
-			ScenarioSimulation view=((ScenarioDesigner)getWorkbenchPart()).getScenarioSimulation();
-			UISimulationHandler handler=new UISimulationHandler(view);
-			
-			ssd.setSimulationHandler(handler);
+			ssd.setScenarioDesigner((ScenarioDesigner)getWorkbenchPart());
 	
 			ssd.open();
 
@@ -101,9 +97,4 @@ public class SimulateScenarioAction extends org.eclipse.gef.ui.actions.Selection
 			logger.log(Level.SEVERE, "Failed to initialize simulation", e);
 		}
     }
-    
-    private static Logger logger = Logger.getLogger("org.pi4soa.service.test.designer.editor");	
-   
-	private static final String LAUNCH_MODE = "run";
-	private static final String PI4SOA_SCENARIO_TEST = "Pi4SOA Scenario Test";
 }

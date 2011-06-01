@@ -19,17 +19,14 @@
  */
 package org.savara.tools.scenario.designer.simulate;
 
-
-import java.util.StringTokenizer;
-//import java.util.logging.Logger;
-
 import org.eclipse.swt.widgets.Display;
+import org.savara.scenario.model.Event;
 
 /**
  * This class is derived from the scenario simulation launcher with the
  * ability to present the results in a graphical form.
  */
-public class ScenarioDesignerSimulationLauncher  {
+public class ScenarioDesignerSimulationLauncher extends ScenarioSimulationLauncher {
 
 	public ScenarioDesignerSimulationLauncher(Display display,
 			org.savara.scenario.model.Scenario scenario,
@@ -80,16 +77,9 @@ public class ScenarioDesignerSimulationLauncher  {
 			// GPB(4/7/08) removed 'INFO' to ensure internationalization
 			// of java logging tags is catered for - issue is how to
 			// detect SEVERE messages?
-			infoPos=m_log.indexOf(": <",
+			infoPos=m_log.indexOf(">>> ",
 					m_currentPosition);
 					
-			int tmpPos=m_log.indexOf("SEVERE: <",
-					m_currentPosition);
-			
-			if (tmpPos != -1 && tmpPos < infoPos) {
-				infoPos = tmpPos;
-			}
-			
 			if (infoPos != -1) {
 				int newlinePos=0;
 				
@@ -100,7 +90,7 @@ public class ScenarioDesignerSimulationLauncher  {
 								infoPos)) != -1) {
 				
 					// Complete line found
-					processResultLine(infoPos,
+					processResultLine(infoPos+4,
 							newlinePos);
 					
 					m_currentPosition = newlinePos;
@@ -109,87 +99,47 @@ public class ScenarioDesignerSimulationLauncher  {
 				}
 			}
 		} while(f_entryFound);
+		
 	}
 	
 	protected void processResultLine(int start, int end) {
-		/* TODO: GPB: Need to decide how simulator would return its info on stdout
-		 *
-		 *
 		String tag=null;
 		String line=m_log.substring(start, end);
 		
-		if (line.startsWith("INFO:")) {
-			int tagEndPos=line.indexOf(' ', 7);
-			tag = line.substring(7, tagEndPos);
-		} else if (line.startsWith(": <")) {
-			int tagEndPos=line.indexOf(' ', 3);
-			tag = line.substring(3, tagEndPos);
-		} else if (line.startsWith("SEVERE:")) {
-			int tagEndPos=line.indexOf(' ', 9);
-			tag = line.substring(9, tagEndPos);
-		}
+		int tagEndPos=line.indexOf(' ');
+		tag = line.substring(0, tagEndPos);
 		
-		if (tag.equals(ScenarioSimulator.PROCESSING_TAG) == false &&
-				tag.equals(ScenarioSimulator.COMPLETED_TAG) == false &&
-				tag.equals(ScenarioSimulator.FAILED_TAG) == false) {
-			return;
-		}
+		int idstart=line.indexOf("[ID=");
+		int idend=line.indexOf(']');
 		
-		// Get id
-		int idPos=line.indexOf(ScenarioSimulator.ID_ATTR+"=\"");
-		int idEndPos=line.indexOf('"', idPos+2+
-				ScenarioSimulator.ID_ATTR.length());
-		String id=line.substring(idPos+2+
-				ScenarioSimulator.ID_ATTR.length(), idEndPos);
+		String id=line.substring(idstart+4, idend);
 		
 		// Get scenario entity
 		SimulationEntity se=getScenarioEntity(id);
 		
 		if (se != null) {
-			if (tag.equals(ScenarioSimulator.PROCESSING_TAG)) {
+			if (tag.equals("START")) {
 				se.processing();
 				se.setLogStartPosition(start);
-			} else {
-				if (tag.equals(ScenarioSimulator.COMPLETED_TAG)) {
-					se.successful();
-				} else {
-					se.unsuccessful();
-				}
-				
+			} else if (tag.equals("END")) {
 				se.setLogEndPosition(end);
+			} else if (tag.equals("SUCCESS")) {
+				se.successful();
+			} else if (tag.equals("FAIL")) {
+				se.unsuccessful();
 			}
 		}
-		*/
 	}
 	
 	protected SimulationEntity getScenarioEntity(String id) {
 		SimulationEntity ret=null;
-		StringTokenizer st=new StringTokenizer(id, "/");
 		
-		// Ignore scenario identity - may be useful in constructing
-		// tree items when multiple scenarios are being run
-		st.nextToken();
-		
-		Object cur=m_scenario;
-		
-		while (st.hasMoreTokens()) {
-			String token=st.nextToken();
-			
-			try {
-				int pos=Integer.parseInt(token);
-				
-				java.util.List children=org.savara.tools.scenario.designer.model.ModelSupport.getChildren(cur);
-				
-				cur = children.get(pos);
-				
-			} catch(Exception e) {
-				// Ignore
+		for (Event event : m_scenario.getEvent()) {
+			if (event.getId().equals(id)) {
+				ret = m_scenarioSimulation.getSimulationEntity(event, false);
+				break;
 			}
 		}
-		
-		// Focus if element is a message event
-		ret = m_scenarioSimulation.getSimulationEntity(cur,
-				(cur instanceof org.savara.scenario.model.MessageEvent));
 		
 		return(ret);
 	}
