@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Display;
  * This class is derived from the scenario test launcher with the
  * ability to present the results in a graphical form.
  */
-public class ScenarioSimulationUILauncher {
+public class ScenarioSimulationUILauncher extends ScenarioSimulationLauncher {
 
 	public ScenarioSimulationUILauncher(Display display,
 					Tree results, Text output) {
@@ -42,7 +42,6 @@ public class ScenarioSimulationUILauncher {
 		m_results = results;
 		m_output = output;
 		
-		/*
 		m_results.addSelectionListener(new SelectionListener() {
 			
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -65,7 +64,6 @@ public class ScenarioSimulationUILauncher {
 				widgetSelected(e);
 			}
 		});
-		*/
 	}
 	
 	/**
@@ -124,8 +122,10 @@ public class ScenarioSimulationUILauncher {
 						infoPos)) != -1) {
 				
 					// Complete line found
-					processResultLine(infoPos,
-							newlinePos);
+					System.out.println("PROCESS RESULT LINE: "+infoPos+" "+newlinePos);
+					// TODO:
+					//processResultLine(infoPos,
+					//		newlinePos);
 					
 					m_currentPosition = newlinePos;
 					
@@ -135,10 +135,8 @@ public class ScenarioSimulationUILauncher {
 		} while(f_entryFound);
 	}
 	
+	/*
 	protected void processResultLine(int start, int end) {
-		/* TODO: GPB: How is the stdout processed?
-		 * 
-		 *
 		String tag=null;
 		String line=m_buffer.substring(start, end);
 		
@@ -248,8 +246,8 @@ public class ScenarioSimulationUILauncher {
 				m_results.update();
 			}
 		}
-		*/
 	}
+	*/
 	
 	protected TreeItem getTreeItem(String id, boolean create) {
 		TreeItem ret=null;

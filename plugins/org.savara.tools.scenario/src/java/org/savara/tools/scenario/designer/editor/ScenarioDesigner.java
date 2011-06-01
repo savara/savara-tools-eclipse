@@ -968,7 +968,7 @@ public class ScenarioDesigner
         }
     }
     
-    protected void updateEditPartActions() {
+    public void updateEditPartActions() {
     	updateActions(m_editPartActionIDs);
     }
     
