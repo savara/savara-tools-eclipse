@@ -47,6 +47,7 @@ public class ScenarioDesignerSimulationLauncher extends ScenarioSimulationLaunch
 	protected void handleResults(String results, boolean errorStream) {		
 		final String text=results;
 		
+System.out.println(">>: "+results);		
 		if (errorStream) {
 			
 			try {

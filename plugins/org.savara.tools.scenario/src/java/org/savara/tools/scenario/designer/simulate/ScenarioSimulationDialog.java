@@ -546,26 +546,34 @@ public class ScenarioSimulationDialog extends Dialog {
     	
     	java.util.List<RoleSimulator> rsims=RoleSimulatorFactory.getRoleSimulators();
     	for (RoleSimulator rsim : rsims) {
-    		Object model=rsim.getSupportedModel(m_simulationModels.get(index));
-    		if (model != null) {
-    			m_simulatorTypes.get(index).add(rsim.getName());
+    		if (rsim.isSupported(m_simulationModels.get(index))) {
+        		Object model=rsim.getModel(m_simulationModels.get(index));
+
+        		m_simulatorTypes.get(index).add(rsim.getName());
     			
     			m_modelRoles.get(index).removeAll();
     			
-    			java.util.List<Role> roles=rsim.getModelRoles(model);
     			int mainDefaultRole=-1;
     			int secondaryDefaultRole=-1;
     			
-    			for (Role role : roles) {    				
-    				if (role.getName().endsWith(m_scenario.getRole().get(index).getName())) {
-    					mainDefaultRole = m_modelRoles.get(index).getItemCount();
-    				}
-    				
-    				if (role.getName().indexOf(m_scenario.getRole().get(index).getName()) != -1) {
-    					secondaryDefaultRole = m_modelRoles.get(index).getItemCount();
-    				}
-
-    				m_modelRoles.get(index).add(role.getName());
+    			// Model type may be supported, but might not be retrievable
+    			// in the Eclipse environment, but that is ok as simulation
+    			// is being done externally with classpath including user's
+    			// project
+    			if (model != null) {
+	    			java.util.List<Role> roles=rsim.getModelRoles(model);
+	    			
+	    			for (Role role : roles) {    				
+	    				if (role.getName().endsWith(m_scenario.getRole().get(index).getName())) {
+	    					mainDefaultRole = m_modelRoles.get(index).getItemCount();
+	    				}
+	    				
+	    				if (role.getName().indexOf(m_scenario.getRole().get(index).getName()) != -1) {
+	    					secondaryDefaultRole = m_modelRoles.get(index).getItemCount();
+	    				}
+	
+	    				m_modelRoles.get(index).add(role.getName());
+	    			}
     			}
     			
     			if (mainDefaultRole != -1) {
@@ -598,7 +606,7 @@ public class ScenarioSimulationDialog extends Dialog {
 					roleDetails.setScenarioRole(m_scenario.getRole().get(i).getName());	
 					roleDetails.setModel(m_simulationModels.get(i).getName());
 					
-					Object model=rsim.getSupportedModel(m_simulationModels.get(i));
+					Object model=rsim.getModel(m_simulationModels.get(i));
 					
 					if (model != null) {
 						java.util.List<Role> roles=rsim.getModelRoles(model);
