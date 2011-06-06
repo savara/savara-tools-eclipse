@@ -228,53 +228,63 @@ public class ScenarioSimulationLauncher
 		java.util.Vector<String> classpathEntries=new java.util.Vector<String>();
 					
 		// Add classpath entry for current Java project
-		try {
-			String projname=configuration.getAttribute(
-				ScenarioSimulationLaunchConfigurationConstants.ATTR_PROJECT_NAME, "");
+		String projnames=null;
 		
-			IProject project=
-				ResourcesPlugin.getWorkspace().getRoot().getProject(projname);
-
-			IJavaProject jproject=JavaCore.create(project); 
+		try {
+			projnames = configuration.getAttribute(
+					ScenarioSimulationLaunchConfigurationConstants.ATTR_PROJECT_NAME, "");
 			
-			// Add output location
-			IPath outputLocation=jproject.getOutputLocation();
+			String[] projname=projnames.split(",");
 			
-			IFolder folder=
-				ResourcesPlugin.getWorkspace().getRoot().getFolder(outputLocation);
-			
-			String path=folder.getLocation().toString();
-
-			classpathEntries.add(path);
-			
-			// Add other libraries to the classpath
-			IClasspathEntry[] curclspath=jproject.getRawClasspath();
-			for (int i=0; curclspath != null &&
-						i < curclspath.length; i++) {
-				
-				if (curclspath[i].getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
-					IFile file=
-						ResourcesPlugin.getWorkspace().
-							getRoot().getFile(curclspath[i].getPath());
-
-					if (file.exists()) {
-						// Library is within the workspace
-						classpathEntries.add(file.getLocation().toString());
-					} else {
-						// Assume library is external to workspace
-						classpathEntries.add(curclspath[i].getPath().toString());
+			for (int n=0; n < projname.length; n++) {
+				try {
+					IProject project=
+						ResourcesPlugin.getWorkspace().getRoot().getProject(projname[n]);
+		
+					IJavaProject jproject=JavaCore.create(project); 
+					
+					// Add output location
+					IPath outputLocation=jproject.getOutputLocation();
+					
+					IFolder folder=
+						ResourcesPlugin.getWorkspace().getRoot().getFolder(outputLocation);
+					
+					String path=folder.getLocation().toString();
+		
+					classpathEntries.add(path);
+					
+					// Add other libraries to the classpath
+					IClasspathEntry[] curclspath=jproject.getRawClasspath();
+					for (int i=0; curclspath != null &&
+								i < curclspath.length; i++) {
+						
+						if (curclspath[i].getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
+							IFile file=
+								ResourcesPlugin.getWorkspace().
+									getRoot().getFile(curclspath[i].getPath());
+		
+							if (file.exists()) {
+								// Library is within the workspace
+								classpathEntries.add(file.getLocation().toString());
+							} else {
+								// Assume library is external to workspace
+								classpathEntries.add(curclspath[i].getPath().toString());
+							}
+							
+						} else if (curclspath[i].getEntryKind() ==
+										IClasspathEntry.CPE_CONTAINER) {
+							// Container's not currently handled - but
+							// problem need to retrieve from project and
+							// iterate over container entries
+						}
 					}
 					
-				} else if (curclspath[i].getEntryKind() ==
-								IClasspathEntry.CPE_CONTAINER) {
-					// Container's not currently handled - but
-					// problem need to retrieve from project and
-					// iterate over container entries
+				} catch(Exception e) {
+					// TODO: report error
 				}
 			}
-			
-		} catch(Exception e) {
-			// TODO: report error
+		} catch(Exception ex) {
+			ex.printStackTrace();
 		}
 		
 		java.util.List<Bundle> bundles=getBundles();
