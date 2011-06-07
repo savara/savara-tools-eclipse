@@ -279,6 +279,13 @@ NO WARRANTY
          unpack="false"/>
 
    <plugin
+         id="org.savara.scenario.simulator.sca"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.savara.tools.scenario"
          download-size="0"
          install-size="0"
