@@ -19,6 +19,9 @@
  */
 package org.savara.tools.scenario.designer.simulate;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.eclipse.swt.widgets.Display;
 import org.savara.scenario.model.Event;
 
@@ -28,6 +31,8 @@ import org.savara.scenario.model.Event;
  */
 public class ScenarioDesignerSimulationLauncher extends ScenarioSimulationLauncher {
 
+	private static final Logger logger=Logger.getLogger(ScenarioDesignerSimulationLauncher.class.getName());
+	
 	public ScenarioDesignerSimulationLauncher(Display display,
 			org.savara.scenario.model.Scenario scenario,
 					ScenarioSimulation simulation) {
@@ -47,7 +52,10 @@ public class ScenarioDesignerSimulationLauncher extends ScenarioSimulationLaunch
 	protected void handleResults(String results, boolean errorStream) {		
 		final String text=results;
 		
-System.out.println(">>: "+results);		
+		if (logger.isLoggable(Level.FINER)) {
+			logger.finer(">>: "+results);
+		}
+		
 		if (errorStream) {
 			
 			try {
@@ -128,6 +136,8 @@ System.out.println(">>: "+results);
 				se.successful();
 			} else if (tag.equals("FAIL")) {
 				se.unsuccessful();
+			} else if (tag.equals("NO_SIMULATOR")) {
+				se.reset();
 			}
 		}
 	}
