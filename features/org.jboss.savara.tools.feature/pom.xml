@@ -61,6 +61,11 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
  		</dependency>
  		<dependency>
  			<groupId>org.savara.bundles</groupId>
+			<artifactId>org.savara.scenario.simulator.sca</artifactId> 
+			<version>${savara.core.version}</version>
+ 		</dependency>
+ 		<dependency>
+ 			<groupId>org.savara.bundles</groupId>
 			<artifactId>org.savara.wsdl</artifactId> 
 			<version>${savara.core.version}</version>
  		</dependency>

@@ -228,60 +228,70 @@ public class ScenarioSimulationLauncher
 		java.util.Vector<String> classpathEntries=new java.util.Vector<String>();
 					
 		// Add classpath entry for current Java project
-		try {
-			String projname=configuration.getAttribute(
-				ScenarioSimulationLaunchConfigurationConstants.ATTR_PROJECT_NAME, "");
+		String projnames=null;
 		
-			IProject project=
-				ResourcesPlugin.getWorkspace().getRoot().getProject(projname);
-
-			IJavaProject jproject=JavaCore.create(project); 
+		try {
+			projnames = configuration.getAttribute(
+					ScenarioSimulationLaunchConfigurationConstants.ATTR_PROJECT_NAME, "");
 			
-			// Add output location
-			IPath outputLocation=jproject.getOutputLocation();
+			String[] projname=projnames.split(",");
 			
-			IFolder folder=
-				ResourcesPlugin.getWorkspace().getRoot().getFolder(outputLocation);
-			
-			String path=folder.getLocation().toString();
-
-			classpathEntries.add(path);
-			
-			// Add other libraries to the classpath
-			IClasspathEntry[] curclspath=jproject.getRawClasspath();
-			for (int i=0; curclspath != null &&
-						i < curclspath.length; i++) {
-				
-				if (curclspath[i].getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
-					IFile file=
-						ResourcesPlugin.getWorkspace().
-							getRoot().getFile(curclspath[i].getPath());
-
-					if (file.exists()) {
-						// Library is within the workspace
-						classpathEntries.add(file.getLocation().toString());
-					} else {
-						// Assume library is external to workspace
-						classpathEntries.add(curclspath[i].getPath().toString());
+			for (int n=0; n < projname.length; n++) {
+				try {
+					IProject project=
+						ResourcesPlugin.getWorkspace().getRoot().getProject(projname[n]);
+		
+					IJavaProject jproject=JavaCore.create(project); 
+					
+					// Add output location
+					IPath outputLocation=jproject.getOutputLocation();
+					
+					IFolder folder=
+						ResourcesPlugin.getWorkspace().getRoot().getFolder(outputLocation);
+					
+					String path=folder.getLocation().toString();
+		
+					classpathEntries.add(path);
+					
+					// Add other libraries to the classpath
+					IClasspathEntry[] curclspath=jproject.getRawClasspath();
+					for (int i=0; curclspath != null &&
+								i < curclspath.length; i++) {
+						
+						if (curclspath[i].getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
+							IFile file=
+								ResourcesPlugin.getWorkspace().
+									getRoot().getFile(curclspath[i].getPath());
+		
+							if (file.exists()) {
+								// Library is within the workspace
+								classpathEntries.add(file.getLocation().toString());
+							} else {
+								// Assume library is external to workspace
+								classpathEntries.add(curclspath[i].getPath().toString());
+							}
+							
+						} else if (curclspath[i].getEntryKind() ==
+										IClasspathEntry.CPE_CONTAINER) {
+							// Container's not currently handled - but
+							// problem need to retrieve from project and
+							// iterate over container entries
+						}
 					}
 					
-				} else if (curclspath[i].getEntryKind() ==
-								IClasspathEntry.CPE_CONTAINER) {
-					// Container's not currently handled - but
-					// problem need to retrieve from project and
-					// iterate over container entries
+				} catch(Exception e) {
+					// TODO: report error
 				}
 			}
-			
-		} catch(Exception e) {
-			// TODO: report error
+		} catch(Exception ex) {
+			ex.printStackTrace();
 		}
 		
 		java.util.List<Bundle> bundles=getBundles();
 		
 		for (Bundle b : bundles) {
 			buildClassPath(b, classpathEntries);
-		}
+		}		
 		
 		ret = new String[classpathEntries.size()];
 		classpathEntries.copyInto(ret);
@@ -356,6 +366,11 @@ public class ScenarioSimulationLauncher
 		String baseLocation = local.getFile();
 
 		try {
+			String projectClassPath=getProjectClasspath(baseLocation);
+			
+			// TODO: If classpath has been set, but the items are not available,
+			// then resort to the .classpath file. Issue - how to resolve variables?
+			
 			String requires = (String)bundle.getHeaders().get(Constants.BUNDLE_CLASSPATH);
 			ManifestElement[] elements = ManifestElement.parseHeader(Constants.BUNDLE_CLASSPATH, requires);
 			
@@ -369,9 +384,37 @@ public class ScenarioSimulationLauncher
 				if (path.endsWith(".jar")) {
 					
 					if ((new File(path)).exists() == false) {
-						if ((new File(baseLocation+"classes")).exists()) {
-							path = baseLocation+"classes";
+						String jarPath=null;
+						
+						// Check if .classpath file exists - may be running in test workbench
+						// and need to access local maven repo
+						if (projectClassPath != null) {
+							jarPath = getJarPath(projectClassPath, elements[i].getValue());
 						}
+						
+						if (jarPath != null) {
+							path = jarPath;
+						} else {
+							if ((new File(baseLocation+"classes")).exists()) {
+								path = baseLocation+"classes";
+							} else if ((new File(baseLocation+"target"+File.separatorChar+"classes")).exists()) {
+								path = baseLocation+"target"+File.separatorChar+"classes";
+							} else if ((new File(baseLocation+"bin")).exists()) {
+								path = baseLocation+"bin";
+							} else {
+								path = baseLocation;
+							}
+						}
+					}
+				} else if (elements[i].getValue().equals(".")) {
+					if ((new File(baseLocation+"classes")).exists()) {
+						path = baseLocation+"classes";
+					} else if ((new File(baseLocation+"target"+File.separatorChar+"classes")).exists()) {
+						path = baseLocation+"target"+File.separatorChar+"classes";
+					} else if ((new File(baseLocation+"bin")).exists()) {
+						path = baseLocation+"bin";
+					} else {
+						path = baseLocation;
 					}
 				}
 				
@@ -414,5 +457,55 @@ public class ScenarioSimulationLauncher
 			logger.severe("Failed to construct classpath: "+e);
 			e.printStackTrace();
 		}
+	}
+	
+	protected String getProjectClasspath(String baseLocation) {
+		String ret=null;
+		
+		File cppath=new File(baseLocation+".classpath");
+		if (cppath.exists()) {
+			try {
+				java.io.FileInputStream fis=new java.io.FileInputStream(cppath);
+				
+				byte[] b=new byte[fis.available()];
+				
+				fis.read(b);
+				
+				fis.close();
+				
+				ret = new String(b);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return(ret);
+	}
+	
+	protected String getJarPath(String projectClassPath, String element) {
+		String ret=null;
+		
+		// Extract the jar name (without preceding folders or the file suffix)
+		int startindex=element.lastIndexOf('/');
+		int endindex=element.lastIndexOf('.');
+		
+		String jarName=element.substring(startindex+1, endindex);
+		
+		String locator="/"+jarName+"/";
+		
+		int index=projectClassPath.indexOf(locator);
+		
+		if (index != -1) {
+			int startpos=index;
+			for (; projectClassPath.charAt(startpos) != '"'; startpos--);
+			
+			int endpos=projectClassPath.indexOf('"', index);
+			
+			String newpath=projectClassPath.substring(startpos+1, endpos);
+			
+			ret=newpath.replaceAll("M2_REPO", System.getenv("HOME")+"/.m2/repository");
+		}
+		
+		return(ret);
 	}
 }

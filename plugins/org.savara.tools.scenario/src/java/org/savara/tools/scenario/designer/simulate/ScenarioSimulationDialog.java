@@ -21,7 +21,10 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.core.internal.resources.WorkspaceRoot;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -546,26 +549,34 @@ public class ScenarioSimulationDialog extends Dialog {
     	
     	java.util.List<RoleSimulator> rsims=RoleSimulatorFactory.getRoleSimulators();
     	for (RoleSimulator rsim : rsims) {
-    		Object model=rsim.getSupportedModel(m_simulationModels.get(index));
-    		if (model != null) {
-    			m_simulatorTypes.get(index).add(rsim.getName());
+    		if (rsim.isSupported(m_simulationModels.get(index))) {
+        		Object model=rsim.getModel(m_simulationModels.get(index));
+
+        		m_simulatorTypes.get(index).add(rsim.getName());
     			
     			m_modelRoles.get(index).removeAll();
     			
-    			java.util.List<Role> roles=rsim.getModelRoles(model);
     			int mainDefaultRole=-1;
     			int secondaryDefaultRole=-1;
     			
-    			for (Role role : roles) {    				
-    				if (role.getName().endsWith(m_scenario.getRole().get(index).getName())) {
-    					mainDefaultRole = m_modelRoles.get(index).getItemCount();
-    				}
-    				
-    				if (role.getName().indexOf(m_scenario.getRole().get(index).getName()) != -1) {
-    					secondaryDefaultRole = m_modelRoles.get(index).getItemCount();
-    				}
-
-    				m_modelRoles.get(index).add(role.getName());
+    			// Model type may be supported, but might not be retrievable
+    			// in the Eclipse environment, but that is ok as simulation
+    			// is being done externally with classpath including user's
+    			// project
+    			if (model != null) {
+	    			java.util.List<Role> roles=rsim.getModelRoles(model);
+	    			
+	    			for (Role role : roles) {    				
+	    				if (role.getName().endsWith(m_scenario.getRole().get(index).getName())) {
+	    					mainDefaultRole = m_modelRoles.get(index).getItemCount();
+	    				}
+	    				
+	    				if (role.getName().indexOf(m_scenario.getRole().get(index).getName()) != -1) {
+	    					secondaryDefaultRole = m_modelRoles.get(index).getItemCount();
+	    				}
+	
+	    				m_modelRoles.get(index).add(role.getName());
+	    			}
     			}
     			
     			if (mainDefaultRole != -1) {
@@ -598,7 +609,7 @@ public class ScenarioSimulationDialog extends Dialog {
 					roleDetails.setScenarioRole(m_scenario.getRole().get(i).getName());	
 					roleDetails.setModel(m_simulationModels.get(i).getName());
 					
-					Object model=rsim.getSupportedModel(m_simulationModels.get(i));
+					Object model=rsim.getModel(m_simulationModels.get(i));
 					
 					if (model != null) {
 						java.util.List<Role> roles=rsim.getModelRoles(model);
@@ -672,8 +683,12 @@ public class ScenarioSimulationDialog extends Dialog {
 			ILaunchConfigurationWorkingCopy workingCopy =
 			      type.newInstance(null, SCENARIO_SIMULATOR_MAIN);
 
+			// Find projects associated with specified models			
+			String projectNames=getProjectNames();
+			
 			workingCopy.setAttribute(ScenarioSimulationLaunchConfigurationConstants.ATTR_PROJECT_NAME,
-					m_designer.getFile().getProject().getName());
+									projectNames);
+			
 			workingCopy.setAttribute(ScenarioSimulationLaunchConfigurationConstants.ATTR_SCENARIO,
 					m_designer.getFile().getProjectRelativePath().toString());
 			
@@ -707,6 +722,38 @@ public class ScenarioSimulationDialog extends Dialog {
     	SimulationModelUtil.serialize(m_simulation, os);
     	
     	os.close();
+    	
+    	return(ret);
+    }
+    
+    protected String getProjectNames() {
+    	java.util.List<String> projects=new java.util.Vector<String>();
+    	
+    	projects.add(m_designer.getFile().getProject().getName());
+    	
+    	for (int i=0; i < m_models.size(); i++) {
+    		ResourcesPlugin.getWorkspace();
+    		ResourcesPlugin.getWorkspace().getRoot();
+    		
+    		IFile modelFile=ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(m_simulationModels.get(i).getName()));
+    		
+    		if (modelFile != null && modelFile.getProject() != null) {
+    			String project=modelFile.getProject().getName();
+    			
+    			if (projects.contains(project)==false) {
+    				projects.add(project);
+    			}
+    		}
+    	}
+    	    	
+    	String ret="";
+    	
+    	for (int i=0; i < projects.size(); i++) {
+    		if (i > 0) {
+    			ret += ",";
+    		}
+    		ret += projects.get(i);
+    	}
     	
     	return(ret);
     }

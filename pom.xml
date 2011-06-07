@@ -31,6 +31,7 @@
 		<scribble.version>2.0.0-SNAPSHOT</scribble.version>
         	<jaxb.version>2.1</jaxb.version>
     		<tycho-version>0.10.0</tycho-version>
+		<tuscany.version>2.0-Beta2</tuscany.version>
 	</properties>
 
 	<modules>
