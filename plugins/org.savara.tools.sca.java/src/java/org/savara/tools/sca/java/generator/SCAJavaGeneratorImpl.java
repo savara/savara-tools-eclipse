@@ -32,6 +32,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
+import org.osgi.framework.Bundle;
 import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.logging.MessageFormatter;
 import org.savara.common.util.XMLUtils;
@@ -442,7 +443,7 @@ public class SCAJavaGeneratorImpl extends AbstractGenerator {
 			project.getProject().setDescription(description,
 						new org.eclipse.core.runtime.NullProgressMonitor());
 			
-			IClasspathEntry[] classpaths=new IClasspathEntry[3];
+			IClasspathEntry[] classpaths=new IClasspathEntry[4];
 
 			classpaths[0] = JavaCore.newContainerEntry(
 					new Path("org.eclipse.jdt.launching.JRE_CONTAINER"));
@@ -457,10 +458,43 @@ public class SCAJavaGeneratorImpl extends AbstractGenerator {
 
 			classpaths[2] = JavaCore.newSourceEntry(resFolder.getFullPath());
 
+			// Install SCA API library
+			Bundle bundle=
+					org.eclipse.core.runtime.Platform.getBundle("org.savara.sca.java");
+				
+			java.net.URL url=bundle.getEntry("/lib/tuscany-sca-api.jar");
+			
+			if (url != null) {
+				url = org.eclipse.core.runtime.FileLocator.toFileURL(url);
+			} else {
+				url = bundle.getResource("lib/tuscany-sca-api.jar");
+			}
+			
+			java.io.InputStream is=url.openStream();
+			
+			byte[] b=new byte[is.available()];
+			is.read(b);
+						
+			is.close();
+			
+			IFolder libFolder=project.getProject().getFolder("lib");
+			GeneratorUtil.createFolder(libFolder);
+			
+			IFile scaapijar=libFolder.getFile("sca-api.jar");
+			
+			is = new java.io.ByteArrayInputStream(b);
+			
+			scaapijar.create(is, true, null);
+			
+			is.close();
+			
+
+			classpaths[3] = JavaCore.newLibraryEntry(scaapijar.getFullPath(), null, null);
+
+			// Set classpath
 			project.setRawClasspath(classpaths,
 					new org.eclipse.core.runtime.NullProgressMonitor());
 			
-
 		} catch(Exception e) {
 			logger.severe("Failed to create Java project: "+e);
 		}
