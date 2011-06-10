@@ -32,6 +32,7 @@
         	<jaxb.version>2.1</jaxb.version>
     		<tycho-version>0.10.0</tycho-version>
 		<tuscany.version>2.0-Beta2</tuscany.version>
+		<cxf.version>2.4.0</cxf.version>
 	</properties>
 
 	<modules>
