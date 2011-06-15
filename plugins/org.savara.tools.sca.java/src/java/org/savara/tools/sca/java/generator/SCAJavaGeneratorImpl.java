@@ -117,6 +117,8 @@ public class SCAJavaGeneratorImpl extends AbstractGenerator {
 				
 				SCAJavaGenerator gen=new SCAJavaGenerator();
 				
+				java.util.List<Role> refRoles=local.getProtocol().getRoles();
+				
 				// Write the WSDL files
 				IFile wsdlFile=generateWSDL(model, role, proj, local, modelResource, handler);
 				
@@ -134,26 +136,30 @@ public class SCAJavaGeneratorImpl extends AbstractGenerator {
 					
 					gen.createServiceImplementationFromWSDL(wsdlFile.getLocation().toOSString(),
 							wsdlLocation, proj.getFolder(JAVA_PATH).getLocation().toOSString());
-
-					// Generate composite for role
-					gen.createServiceComposite(role, wsdlFile.getLocation().toOSString(),
-							proj.getFolder(RESOURCE_PATH).getLocation().toOSString());
 				}
 				
-				java.util.List<Role> roles=local.getProtocol().getRoles();
+				java.util.List<String > refWsdlFilePaths=new java.util.Vector<String>();
 				
-				for (int i=0; i < roles.size(); i++) {
-					wsdlFile = generateWSDL(model, roles.get(i), proj, local, modelResource, handler);
+				for (int i=0; i < refRoles.size(); i++) {
+					IFile refWsdlFile = generateWSDL(model, refRoles.get(i), proj, local, modelResource, handler);
 					
-					if (wsdlFile != null) {
-						String wsdlLocation=WSDL_FOLDER+"/"+wsdlFile.getName();
+					if (refWsdlFile != null) {
+						String wsdlLocation=WSDL_FOLDER+"/"+refWsdlFile.getName();
 						
-						logger.info("Generate referenced Java service interface from wsdl '"+wsdlFile.getLocation().toOSString()+
+						logger.info("Generate referenced Java service interface from wsdl '"+refWsdlFile.getLocation().toOSString()+
 								"' to source folder '"+proj.getFolder(JAVA_PATH).getLocation().toOSString()+"'");
 						
-						gen.createServiceInterfaceFromWSDL(wsdlFile.getLocation().toOSString(),
+						gen.createServiceInterfaceFromWSDL(refWsdlFile.getLocation().toOSString(),
 								wsdlLocation, proj.getFolder(JAVA_PATH).getLocation().toOSString());
+						
+						refWsdlFilePaths.add(refWsdlFile.getLocation().toOSString());
 					}
+				}
+				
+				if (wsdlFile != null) {
+					// Generate composite for role
+					gen.createServiceComposite(role, refRoles, wsdlFile.getLocation().toOSString(),
+							refWsdlFilePaths, proj.getFolder(RESOURCE_PATH).getLocation().toOSString());
 				}
 				
 				proj.refreshLocal(IResource.DEPTH_INFINITE,
