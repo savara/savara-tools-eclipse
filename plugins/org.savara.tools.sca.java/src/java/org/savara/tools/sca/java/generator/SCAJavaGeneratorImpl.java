@@ -118,27 +118,10 @@ public class SCAJavaGeneratorImpl extends AbstractGenerator {
 				SCAJavaGenerator gen=new SCAJavaGenerator();
 				
 				java.util.List<Role> refRoles=local.getProtocol().getRoles();
+				java.util.List<Role> wsdlRoles=new java.util.Vector<Role>();
 				
 				// Write the WSDL files
-				IFile wsdlFile=generateWSDL(model, role, proj, local, modelResource, handler);
-				
-				if (wsdlFile != null) {
-					String wsdlLocation=WSDL_FOLDER+"/"+wsdlFile.getName();
-					
-					logger.info("Generate Java service interface from wsdl '"+wsdlFile.getLocation().toOSString()+
-							"' to source folder '"+proj.getFolder(JAVA_PATH).getLocation().toOSString()+"'");
-					
-					gen.createServiceInterfaceFromWSDL(wsdlFile.getLocation().toOSString(),
-							wsdlLocation, proj.getFolder(JAVA_PATH).getLocation().toOSString());
-					
-					logger.info("Generate Java service implementation from wsdl '"+wsdlFile.getLocation().toOSString()+
-							"' to source folder '"+proj.getFolder(JAVA_PATH).getLocation().toOSString()+"'");
-					
-					gen.createServiceImplementationFromWSDL(wsdlFile.getLocation().toOSString(),
-							wsdlLocation, proj.getFolder(JAVA_PATH).getLocation().toOSString());
-				}
-				
-				java.util.List<String > refWsdlFilePaths=new java.util.Vector<String>();
+				java.util.List<String> refWsdlFilePaths=new java.util.Vector<String>();
 				
 				for (int i=0; i < refRoles.size(); i++) {
 					IFile refWsdlFile = generateWSDL(model, refRoles.get(i), proj, local, modelResource, handler);
@@ -152,13 +135,34 @@ public class SCAJavaGeneratorImpl extends AbstractGenerator {
 						gen.createServiceInterfaceFromWSDL(refWsdlFile.getLocation().toOSString(),
 								wsdlLocation, proj.getFolder(JAVA_PATH).getLocation().toOSString());
 						
+						logger.info("Add WSDL file path '"+refWsdlFile.getLocation().toOSString()+
+										"' associated with role "+refRoles.get(i));
 						refWsdlFilePaths.add(refWsdlFile.getLocation().toOSString());
+						wsdlRoles.add(refRoles.get(i));
 					}
 				}
 				
+				IFile wsdlFile=generateWSDL(model, role, proj, local, modelResource, handler);
+				
 				if (wsdlFile != null) {
+					String wsdlLocation=WSDL_FOLDER+"/"+wsdlFile.getName();
+					
+					logger.info("Generate Java service interface from wsdl '"+wsdlFile.getLocation().toOSString()+
+							"' to source folder '"+proj.getFolder(JAVA_PATH).getLocation().toOSString()+"'");
+					
+					gen.createServiceInterfaceFromWSDL(wsdlFile.getLocation().toOSString(),
+							wsdlLocation, proj.getFolder(JAVA_PATH).getLocation().toOSString());
+
+					logger.info("Generate Java service implementation from wsdl '"+wsdlFile.getLocation().toOSString()+
+							"' to source folder '"+proj.getFolder(JAVA_PATH).getLocation().toOSString()+"'");
+					
+					gen.createServiceImplementationFromWSDL(role, wsdlRoles,
+							wsdlFile.getLocation().toOSString(),
+							wsdlLocation, refWsdlFilePaths, 
+							proj.getFolder(JAVA_PATH).getLocation().toOSString());
+
 					// Generate composite for role
-					gen.createServiceComposite(role, refRoles, wsdlFile.getLocation().toOSString(),
+					gen.createServiceComposite(role, wsdlRoles, wsdlFile.getLocation().toOSString(),
 							refWsdlFilePaths, proj.getFolder(RESOURCE_PATH).getLocation().toOSString());
 				}
 				
