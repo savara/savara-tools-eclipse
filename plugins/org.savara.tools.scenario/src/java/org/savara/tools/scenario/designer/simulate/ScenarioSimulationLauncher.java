@@ -20,6 +20,7 @@
 package org.savara.tools.scenario.designer.simulate;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Map;
 import java.util.logging.Level;
@@ -236,6 +237,8 @@ public class ScenarioSimulationLauncher
 			
 			String[] projname=projnames.split(",");
 			
+			java.util.List<String> outputPaths=new java.util.Vector<String>();
+			
 			for (int n=0; n < projname.length; n++) {
 				try {
 					IProject project=
@@ -251,7 +254,7 @@ public class ScenarioSimulationLauncher
 					
 					String path=folder.getLocation().toString();
 		
-					classpathEntries.add(path);
+					outputPaths.add(path);
 					
 					// Add other libraries to the classpath
 					IClasspathEntry[] curclspath=jproject.getRawClasspath();
@@ -283,6 +286,24 @@ public class ScenarioSimulationLauncher
 					// TODO: report error
 				}
 			}
+			
+			if (outputPaths.size() == 1) {
+				classpathEntries.add(outputPaths.get(0));
+			} else if (outputPaths.size() > 0) {
+				// Need to merge output folders into one location
+				java.io.File dir=new java.io.File(System.getProperty("java.io.tmpdir")+
+						java.io.File.separatorChar+"savara"+java.io.File.separatorChar+
+						"simulation"+System.currentTimeMillis());
+				dir.deleteOnExit();
+				
+				dir.mkdirs();
+				
+				classpathEntries.add(dir.getAbsolutePath());
+				
+				for (String path : outputPaths) {
+					copy(new java.io.File(path), dir);
+				}
+			}
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
@@ -304,6 +325,43 @@ public class ScenarioSimulationLauncher
 		}
 		
 		return(ret);
+	}
+	
+	protected void copy(java.io.File src, java.io.File target) throws java.io.IOException {
+
+		if (src.isDirectory()) 	{
+			
+			// Check if target folder needs to be created
+			if (target.exists() == false) {
+				if (target.mkdirs() == false) {
+					throw new IOException("Could not create target direcotry: "+
+									target.getPath());
+				}
+			}
+			
+			target.deleteOnExit();
+
+			java.io.File[] children=src.listFiles();
+			
+			for (int i=0; i < children.length; i++) {
+				copy(children[i], new File(target, children[i].getName()));
+			}
+		} else { 
+			java.io.FileInputStream fis=new java.io.FileInputStream(src);
+			
+			byte[] b=new byte[fis.available()];
+			fis.read(b);
+			
+			fis.close();
+			
+			java.io.FileOutputStream fos=new java.io.FileOutputStream(target);
+			
+			fos.write(b);
+			
+			fos.close();
+			
+			target.deleteOnExit();
+		}
 	}
 	
 	protected java.util.List<Bundle> getBundles() {
