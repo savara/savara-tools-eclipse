@@ -65,7 +65,8 @@ public class SCAJavaGeneratorImpl extends AbstractGenerator {
 	private static final String XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
 	private static final String JAVA_PATH = "src/main/java";
 	private static final String WSDL_FOLDER = "wsdl";
-	private static final String WSDL_PATH = "src/main/resources/"+WSDL_FOLDER;
+	private static final String RESOURCE_PATH = "src/main/resources/";
+	private static final String WSDL_PATH = RESOURCE_PATH+WSDL_FOLDER;
 
 	private static Logger logger = Logger.getLogger(SCAJavaGeneratorImpl.class.getName());
 
@@ -133,6 +134,10 @@ public class SCAJavaGeneratorImpl extends AbstractGenerator {
 					
 					gen.createServiceImplementationFromWSDL(wsdlFile.getLocation().toOSString(),
 							wsdlLocation, proj.getFolder(JAVA_PATH).getLocation().toOSString());
+
+					// Generate composite for role
+					gen.createServiceComposite(role, wsdlFile.getLocation().toOSString(),
+							proj.getFolder(RESOURCE_PATH).getLocation().toOSString());
 				}
 				
 				java.util.List<Role> roles=local.getProtocol().getRoles();
@@ -151,7 +156,7 @@ public class SCAJavaGeneratorImpl extends AbstractGenerator {
 					}
 				}
 				
-				proj.getFolder(JAVA_PATH).refreshLocal(IResource.DEPTH_INFINITE,
+				proj.refreshLocal(IResource.DEPTH_INFINITE,
 									new NullProgressMonitor());
 			} catch(Exception e) {
 				org.savara.tools.sca.java.osgi.Activator.logError("Failed to create SCA Java project '"+

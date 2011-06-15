@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.core.internal.resources.WorkspaceRoot;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -93,7 +92,7 @@ public class ScenarioSimulationDialog extends Dialog {
 	private boolean m_simulate=false;
 	private java.util.Map<Role,RoleSimulator> m_roleSimulators=new java.util.HashMap<Role,RoleSimulator>();
 	private java.util.Map<Role,SimulationContext> m_contexts=new java.util.HashMap<Role,SimulationContext>();
-	private Simulation m_simulation=new Simulation();
+	private Simulation m_simulation=null;
 	private boolean f_initialConfig=true;
 		
 	private static final Logger logger=Logger.getLogger(ScenarioSimulationDialog.class.getName());
@@ -728,7 +727,9 @@ public class ScenarioSimulationDialog extends Dialog {
     }
     
     protected void initSimulation() {
-		try {			
+		try {
+			m_simulation = new Simulation();
+			
 			m_simulation.setScenario(getScenarioFile().getAbsolutePath());
 			
 			java.util.List<RoleSimulator> simulators=new java.util.Vector<RoleSimulator>();

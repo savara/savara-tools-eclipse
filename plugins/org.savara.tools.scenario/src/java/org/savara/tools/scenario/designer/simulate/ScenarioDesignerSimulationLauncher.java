@@ -23,7 +23,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.swt.widgets.Display;
+import org.savara.common.logging.MessageFormatter;
 import org.savara.scenario.model.Event;
+import org.savara.tools.scenario.osgi.Activator;
 
 /**
  * This class is derived from the scenario simulation launcher with the
@@ -32,6 +34,12 @@ import org.savara.scenario.model.Event;
 public class ScenarioDesignerSimulationLauncher extends ScenarioSimulationLauncher {
 
 	private static final Logger logger=Logger.getLogger(ScenarioDesignerSimulationLauncher.class.getName());
+
+	private Display m_display=null;
+	private ScenarioSimulation m_scenarioSimulation=null;
+	private org.savara.scenario.model.Scenario m_scenario=null;
+	private int m_currentPosition=0;
+	private StringBuffer m_log=new StringBuffer();
 	
 	public ScenarioDesignerSimulationLauncher(Display display,
 			org.savara.scenario.model.Scenario scenario,
@@ -50,18 +58,20 @@ public class ScenarioDesignerSimulationLauncher extends ScenarioSimulationLaunch
 	 * 						stream
 	 */
 	protected void handleResults(String results, boolean errorStream) {		
-		final String text=results;
-		
 		if (logger.isLoggable(Level.FINER)) {
 			logger.finer(">>: "+results);
 		}
 		
 		if (errorStream) {
 			
+			m_scenarioSimulation.appendLogEntry(results);
+			
+			m_log.append(results);
+			
 			try {
 				m_display.asyncExec(new Runnable() {
 					public void run() {				
-						processResults(text);
+						processResults();
 					}			
 				});
 			} catch(Throwable e) {
@@ -71,44 +81,49 @@ public class ScenarioDesignerSimulationLauncher extends ScenarioSimulationLaunch
 		}
 	}
 	
-	protected void processResults(String results) {
-		boolean f_entryFound=false;
+	protected synchronized void processResults() {
+		int infoPos=0;
 		
-		m_scenarioSimulation.appendLogEntry(results);
-		
-		m_log.append(results);
-		
-		do {
-			int infoPos=0;
-			f_entryFound=false;
+		while ((infoPos=m_log.indexOf(">>> ",
+					m_currentPosition)) != -1) {
 			
-			// Check if "INFO: <" is found
-			// GPB(4/7/08) removed 'INFO' to ensure internationalization
-			// of java logging tags is catered for - issue is how to
-			// detect SEVERE messages?
-			infoPos=m_log.indexOf(">>> ",
-					m_currentPosition);
-					
-			if (infoPos != -1) {
-				int newlinePos=0;
+			errorCheck(m_currentPosition, infoPos);
+			
+			int newlinePos=0;
+			
+			// Check if newline found
+			if ((newlinePos=m_log.indexOf("\r",
+					infoPos)) != -1 ||
+				(newlinePos=m_log.indexOf("\n",
+							infoPos)) != -1) {
+			
+				// Complete line found
+				processResultLine(infoPos+4,
+						newlinePos);
 				
-				// Check if newline found
-				if ((newlinePos=m_log.indexOf("\r",
-						infoPos)) != -1 ||
-					(newlinePos=m_log.indexOf("\n",
-								infoPos)) != -1) {
-				
-					// Complete line found
-					processResultLine(infoPos+4,
-							newlinePos);
-					
-					m_currentPosition = newlinePos;
-					
-					f_entryFound = true;
-				}
+				m_currentPosition = newlinePos;
+			} else {
+				// Line is not complete, so skip until
+				// further text is available
+				break;
 			}
-		} while(f_entryFound);
+		}
+	}
+	
+	protected boolean errorCheck(int startPos, int endPos) {
+		boolean ret=false;
 		
+		if (m_log.indexOf("java.lang.UnsupportedOperationException: Cannot create XMLStreamReader", startPos) != -1) {
+			
+			// Check JDK/JRE version
+			String error=MessageFormatter.format(java.util.PropertyResourceBundle.getBundle(
+					"org.savara.tools.scenario.Messages"), "SAVARA-SCENARIOTOOLS-00001",
+					"Cannot create XMLStreamReader or XMLEventReader from a javax.xml.transform.stream.StreamSource");
+			
+			Activator.logError(error, null);
+		}
+		
+		return(ret);
 	}
 	
 	protected void processResultLine(int start, int end) {
@@ -154,12 +169,4 @@ public class ScenarioDesignerSimulationLauncher extends ScenarioSimulationLaunch
 		
 		return(ret);
 	}
-
-	//private static Logger logger = Logger.getLogger("org.pi4soa.scenario.provider");
-
-	private Display m_display=null;
-	private ScenarioSimulation m_scenarioSimulation=null;
-	private org.savara.scenario.model.Scenario m_scenario=null;
-	private int m_currentPosition=0;
-	private StringBuffer m_log=new StringBuffer();
 }
