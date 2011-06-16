@@ -124,21 +124,26 @@ public class SCAJavaGeneratorImpl extends AbstractGenerator {
 				java.util.List<String> refWsdlFilePaths=new java.util.Vector<String>();
 				
 				for (int i=0; i < refRoles.size(); i++) {
-					IFile refWsdlFile = generateWSDL(model, refRoles.get(i), proj, local, modelResource, handler);
+					Contract contract=ContractGeneratorFactory.getContractGenerator().generate(local.getProtocol(),
+										null, refRoles.get(i), handler);
 					
-					if (refWsdlFile != null) {
-						String wsdlLocation=WSDL_FOLDER+"/"+refWsdlFile.getName();
+					if (contract.getInterfaces().size() > 0) {
+						IFile refWsdlFile = generateWSDL(model, refRoles.get(i), proj, local, modelResource, handler);
 						
-						logger.info("Generate referenced Java service interface from wsdl '"+refWsdlFile.getLocation().toOSString()+
-								"' to source folder '"+proj.getFolder(JAVA_PATH).getLocation().toOSString()+"'");
-						
-						gen.createServiceInterfaceFromWSDL(refWsdlFile.getLocation().toOSString(),
-								wsdlLocation, proj.getFolder(JAVA_PATH).getLocation().toOSString());
-						
-						logger.info("Add WSDL file path '"+refWsdlFile.getLocation().toOSString()+
-										"' associated with role "+refRoles.get(i));
-						refWsdlFilePaths.add(refWsdlFile.getLocation().toOSString());
-						wsdlRoles.add(refRoles.get(i));
+						if (refWsdlFile != null) {
+							String wsdlLocation=WSDL_FOLDER+"/"+refWsdlFile.getName();
+							
+							logger.info("Generate referenced Java service interface from wsdl '"+refWsdlFile.getLocation().toOSString()+
+									"' to source folder '"+proj.getFolder(JAVA_PATH).getLocation().toOSString()+"'");
+							
+							gen.createServiceInterfaceFromWSDL(refWsdlFile.getLocation().toOSString(),
+									wsdlLocation, proj.getFolder(JAVA_PATH).getLocation().toOSString());
+							
+							logger.info("Add WSDL file path '"+refWsdlFile.getLocation().toOSString()+
+											"' associated with role "+refRoles.get(i));
+							refWsdlFilePaths.add(refWsdlFile.getLocation().toOSString());
+							wsdlRoles.add(refRoles.get(i));
+						}
 					}
 				}
 				
