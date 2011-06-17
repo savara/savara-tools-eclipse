@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+]>
+<chapter id="conversationvalidationwithcdl">
+	<title>Conversation Validation with CDL</title>
+	<section>
+      	<title>Overview</title>
+		<para>
+Conversation validation is a form of runtime governance concerned with the dynamic behaviour of a system.
+		</para>
+		<para>
+When coupled with a choreography description model of a system, this means having the ability to ensure that the way a collection of services interact correctly adheres to a description of the business process being enacted.
+		</para>
+		<para>
+This section introduces the choreography description language (CDL) defined by W3C, and the <emphasis>pi4soa</emphasis> open source project which provides an editor for creating choreography descriptions, as well as utilizing these descriptions for runtime validation and execution purposes.
+
+		</para>
+
+	</section>
+
+	<section>
+		<title>Configuration of Conversation Validation</title>
+
+		<para>
+		This section explains how to configure the conversation validation mechanism to validate services
+		against a choreography description. The first sub-section describes how the mechanism is hooked into the
+		JBossESB and JBossWS-Native environments. The following two sub-sections explain two alternate ways that relevant endpoint
+		references can be configured for validation.
+		</para>
+
+		<section>
+			<title>Installing the Conversation Validation Mechanism</title>
+			
+			<section>
+				<title>JBossWS-Native</title>
+				
+				<para>
+				The principle mechanism used for validating conversations within the JBossWS Native stack
+				is through the use of a global filter registered in the
+				<filename>standard-jaxws-client-config.xml</filename> and
+				<filename>standard-jaxws-endpoint-config.xml</filename> files.
+				These files are located in the <emphasis>$JBossAS/server/default/deployers/jbossws.deployer/META-INF</emphasis>
+				folder.
+				</para>
+				
+				<para>
+				The <filename>standard-jaxws-client-config.xml</filename> is updated to include a
+				<emphaiss>pre handler</emphaiss> implemented by a Savara client interceptor.
+				</para>
+				
+				<informalexample>
+	  				<programlisting role="XML" ><![CDATA[
+  <client-config>
+    <config-name>Standard Client</config-name>
+    <pre-handler-chains>
+      <javaee:handler-chain>
+        <javaee:protocol-bindings>##SOAP11_HTTP</javaee:protocol-bindings>
+        <javaee:handler>
+          <javaee:handler-name>SAVARA JBossWS-Native Client Interceptor</javaee:handler-name>
+          <javaee:handler-class>org.savara.integration.jbosswsnative.JBossWSNativeClientInterceptor</javaee:handler-class>
+        </javaee:handler>
+      </javaee:handler-chain>
+    </pre-handler-chains>
+    <feature>http://org.jboss.ws/dispatch/validate</feature>
+    <property>
+      <property-name>http://org.jboss.ws/http#chunksize</property-name>
+      <property-value>2048</property-value>
+    </property>
+  </client-config>
+	 				 ]]></programlisting>
+				</informalexample>
+		
+				<para>
+				The <filename>standard-jaxws-endpoint-config.xml</filename> is updated to include a
+				<emphaiss>pre handler</emphaiss> implemented by a Savara server interceptor.
+				</para>
+				
+				<informalexample>
+	  				<programlisting role="XML" ><![CDATA[
+  <endpoint-config>
+    <config-name>Standard Endpoint</config-name>
+    <pre-handler-chains>
+      <javaee:handler-chain>
+        <javaee:protocol-bindings>##SOAP11_HTTP</javaee:protocol-bindings>
+        <javaee:handler>
+          <javaee:handler-name>Recording Handler</javaee:handler-name>
+          <javaee:handler-class>org.jboss.wsf.framework.invocation.RecordingServerHandler</javaee:handler-class>
+        </javaee:handler>
+      </javaee:handler-chain>
+      <javaee:handler-chain>
+        <javaee:protocol-bindings>##SOAP11_HTTP</javaee:protocol-bindings>
+        <javaee:handler>
+          <javaee:handler-name>SAVARA JBossWS-Native Service Interceptor</javaee:handler-name>
+          <javaee:handler-class>org.savara.integration.jbosswsnative.JBossWSNativeServerInterceptor</javaee:handler-class>
+        </javaee:handler>
+      </javaee:handler-chain>
+    </pre-handler-chains>
+  </endpoint-config>
+	 				 ]]></programlisting>
+				</informalexample>
+		
+				<para>
+				These interceptors are installed as part of the installation process for the SAVARA
+				distribution.
+				</para>
+			</section>
+
+			<section>
+				<title>JBossESB</title>
+				
+				<para>
+				The principle mechanism used for validating conversations within an ESB is through the use 
+				of a global filter registered with the <emphasis>jbossesb-properties.xml</emphasis>.
+				This file is located in the <emphasis>$JBossAS/server/default/deployers/esb.deployer</emphasis>
+				folder.
+				</para>
+				<informalexample>
+	  				<programlisting role="XML" ><![CDATA[
+		<properties name="filters">
+			...
+			<property name="org.jboss.soa.esb.filter.10" 
+					value="org.savara.integration.jbossesb.JBossESBInterceptor"/>
+		</properties>
+	 				 ]]></programlisting>
+				</informalexample>
+		
+				<para>
+				This filter is installed as part of the installation process for the SAVARA distribution.
+				</para>
+			</section>
+		</section>
+
+		<section>
+			<title>Explicit Configuration</title>
+
+		<para>
+		The information concerning which destinations will be validated, and to which model/role 
+		they relate, can be explicitly defined within the <emphasis>validator-config.xml</emphasis> 
+		file, contained within the <emphasis>savara-jbossesb.esb</emphasis> bundle.
+		</para>
+		
+		<para>
+An example of the contents of this file, that would related to the TrailBlazer example, is:
+		</para>
+			<informalexample>
+  				<programlisting role="XML" ><![CDATA[
+	<validator mode="monitor" replyToTimeout="10000" >
+		<service model="TrailBlazer.cdm" 
+					role="LoanBrokerParticipant" >
+			<output epr="jms:queue/esb-tb-creditAgencyQueue" />
+			<input epr="jms:queue/esb-tb-creditAgencyQueue_reply" />
+			<output epr="jms:queue/esb-tb-jmsBankRequestQueue" />
+			<output epr="jms:queue/esb-tb-fileBankRequestQueue" />
+			<input epr="jms:queue/esb-tb-jmsBankResponseQueue" />
+			<output epr="jms:queue/esb-tb-customerNotifier" />
+			<input epr="jms:queue/esb-tb-fileBankResponseQueue" />
+		</service>
+		<service model="TrailBlazer.cdm" 
+					role="CreditAgencyParticipant" >
+			<input epr="jms:queue/esb-tb-creditAgencyQueue" />
+			<output epr="jms:queue/esb-tb-creditAgencyQueue_reply" />
+		</service>
+		<service model="TrailBlazer.cdm" 
+					role="BankParticipant" >
+			<input epr="jms:queue/esb-tb-jmsBankRequestQueue" />
+			<input epr="jms:queue/esb-tb-fileBankRequestQueue" />
+			<output epr="jms:queue/esb-tb-jmsBankResponseQueue" />
+			<output epr="jms:queue/esb-tb-fileBankResponseQueue" />
+		</service>
+		<service model="TrailBlazer.cdm" 
+					role="NotifierParticipant" >
+			<input epr="jms:queue/esb-tb-customerNotifier" />
+		</service>
+	</validator>
+ 				 ]]></programlisting>
+			</informalexample>
+
+			<para>
+			The 'validator' element has an optional attribute called 'mode', with the possible values 
+			of 'monitor' or 'manage'. If the mode is 'monitor' (which is the default), then any messages 
+			that result in validation errors being detected will continue to be received or sent, with 
+			the errors only be reported for information purposes. If the mode is 'manage', then any 
+			erronous messages detected during validation, that conflict with the behaviour as described 
+			in the choreography, will be prevented from being received or sent.
+		</para>
+		<note>
+			<para>
+			It is important to note that if 'manage' validation mode is used, then the validation 
+			mechanism will be an integral part of the message flow. This may have a slight performance 
+			impact on the delivery of messages between services.
+			</para>
+		</note>
+
+		<para>
+		The optional 'replyToTimeout' (defined in milliseconds) is used to determine how long a dynamic 
+		reply-to destination should be monitored for validation purposes. In some message exchanges, 
+		the response destination will not always be known in advance. Therefore the configuration can 
+		identify such situations, and monitor the reply-to destination for the response. However, if a 
+		response is not delivered in a particular time period, we need to be able to discontinue the 
+		validation of the dynamic endpoint. If this did not occur, then over time too many endpoints 
+		would be monitored, which may result in out-of-memory problems. The default timeout period is 
+		10 seconds.
+		</para>
+		<para>
+		Within the 'validator' element is a list of 'service' elements, one per service being validated. 
+		The behaviour of the service being validated is identified by specifying the model (e.g. 
+		choreography description file) and the role (e.g. participant type) within the model. Therefore, 
+		within the above configuration, the first set of destinations (eprs) are associated with the 
+		<emphasis>LoanBrokerParticipant</emphasis> defined within the choreography description model 
+		found in the file <filename>TrailBlazer.cdm</filename>, which will be located within the 
+		<filename>models</filename> folder contained within the
+		<emphasis>savara-jboss.sar</emphasis> bundle.
+		</para>
+		<para>
+		The elements contained within the 'service' element define the <emphasis>input</emphasis> and 
+		<emphasis>output</emphasis> eprs (Endpoint References) that are associated with the service. 
+		The <emphasis>input</emphasis> eprs are the destinations on which messages will be received and 
+		the <emphasis>output</emphasis> eprs are the destinations on which messages will be sent by the 
+		service.
+		</para>
+		<para>
+		The format of the 'epr' attribute will be specific to the type of transport being validated.
+		Currently JMS is supported, and can be identified by the protocol prefix 'jms:', or a
+		Web Service endpoint using a service name with the QName style of '{namespace}localpart'.
+		</para>
+		<para>
+		Each 'input' and 'output' element can also define an optional 'dynamicReplyTo' boolean attribute. 
+		If defined, it will indicate to the Service Validator that the message on the specified endpoint 
+		(epr) will contain a dynamically defined 'reply-to' destination that needs to be monitored for 
+		a response.
+		</para>
+
+		</section>
+
+		<section>
+			<title>Defining the Validator Configuration within a Choreography</title>
+
+		<para>
+		The first step to configuring the validator is to associate the endpoint references (EPRs)
+		against the relevant choreography interactions. This is achieved by defining an
+		annotation for each 'exchange details' component (i.e. each request and response/notification).
+		</para>
+
+		<imageobject>
+			<imagedata fileref="en-US/images/editvalidatorann.png" width="5in" />
+		</imageobject>
+
+		<para>
+		When the annotation editor is displayed for the relevant 'exchange details' component,
+		the <emphasis>validator</emphasis> annotation should be added. This is achieved by
+		selecting the popup menu associated with the background of the lefthand panel,
+		and selecting the <emphasis>Add Defined Annotation</emphasis> menu item.
+		</para>
+
+		<imageobject>
+			<imagedata fileref="en-US/images/editvalidatoranndiag.png" width="5in" />
+		</imageobject>
+
+		<para>
+		When the list of defined annotations is displayed, select the
+		<emphasis>validator</emphasis> annotation.
+		</para>
+
+		<imageobject>
+			<imagedata fileref="en-US/images/editvalidatorannselect.png" width="3in" />
+		</imageobject>
+
+		<para>
+		After pressing the <emphasis>Ok</emphasis> button, the annotation editor
+		will configure the righthand panel with the parameters associated with this
+		annotation.
+		</para>
+
+		<imageobject>
+			<imagedata fileref="en-US/images/validatorannotation.png" width="5in" />
+		</imageobject>
+
+		<para>
+		To specify the Endpoint Reference (EPR) for a particular message exchange, enter the EPR into the
+		<emphasis>Destination</emphasis> field. The value specified in this field will
+		be dependent upon the technology being validated. For example, if the JBossESB
+		is being monitored, then the value will be a physical address associated with the
+		ESB service endpoint (e.g. jms:queue/esb-quotes). If the technology being validated is a Web
+		Service (or BPEL process), then the field will represent the WSDL service name
+		specified using the QName style (e.g. {namespace}localpart).
+		</para>
+		
+		<para>
+		The <emphasis>Type</emphasis> field is used to define the style of endpoint being
+		validated. In the image above, the endpoint being validated is a Web Service (or
+		BPEL process), and therefore the type is specified as a 'service name'. However if
+		the technology being validated identifies a different endpoint address, for the request
+		and response (as in the case of JBossESB), then the type should be set to
+		'endpoint address'.
+		</para>
+		
+		<para>
+		If the exchange is a request, that
+		will result in a response being sent on a dynamically provided "reply-to"
+		destination, then the <emphasis>Dynamic Reply-To</emphasis> checkbox should be selected.
+		This situation may occur in the case of validating a JBossESB service, where a
+		well-defined endpoint address has not been defined for the response.
+		</para>
+
+		<para>
+		Once the annotation has been defined, then press the <emphasis>Save</emphasis>
+		button to save the annotation against the interaction's exchange details.
+		</para>
+
+		<para>
+		When all of the relevant 'exchange details' components have been configured with
+		a <emphasis>validator</emphasis> annotation, defining the EPR to be validated,
+		then the choreography description file can be copied into the
+		<filename>savara-jboss.sar/models</filename> folder. This will cause
+		the validation mechanism to derive the configuration information from the choreography
+		description model, and begin validating the defined destinations against that
+		choreography description model.
+		</para>
+
+		</section>
+
+	</section>
+
+	<section>
+		<title>Monitoring the Choreography Description</title>
+		
+		<para>
+		Once the server environment has been configured, to perform service validation of a set of
+		services against a choreography description, and the server has been started, then the next
+		step is to configure the monitoring tool. This can be achieved by opening the
+		<emphasis>Window->Preferences->Savara->Monitor</emphasis> dialog, as shown in the following
+		image.
+		</para>
+
+		<imageobject>
+			<imagedata fileref="en-US/images/monitorprefs.png" width="5in" />
+		</imageobject>
+
+		<para>
+		In general, the default values specified for the JNDI and JMS properties will be fine.
+		The only information that should need to be provided is a path to the JMS and JNDI
+		libraries. When using the JBossAS server, this path can be set to the top level
+		<filename>client</filename> folder.		
+		</para>
+		
+		<para>
+		The next step is to launch the monitoring tool. This is located on the popup menu, for
+		the choreography description (i.e. .cdm) file, by selecting the Savara->Monitor menu
+		item. Once the tool has been launched, it will load the choreography description, subscribe
+		to the relevant event destination, and then indicate via a message in the bottom status line
+		that it is ready to monitor.
+		</para>
+
+		<imageobject>
+			<imagedata fileref="en-US/images/monitorui.png" width="5in" />
+		</imageobject>
+
+		<para>
+		When the information is received, from the service validators representing the different
+		participants (services), it is correlated to show the global status of the business 
+		transaction. The list of correlated interactions is shown in reverse time order in the 
+		image.
+		</para>
+		
+		<para>
+		If any <emphasis>out of sequence</emphasis> or other error situations arise, these are 
+		displayed in red.
+		</para>
+	</section>
+
+	<section>
+		<title>Configuration for Conversation Recording</title>
+
+		<para>
+		As well as validating the interactions between a set of
+		services, against a pre-defined choreography description,
+		it is also possible to use the <emphasis>Service Validators</emphasis>
+		in a non-validating record mode.
+		</para>
+
+		<para>
+		This will be useful in situations where a choreography
+		description does not currently exist, and we wish to
+		use the stream of business events being sent and received
+		by each identified service (or participant type) to
+		gain an understanding of the current business process.
+		</para>
+
+		<para>
+		An example of this type of configuration, associated
+		with the TrailBlazer example, is:
+		</para>
+			<informalexample>
+  				<programlisting role="XML" ><![CDATA[
+	<validator>
+		<service role="LoanBrokerParticipant" validate="false" >
+			<output epr="jms:queue/esb-tb-creditAgencyQueue" />
+			<input epr="jms:queue/esb-tb-creditAgencyQueue_reply" />
+			<output epr="jms:queue/esb-tb-jmsBankRequestQueue" />
+			<output epr="jms:queue/esb-tb-fileBankRequestQueue" />
+			<input epr="jms:queue/esb-tb-jmsBankResponseQueue" />
+			<output epr="jms:queue/esb-tb-customerNotifier" />
+			<input epr="jms:queue/esb-tb-fileBankResponseQueue" />
+		</service>
+		<service role="CreditAgencyParticipant" validate="false" >
+			<input epr="jms:queue/esb-tb-creditAgencyQueue" />
+			<output epr="jms:queue/esb-tb-creditAgencyQueue_reply" />
+		</service>
+		<service role="BankParticipant" validate="false" >
+			<input epr="jms:queue/esb-tb-jmsBankRequestQueue" />
+			<input epr="jms:queue/esb-tb-fileBankRequestQueue" />
+			<output epr="jms:queue/esb-tb-jmsBankResponseQueue" />
+			<output epr="jms:queue/esb-tb-fileBankResponseQueue" />
+		</service>
+		<service role="NotifierParticipant" validate="false" >
+			<input epr="jms:queue/esb-tb-customerNotifier" />
+		</service>
+	</validator>
+ 				 ]]></programlisting>
+			</informalexample>
+
+		<para>
+		To define a <emphasis>Service Validator</emphasis> in record
+		only mode, the <emphasis>model</emphasis> attribute
+		is not specified (because no choreography description exists
+		to be validated against), and the optional <emphasis>validate</emphasis>
+		attribute should be set to <emphasis role="bold">false</emphasis> (by default
+		this attribute is <emphasis role="bold">true</emphasis>).
+		</para>
+	</section>
+
+</chapter>
