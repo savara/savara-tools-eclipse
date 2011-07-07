@@ -48,6 +48,7 @@ import org.savara.tools.common.generation.GeneratorUtil;
 import org.savara.wsdl.generator.WSDLGeneratorFactory;
 import org.savara.wsdl.generator.soap.SOAPDocLitWSDLBinding;
 import org.scribble.protocol.model.*;
+import org.scribble.protocol.util.RoleUtil;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
@@ -117,18 +118,18 @@ public class SCAJavaGeneratorImpl extends AbstractGenerator {
 				
 				SCAJavaGenerator gen=new SCAJavaGenerator();
 				
-				java.util.List<Role> refRoles=local.getProtocol().getRoles();
+				java.util.Set<Role> refRoles=RoleUtil.getDeclaredRoles(local.getProtocol().getBlock());
 				java.util.List<Role> wsdlRoles=new java.util.Vector<Role>();
 				
 				// Write the WSDL files
 				java.util.List<String> refWsdlFilePaths=new java.util.Vector<String>();
 				
-				for (int i=0; i < refRoles.size(); i++) {
+				for (Role refRole : refRoles) {
 					Contract contract=ContractGeneratorFactory.getContractGenerator().generate(local.getProtocol(),
-										null, refRoles.get(i), handler);
+										null, refRole, handler);
 					
 					if (contract.getInterfaces().size() > 0) {
-						IFile refWsdlFile = generateWSDL(model, refRoles.get(i), proj, local, modelResource, handler);
+						IFile refWsdlFile = generateWSDL(model, refRole, proj, local, modelResource, handler);
 						
 						if (refWsdlFile != null) {
 							String wsdlLocation=WSDL_FOLDER+"/"+refWsdlFile.getName();
@@ -140,9 +141,9 @@ public class SCAJavaGeneratorImpl extends AbstractGenerator {
 									wsdlLocation, proj.getFolder(JAVA_PATH).getLocation().toOSString());
 							
 							logger.info("Add WSDL file path '"+refWsdlFile.getLocation().toOSString()+
-											"' associated with role "+refRoles.get(i));
+											"' associated with role "+refRole);
 							refWsdlFilePaths.add(refWsdlFile.getLocation().toOSString());
-							wsdlRoles.add(refRoles.get(i));
+							wsdlRoles.add(refRole);
 						}
 					}
 				}
