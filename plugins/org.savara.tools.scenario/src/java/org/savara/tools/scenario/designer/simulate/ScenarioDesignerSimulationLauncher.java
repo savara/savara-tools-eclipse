@@ -144,7 +144,7 @@ public class ScenarioDesignerSimulationLauncher extends ScenarioSimulationLaunch
 		if (se != null) {
 			if (tag.equals("START")) {
 				se.processing();
-				se.setLogStartPosition(start);
+				se.setLogStartPosition(start-4);
 			} else if (tag.equals("END")) {
 				se.setLogEndPosition(end);
 			} else if (tag.equals("SUCCESS")) {

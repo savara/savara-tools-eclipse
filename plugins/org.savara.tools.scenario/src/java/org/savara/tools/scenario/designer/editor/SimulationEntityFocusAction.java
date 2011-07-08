@@ -29,7 +29,7 @@ import org.savara.tools.scenario.designer.simulate.*;
  */
 public class SimulationEntityFocusAction extends org.eclipse.gef.ui.actions.SelectionAction {
 
-	public static final String ID="org.pi4soa.service.test.designer.editor.SimulationEntityFocusActionID";
+	public static final String ID="org.savara.tools.scenario.designer.editor.SimulationEntityFocusActionID";
 	
 	/**
 	 * Creates a <code>CreateMessageLinksAction</code> and 
@@ -62,9 +62,8 @@ public class SimulationEntityFocusAction extends org.eclipse.gef.ui.actions.Sele
 		}
 		
 		if (text != null) {
-			// Comment out while not displaying simulation log
-			//((ScenarioDesigner)getWorkbenchPart()).
-			//			getSimulationLogPage().setText(text);
+			((ScenarioDesigner)getWorkbenchPart()).
+						getSimulationLogPage().setText(text);
 		}
 	}
 	
