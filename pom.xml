@@ -120,7 +120,7 @@
 		</repository>
 		<repository>
 			<id>graphiti</id>
-			<url>http://download.eclipse.org/graphiti/updates/0.7.1/</url>
+			<url>http://download.eclipse.org/graphiti/updates/0.8.0/</url>
 			<layout>p2</layout>
 			<snapshots>
 				<enabled>true</enabled>
