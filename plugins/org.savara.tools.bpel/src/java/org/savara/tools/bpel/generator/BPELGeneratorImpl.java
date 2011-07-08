@@ -46,6 +46,7 @@ import org.savara.contract.model.Interface;
 import org.savara.contract.model.Namespace;
 import org.savara.protocol.contract.generator.ContractGenerator;
 import org.savara.protocol.contract.generator.ContractGeneratorFactory;
+import org.savara.tools.bpel.osgi.Activator;
 import org.savara.tools.common.ArtifactType;
 import org.savara.tools.common.generation.AbstractGenerator;
 import org.savara.wsdl.generator.WSDLGeneratorFactory;
@@ -772,13 +773,17 @@ public class BPELGeneratorImpl extends AbstractGenerator {
 		// Add wtp natures
 		WtpUtils.addNatures(project);
 		
-		// Add required project facets	
-		IProjectFacet bpelFacet =
-					ProjectFacetsManager.getProjectFacet("jbt.bpel.facet.core");
-		IProjectFacetVersion ipfv = bpelFacet.getVersion("2.0");
-		IFacetedProject ifp = ProjectFacetsManager.create(project, true, null);
-		ifp.installProjectFacet(ipfv, null,
-					new org.eclipse.core.runtime.NullProgressMonitor());
+		// Add required project facets
+		try {
+			IProjectFacet bpelFacet =
+						ProjectFacetsManager.getProjectFacet("jbt.bpel.facet.core");
+			IProjectFacetVersion ipfv = bpelFacet.getVersion("2.0");
+			IFacetedProject ifp = ProjectFacetsManager.create(project, true, null);
+			ifp.installProjectFacet(ipfv, null,
+						new org.eclipse.core.runtime.NullProgressMonitor());
+		} catch(Exception e) {
+			Activator.logError("Failed to add BPEL facet to project", e);
+		}
 
 		// Update the project description
 		IProjectDescription description = project.getDescription();
