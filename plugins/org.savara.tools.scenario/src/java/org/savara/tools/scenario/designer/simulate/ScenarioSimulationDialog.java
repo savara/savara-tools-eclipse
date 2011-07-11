@@ -870,9 +870,6 @@ public class ScenarioSimulationDialog extends Dialog {
     	projects.add(m_designer.getFile().getProject().getName());
     	
     	for (int i=0; i < m_models.size(); i++) {
-    		ResourcesPlugin.getWorkspace();
-    		ResourcesPlugin.getWorkspace().getRoot();
-    		
     		IFile modelFile=ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(m_simulationModels.get(i).getName()));
     		
     		if (modelFile != null && modelFile.getProject() != null) {
@@ -891,6 +888,10 @@ public class ScenarioSimulationDialog extends Dialog {
     			ret += ",";
     		}
     		ret += projects.get(i);
+    	}
+    	
+    	if (logger.isLoggable(Level.FINE)) {
+    		logger.fine("Simulating with projects: "+ret);
     	}
     	
     	return(ret);

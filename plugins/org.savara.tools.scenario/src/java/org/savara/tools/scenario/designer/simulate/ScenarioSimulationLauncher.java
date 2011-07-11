@@ -241,6 +241,10 @@ public class ScenarioSimulationLauncher
 			
 			for (int n=0; n < projname.length; n++) {
 				try {
+					if (logger.isLoggable(Level.FINE)) {
+						logger.fine("Building classpath for project: "+projname[n]);
+					}
+					
 					IProject project=
 						ResourcesPlugin.getWorkspace().getRoot().getProject(projname[n]);
 		

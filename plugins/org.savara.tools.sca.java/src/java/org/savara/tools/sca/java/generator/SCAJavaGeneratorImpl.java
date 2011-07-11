@@ -431,18 +431,6 @@ public class SCAJavaGeneratorImpl extends AbstractGenerator {
 		// Add wtp natures
 		//WtpUtils.addNatures(project);
 		
-		// Update the project description
-		IProjectDescription description = project.getDescription();
-		
-		// Setup project reference to CDM project
-		IProject[] projects=new IProject[1];
-		projects[0] = resource.getProject();
-		description.setReferencedProjects(projects);
-		
-		// Set the description
-		project.setDescription(description,
-				new org.eclipse.core.runtime.NullProgressMonitor());
-				
 		IJavaProject jproject=JavaCore.create(project);
 		
 		// Create the java project

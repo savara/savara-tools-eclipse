@@ -785,18 +785,6 @@ public class BPELGeneratorImpl extends AbstractGenerator {
 			Activator.logError("Failed to add BPEL facet to project", e);
 		}
 
-		// Update the project description
-		IProjectDescription description = project.getDescription();
-		
-		// Setup project reference to CDM project
-		IProject[] projects=new IProject[1];
-		projects[0] = resource.getProject();
-		description.setReferencedProjects(projects);
-		
-		// Set the description
-		project.setDescription(description,
-				new org.eclipse.core.runtime.NullProgressMonitor());
-		
 		return(project);
 	}
 	
