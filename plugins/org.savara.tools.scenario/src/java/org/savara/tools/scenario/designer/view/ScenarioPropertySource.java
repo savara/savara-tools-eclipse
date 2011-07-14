@@ -75,7 +75,14 @@ public class ScenarioPropertySource implements IPropertySource {
 		if (id == NAME_ID) {
 			ret = getElement().getName();
 		} else if (id == DESCRIPTION_ID) {
-			ret = getElement().getDescription();
+			if (getElement().getDescription() != null) {
+				for (Object content : getElement().getDescription().getContent()) {
+					if (content instanceof String) {
+						ret = content;
+						break;
+					}
+				}
+			}
 		} else if (id == AUTHOR_ID) {
 			ret = getElement().getAuthor();
 		}
@@ -114,7 +121,11 @@ public class ScenarioPropertySource implements IPropertySource {
 			}
 		} else if (id == DESCRIPTION_ID) {
 			if (value instanceof String) {
-				getElement().setDescription((String)value);
+				if (getElement().getDescription() == null) {
+					getElement().setDescription(new Scenario.Description());
+				}
+				getElement().getDescription().getContent().clear();
+				getElement().getDescription().getContent().add((String)value);
 			}			
 		} else if (id == AUTHOR_ID) {
 			if (value instanceof String) {
