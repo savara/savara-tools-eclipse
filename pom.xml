@@ -131,6 +131,29 @@
 			</releases>
 		</repository>
 		<repository>
+			<id>bpmn2model</id>
+			<url>http://download.eclipse.org/bpmn2-modeler/bpmn2/site/</url>
+			<layout>p2</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>bpmn2editor</id>
+			<url>http://download.eclipse.org/bpmn2-modeler/site/</url>
+			<layout>p2</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+<!--
+		<repository>
 			<id>bpmn2editor</id>
 			<url>http://codehoop.com/bpmn2</url>
 			<layout>p2</layout>
@@ -141,7 +164,6 @@
 				<enabled>true</enabled>
 			</releases>
 		</repository>
-<!--
 		<repository>
 			<id>eclipse-helios</id>
 			<url>http://download.eclipse.org/releases/helios</url>
