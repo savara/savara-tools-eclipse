@@ -214,6 +214,13 @@ NO WARRANTY
          unpack="false"/>
 
    <plugin
+         id="org.savara.bpmn2"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.savara.tools.sca.java"
          download-size="0"
          install-size="0"
@@ -241,14 +248,12 @@ NO WARRANTY
          version="0.0.0"
          unpack="false"/>
 
-<!--
    <plugin
-         id="org.savara.tools.bpmn"
+         id="org.savara.tools.bpmn2"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
--->
 
    <plugin
          id="org.savara.tools.monitor"
