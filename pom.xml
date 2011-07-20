@@ -152,17 +152,6 @@
 				<enabled>true</enabled>
 			</releases>
 		</repository>
-		<repository>
-			<id>releaserepo</id>
-			<url>https://repository.jboss.org/nexus/content/repositories/jboss_thirdparty_releases_staging_profile-115/</url>
-			<layout>p2</layout>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
 	</repositories>
 
 </project>
