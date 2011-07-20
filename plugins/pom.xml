@@ -18,7 +18,6 @@
 		<module>org.savara.tools.common</module>
 		<module>org.savara.tools.bpel</module>
 		<module>org.savara.tools.bpmn2</module>
-		<module>org.savara.tools.monitor</module>
 		<module>org.savara.tools.sca.java</module>
 		<module>org.savara.tools.validator</module>
 		<module>org.savara.tools.wsdl</module>
