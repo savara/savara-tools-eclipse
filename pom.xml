@@ -31,7 +31,7 @@
 		<savara.core.version>2.0.0-SNAPSHOT</savara.core.version>
 		<scribble.version>2.0.0.20110708-M6</scribble.version>
         	<jaxb.version>2.1</jaxb.version>
-    		<tycho-version>0.10.0</tycho-version>
+    		<tychoVersion>0.12.0</tychoVersion>
 		<tuscany.version>2.0-Beta2</tuscany.version>
 		<cxf.version>2.4.0</cxf.version>
 	</properties>
@@ -57,7 +57,7 @@
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
-				<version>${tycho-version}</version>
+				<version>${tychoVersion}</version>
 				<configuration>
 					<resolver>p2</resolver>
 					<ignoreTychoRepositories>true</ignoreTychoRepositories>
