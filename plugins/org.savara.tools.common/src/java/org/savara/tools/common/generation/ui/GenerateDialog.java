@@ -157,8 +157,8 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 		try {
 			Content content=new FileContent(res.getRawLocation().toFile());
 			
-			m_protocolModel = ProtocolServices.getParserManager().parse(content,
-							new JournalProxy(journal), null);
+			m_protocolModel = ProtocolServices.getParserManager().parse(null, content,
+							new JournalProxy(journal));
 			
 			if (m_protocolModel == null) {
 				logger.severe("Unable to load model");

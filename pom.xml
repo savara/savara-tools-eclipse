@@ -29,7 +29,7 @@
 	<properties>
 		<BUILD_ALIAS>M4</BUILD_ALIAS>
 		<savara.core.version>2.0.0-SNAPSHOT</savara.core.version>
-		<scribble.version>2.0.0.20110708-M6</scribble.version>
+		<scribble.version>2.0.0-SNAPSHOT</scribble.version>
         	<jaxb.version>2.1</jaxb.version>
     		<tychoVersion>0.12.0</tychoVersion>
 		<tuscany.version>2.0-Beta2</tuscany.version>

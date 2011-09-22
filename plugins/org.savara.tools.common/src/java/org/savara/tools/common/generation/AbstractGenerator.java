@@ -73,8 +73,8 @@ public abstract class AbstractGenerator implements Generator {
 		DefaultProtocolContext context=new DefaultProtocolContext(ProtocolServices.getParserManager(),
 				new DefaultResourceLocator(resource.getParent().getFullPath().toFile()));
 
-		ret = ProtocolServices.getProtocolProjector().project(global,
-						role, new JournalProxy(handler), context);
+		ret = ProtocolServices.getProtocolProjector().project(context, global,
+						role, new JournalProxy(handler));
 
 		if (ret != null) {
 			// TODO: SAVARA-167 - issue when projection is based on a sub-protocol

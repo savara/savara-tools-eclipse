@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.savara.bpmn2.generation.process.ProtocolToBPMN2ProcessModelGenerator;
 import org.savara.bpmn2.model.TDefinitions;
@@ -36,11 +35,6 @@ import org.savara.tools.common.ArtifactType;
 import org.savara.tools.common.generation.AbstractGenerator;
 import org.scribble.protocol.model.*;
 import org.eclipse.core.runtime.*;
-import org.eclipse.jst.common.project.facet.WtpUtils;
-import org.eclipse.wst.common.project.facet.core.IFacetedProject;
-import org.eclipse.wst.common.project.facet.core.IProjectFacet;
-import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
-import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 
 /**
  * This class provides the mechanism for generating BPMN2
@@ -123,7 +117,7 @@ public class BPMN2GeneratorImpl extends AbstractGenerator {
 
 			// Store BPMN2 process
 			IPath bpmn2Path=proj.getFullPath().append(localcm.getProtocol().getName()+"_"+
-							localcm.getProtocol().getRole().getName()+".bpmn2");
+							localcm.getProtocol().getLocatedRole().getName()+".bpmn2");
 			
 			IFile bpmn2File=proj.getProject().getWorkspace().getRoot().getFile(bpmn2Path);
 			

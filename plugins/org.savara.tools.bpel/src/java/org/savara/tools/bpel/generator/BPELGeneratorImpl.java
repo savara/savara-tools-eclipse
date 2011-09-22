@@ -31,7 +31,6 @@ import javax.xml.transform.stream.StreamResult;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.savara.bpel.generator.ProtocolToBPELModelGenerator;
 import org.savara.bpel.model.*;
@@ -169,7 +168,7 @@ public class BPELGeneratorImpl extends AbstractGenerator {
 			IPath bpelPath=proj.getFullPath().append(
 					new Path(BPEL_PATH)).
 						append(localcm.getProtocol().getName()+"_"+
-							localcm.getProtocol().getRole().getName()+".bpel");
+							localcm.getProtocol().getLocatedRole().getName()+".bpel");
 			
 			IFile bpelFile=proj.getProject().getWorkspace().getRoot().getFile(bpelPath);
 			createFolder(bpelFile);
