@@ -93,6 +93,13 @@ Raleigh NC 27606 USA.
          unpack="false"/>
 
    <plugin
+         id="org.savara.tools.switchyard.bpel"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.savara.tools.validator"
          download-size="0"
          install-size="0"
@@ -136,6 +143,13 @@ Raleigh NC 27606 USA.
 
    <plugin
          id="org.savara.sca.java"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.savara.switchyard.bpel"
          download-size="0"
          install-size="0"
          version="0.0.0"
