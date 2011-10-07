@@ -152,6 +152,17 @@
 				<enabled>true</enabled>
 			</releases>
 		</repository>
+		<repository>
+			<id>bpeleditor</id>
+			<url>http://download.eclipse.org/bpel/update-site/</url>
+			<layout>p2</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
 	</repositories>
 
 </project>
