@@ -390,10 +390,12 @@ public class SwitchyardBPELGeneratorImpl extends AbstractGenerator {
 		
 		// Write partner link types to file
 		IPath deployDescPath=proj.getFullPath().append(
-				new Path(BPEL_PATH)).
-					append(SWITCHYARD_XML_FILENAME);
+				new Path(BPEL_PATH+java.io.File.separatorChar+"META-INF"))
+						.append(SWITCHYARD_XML_FILENAME);
 		
 		IFile deployDescFile=proj.getProject().getWorkspace().getRoot().getFile(deployDescPath);
+		
+		GeneratorUtil.createFolder((IFolder)deployDescFile.getParent());
 		
 		deployDescFile.create(null, true,
 				new org.eclipse.core.runtime.NullProgressMonitor());
@@ -412,7 +414,7 @@ public class SwitchyardBPELGeneratorImpl extends AbstractGenerator {
 		
 		xmlstr.close();
 		
-		String xml=XMLUtils.format(new String(xmlstr.toByteArray()));
+		String xml=new String(xmlstr.toByteArray());
 		
 		deployDescFile.setContents(new java.io.ByteArrayInputStream(xml.getBytes()), true, false,
 					new org.eclipse.core.runtime.NullProgressMonitor());
