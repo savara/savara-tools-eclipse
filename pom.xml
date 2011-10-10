@@ -152,9 +152,34 @@
 				<enabled>true</enabled>
 			</releases>
 		</repository>
+
+		<!-- BPEL related dependencies introduced due to the WSIL component
+			shared with the BPMN2 editor -->
 		<repository>
 			<id>bpeleditor</id>
 			<url>http://download.eclipse.org/bpel/update-site/</url>
+			<layout>p2</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>gmf</id>
+			<url>http://download.eclipse.org/modeling/gmp/updates/releases/</url>
+			<layout>p2</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>emf</id>
+			<url>http://download.eclipse.org/modeling/emf/updates/releases/</url>
 			<layout>p2</layout>
 			<snapshots>
 				<enabled>true</enabled>
