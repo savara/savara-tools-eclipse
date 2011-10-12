@@ -5,7 +5,7 @@
 	<groupId>org.savara</groupId>
 	<artifactId>tools</artifactId>
 	<packaging>pom</packaging>
-	<version>2.0.0-SNAPSHOT</version>
+	<version>2.0.0.20111014-M5</version>
 	<name>Savara::Tools</name>
 
 	<!-- use JBoss Tools' trunk/build/parent/pom.xml - must be built locally first! 
@@ -28,10 +28,9 @@
 
 	<properties>
 		<BUILD_ALIAS>M5</BUILD_ALIAS>
-		<savara.core.version>2.0.0-SNAPSHOT</savara.core.version>
-		<scribble.version>2.0.0-SNAPSHOT</scribble.version>
+		<savara.core.version>2.0.0.20111014-M5</savara.core.version>
+		<scribble.version>2.0.0.CR2</scribble.version>
         	<jaxb.version>2.1</jaxb.version>
-    		<tychoVersion>0.12.0</tychoVersion>
 		<tuscany.version>2.0-Beta2</tuscany.version>
 		<cxf.version>2.4.0</cxf.version>
 	</properties>
@@ -153,41 +152,32 @@
 			</releases>
 		</repository>
 
-		<!-- BPEL related dependencies introduced due to the WSIL component
-			shared with the BPMN2 editor -->
 		<repository>
-			<id>bpeleditor</id>
-			<url>http://download.eclipse.org/bpel/update-site/</url>
-			<layout>p2</layout>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
+			<id>savara-core-staging</id>
+	        	<name>Savara Core Staging</name>
+			<url>https://repository.jboss.org/nexus/content/repositories/jboss_thirdparty_releases_staging_profile-010/</url>
 			<releases>
-				<enabled>true</enabled>
+			  <enabled>true</enabled>
+			  <updatePolicy>never</updatePolicy>
 			</releases>
-		</repository>
-		<repository>
-			<id>gmf</id>
-			<url>http://download.eclipse.org/modeling/gmp/updates/releases/</url>
-			<layout>p2</layout>
 			<snapshots>
-				<enabled>true</enabled>
+			  <enabled>true</enabled>
+			  <updatePolicy>never</updatePolicy>
 			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
 		</repository>
-		<repository>
-			<id>emf</id>
-			<url>http://download.eclipse.org/modeling/emf/updates/releases/</url>
-			<layout>p2</layout>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
+	    <repository>
+	        <id>scribble-staging</id>
+	        <name>Scribble Staging</name>
+		<url>https://repository.jboss.org/nexus/content/repositories/jboss_thirdparty_releases_staging_profile-006/</url>
+		<releases>
+		  <enabled>true</enabled>
+		  <updatePolicy>never</updatePolicy>
+		</releases>
+		<snapshots>
+		  <enabled>true</enabled>
+		  <updatePolicy>never</updatePolicy>
+		</snapshots>
+	    </repository>
 	</repositories>
 
 </project>
