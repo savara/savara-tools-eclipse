@@ -152,19 +152,6 @@
 			</releases>
 		</repository>
 
-		<repository>
-			<id>savara-core-staging</id>
-	        	<name>Savara Core Staging</name>
-			<url>https://repository.jboss.org/nexus/content/repositories/jboss_thirdparty_releases_staging_profile-044/</url>
-			<releases>
-			  <enabled>true</enabled>
-			  <updatePolicy>never</updatePolicy>
-			</releases>
-			<snapshots>
-			  <enabled>true</enabled>
-			  <updatePolicy>never</updatePolicy>
-			</snapshots>
-		</repository>
 	</repositories>
 
 </project>
