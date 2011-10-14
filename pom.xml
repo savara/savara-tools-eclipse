@@ -155,7 +155,7 @@
 		<repository>
 			<id>savara-core-staging</id>
 	        	<name>Savara Core Staging</name>
-			<url>https://repository.jboss.org/nexus/content/repositories/jboss_thirdparty_releases_staging_profile-010/</url>
+			<url>https://repository.jboss.org/nexus/content/repositories/jboss_thirdparty_releases_staging_profile-044/</url>
 			<releases>
 			  <enabled>true</enabled>
 			  <updatePolicy>never</updatePolicy>
@@ -165,19 +165,6 @@
 			  <updatePolicy>never</updatePolicy>
 			</snapshots>
 		</repository>
-	    <repository>
-	        <id>scribble-staging</id>
-	        <name>Scribble Staging</name>
-		<url>https://repository.jboss.org/nexus/content/repositories/jboss_thirdparty_releases_staging_profile-006/</url>
-		<releases>
-		  <enabled>true</enabled>
-		  <updatePolicy>never</updatePolicy>
-		</releases>
-		<snapshots>
-		  <enabled>true</enabled>
-		  <updatePolicy>never</updatePolicy>
-		</snapshots>
-	    </repository>
 	</repositories>
 
 </project>
