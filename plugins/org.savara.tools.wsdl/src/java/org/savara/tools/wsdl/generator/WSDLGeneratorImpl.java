@@ -236,7 +236,7 @@ public class WSDLGeneratorImpl extends AbstractGenerator {
 			
 			journal.error(MessageFormatter.format(java.util.PropertyResourceBundle.getBundle(
 					"org.savara.tools.wsdl.Messages"),
-								"SAVARA-WDSLTOOLS-00001"), null);
+								"SAVARA-WSDLTOOLS-00001", role.getName()), null);
 		}
 	}
 }

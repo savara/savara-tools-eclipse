@@ -97,10 +97,10 @@ public class BPMN2GeneratorImpl extends AbstractGenerator {
 					generateRoleProject(model, projectName, role, (TDefinitions)target,
 							local, modelResource, handler);
 				} catch(Exception e) {
-					logger.log(Level.SEVERE, "Failed to create BPEL project '"+projectName+"'", e);
+					logger.log(Level.SEVERE, "Failed to create BPMN2 project '"+projectName+"'", e);
 					
 					handler.error(MessageFormatter.format(java.util.PropertyResourceBundle.getBundle(
-							"org.savara.tools.bpel.Messages"), "SAVARA-BPELTOOLS-00001",
+							"org.savara.tools.bpmn2.Messages"), "SAVARA-BPMN2TOOLS-00001",
 										projectName), null);
 				}
 			}
