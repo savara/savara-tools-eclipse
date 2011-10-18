@@ -2,7 +2,7 @@
 <feature
       id="org.savara.tools.feature"
       label="SAVARA Tools Feature"
-      version="2.0.0.20111018-M5"
+      version="2.0.0.qualifier"
       provider-name="www.savara.org">
 
    <description>
