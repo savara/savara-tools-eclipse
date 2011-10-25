@@ -15,7 +15,7 @@
    <feature url="features/org.eclipse.graphiti.feature_0.0.0.jar" id="org.eclipse.graphiti.feature" version="0.0.0">
       <category name="Savara Dependencies"/>
    </feature>
-   <feature url="features/org.eclipse.bpmn2.modeler_0.0.0.jar" id="org.eclipse.bpmn2.modeler" version="0.0.0">
+   <feature url="features/org.eclipse.bpmn2.modeler.feature_0.0.0.jar" id="org.eclipse.bpmn2.modeler.feature" version="0.0.0">
       <category name="Savara Dependencies"/>
    </feature>
    <feature url="features/org.eclipse.bpmn2.feature_0.0.0.jar" id="org.eclipse.bpmn2.feature" version="0.0.0">
