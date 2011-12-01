@@ -126,8 +126,8 @@
         point="org.eclipse.ui.preferencePages">
      <page
            category="org.savara.tools.preferences.SavaraPreferencePage"
-           class="org.savara.tools.scenario.designer.eclipse.preferences.ScenarioPreferencePage"
-           id="org.savara.tools.scenario.designer.eclipse.preferences.ScenarioPreferencePage"
+           class="org.savara.tools.scenario.designer.preferences.ScenarioPreferencePage"
+           id="org.savara.tools.scenario.designer.preferences.ScenarioPreferencePage"
            name="Scenario">
      </page>
   </extension>
