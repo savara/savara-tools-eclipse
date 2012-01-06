@@ -9,4 +9,30 @@
      </generator>
   </extension>
 
+  <extension point="org.eclipse.ui.popupMenus"> 
+	<objectContribution 
+      id="org.savara.tools.bpmn2.object.contribution"
+   			objectClass="org.eclipse.core.resources.IFile"
+   				nameFilter="*.bpmn">
+	  <menu
+         id="org.savara.tools.menu"
+         label="Savara"
+         path="additions">
+      	<separator name="group1"/>
+      </menu>
+	  <menu
+         id="BPMN2.menu"
+         label="BPMN2"
+         path="org.savara.tools.menu/additions">
+      	<separator name="group2"/>
+      </menu>
+      <action
+           label="Add Service Interfaces"
+           class="org.savara.tools.bpmn2.actions.AddServiceInterfacesAction"
+           menubarPath="org.savara.tools.menu/BPMN2.menu/group2"
+           enablesFor="1"
+           id="org.savara.tools.bpmn2.actions.AddServiceInterfacesAction">
+     </action> 
+    </objectContribution>
+  </extension>
 </plugin>
