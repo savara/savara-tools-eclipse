@@ -28,3 +28,5 @@ Require-Bundle: org.eclipse.ui,
  org.savara.tools.common
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ClassPath: .,
+ lib/jaxb-impl-2.2.4-1.jar
