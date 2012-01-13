@@ -17,11 +17,6 @@
  */
 package org.savara.tools.bpmn2.actions;
 
-import java.io.IOException;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.IAction;
@@ -80,7 +75,8 @@ public class AddServiceInterfacesAction implements IObjectActionDelegate {
 						
 						java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
 						
-						serialize(defns, baos);
+						BPMN2ModelUtil.serialize(defns, baos, null,
+								AddServiceInterfacesAction.class.getClassLoader());
 						
 						java.io.ByteArrayInputStream bais=new java.io.ByteArrayInputStream(baos.toByteArray());
 						
@@ -91,33 +87,6 @@ public class AddServiceInterfacesAction implements IObjectActionDelegate {
 					Activator.logError("Failed to add service interfaces", e);
 				}
 			}
-		}
-	}
-	
-	/**
-	 * Serialize the BPMN2 model. This method is a copy of the one in the
-	 * BPMN2 bundle - however it is replicated here to make sure it picks
-	 * up the jaxb ri implementation, to fix an issue with the jaxb issue in
-	 * JDK 6 - so this may not be required when JDK 7 is the base version.
-	 * 
-	 * @param defns The BPMN2 model
-	 * @param os The output stream
-	 * @throws IOException Failed to serialize
-	 */
-	private void serialize(TDefinitions defns, java.io.OutputStream os) throws IOException {
-
-		try {
-			org.savara.bpmn2.model.ObjectFactory factory=
-						new org.savara.bpmn2.model.ObjectFactory();
-			
-			JAXBContext context = JAXBContext.newInstance(TDefinitions.class);
-			Marshaller marshaller = context.createMarshaller();
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-		
-			marshaller.marshal(factory.createDefinitions(defns), os);
-
-		} catch(Exception e) {
-			throw new IOException("Failed to serialize BPMN2 definitions", e);
 		}
 	}
 	

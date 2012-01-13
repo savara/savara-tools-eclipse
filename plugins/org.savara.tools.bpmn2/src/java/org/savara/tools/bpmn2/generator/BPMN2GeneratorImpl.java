@@ -142,7 +142,7 @@ public class BPMN2GeneratorImpl extends AbstractGenerator {
 			
 			//String bpelText=XMLUtils.toText(bpelProcess.getDOMElement());
 			ByteArrayOutputStream os=new ByteArrayOutputStream();
-			BPMN2ModelUtil.serialize(process, os, prefixes);
+			BPMN2ModelUtil.serialize(process, os, prefixes, BPMN2GeneratorImpl.class.getClassLoader());
 			
 			os.close();
 			
