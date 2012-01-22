@@ -35,6 +35,7 @@ import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 import org.savara.common.logging.DefaultFeedbackHandler;
 import org.savara.common.logging.FeedbackHandler;
+import org.savara.common.logging.MessageFormatter;
 import org.savara.contract.model.Contract;
 import org.savara.protocol.contract.generator.ContractGenerator;
 import org.savara.protocol.contract.generator.ContractGeneratorFactory;
@@ -229,6 +230,16 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 
 		if (m_protocolModel != null) {
 			java.util.List<Role> roles=m_protocolModel.getProtocol().getRoles();
+			
+			if (roles.size() == 0 && m_protocolModel.isLocated()) {
+				roles.add(m_protocolModel.getProtocol().getLocatedRole());
+			}
+			
+			if (roles.size() == 0) {
+				error(MessageFormatter.format(java.util.PropertyResourceBundle.getBundle(
+						"org.savara.tools.common.Messages"), "SAVARA-COMMONTOOLS-00002"), null);
+				throw new RuntimeException("Error occurred");
+			}
 
 			ContractGenerator cg=ContractGeneratorFactory.getContractGenerator();
 			
@@ -313,6 +324,10 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 					m_roleArtifactTypes.add(genType);
 				}
 			}
+		} else {
+			error(MessageFormatter.format(java.util.PropertyResourceBundle.getBundle(
+							"org.savara.tools.common.Messages"), "SAVARA-COMMONTOOLS-00001"), null);
+			throw new RuntimeException("Error occurred");
 		}
 
 		Button button=new Button(group, SWT.NONE);
@@ -369,6 +384,15 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 		checkStatus();
 		
 		return(ret);
+	}
+	
+	@Override
+	public int open() {
+		try {
+			return(super.open());
+		} catch(RuntimeException e) {
+			return(CANCEL);
+		}
 	}
 	
 	protected void checkStatus() {
