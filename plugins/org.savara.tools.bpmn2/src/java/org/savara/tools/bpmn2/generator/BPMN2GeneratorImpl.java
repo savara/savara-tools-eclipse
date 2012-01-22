@@ -117,7 +117,7 @@ public class BPMN2GeneratorImpl extends AbstractGenerator {
 
 			// Store BPMN2 process
 			IPath bpmn2Path=proj.getFullPath().append(localcm.getProtocol().getName()+"_"+
-							localcm.getProtocol().getLocatedRole().getName()+".bpmn2");
+							localcm.getProtocol().getLocatedRole().getName()+".bpmn");
 			
 			IFile bpmn2File=proj.getProject().getWorkspace().getRoot().getFile(bpmn2Path);
 			
