@@ -29,7 +29,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
+import org.savara.protocol.util.ProtocolServices;
 import org.savara.tools.common.ArtifactType;
+import org.scribble.common.resource.Content;
+import org.scribble.common.resource.FileContent;
 
 
 /**
@@ -81,6 +84,27 @@ public class GenerateServiceImplementationAction implements IObjectActionDelegat
 	public void selectionChanged(IAction action,
             ISelection selection) {
 		m_selection = selection;
+		
+		action.setEnabled(false);
+		
+		if (m_selection instanceof StructuredSelection) {
+			StructuredSelection sel=(StructuredSelection)m_selection;
+			
+			IResource res=(IResource)sel.getFirstElement();
+			
+			if (res instanceof IFile) {
+				
+				try {
+					Content content=new FileContent(res.getRawLocation().toFile());
+					
+					if (ProtocolServices.getParserManager().isParserAvailable(content)) {
+						action.setEnabled(true);
+					}
+				} catch(Exception e) {
+					logger.log(Level.SEVERE, "Failed to check if file could be parsed", e);
+				}
+			}
+		}
 	}
 
 	/**

@@ -6,8 +6,7 @@
   <extension point="org.eclipse.ui.popupMenus"> 
 	<objectContribution 
       id="org.savara.tools.common.object.contribution"
-   			objectClass="org.eclipse.core.resources.IFile"
-   				nameFilter="*.cdm">
+   			objectClass="org.eclipse.core.resources.IFile">
 	  <menu
          id="org.savara.tools.menu"
          label="Savara"
@@ -37,71 +36,4 @@
     </objectContribution>
   </extension>
 
-  <extension point="org.eclipse.ui.popupMenus"> 
-	<objectContribution 
-      id="org.savara.tools.common.object.contribution"
-   			objectClass="org.eclipse.core.resources.IFile"
-   				nameFilter="*.bpmn">
-	  <menu
-         id="org.savara.tools.menu"
-         label="Savara"
-         path="additions">
-      	<separator name="group1"/>
-      </menu>
-	  <menu
-         id="generate.menu"
-         label="Generate"
-         path="org.savara.tools.menu/additions">
-      	<separator name="group2"/>
-      </menu>
-      <action
-           label="Contract"
-           class="org.savara.tools.common.generation.ui.GenerateServiceContractAction"
-           menubarPath="org.savara.tools.menu/generate.menu/group2"
-           enablesFor="1"
-           id="org.savara.tools.common.generation.ui.GenerateServiceContractAction">
-     </action> 
-      <action
-           label="Service"
-           class="org.savara.tools.common.generation.ui.GenerateServiceImplementationAction"
-           menubarPath="org.savara.tools.menu/generate.menu/group2"
-           enablesFor="1"
-           id="org.savara.tools.common.generation.ui.GenerateServiceImplementationAction">
-     </action> 
-    </objectContribution>
-  </extension>
-
-  <extension point="org.eclipse.ui.popupMenus"> 
-	<objectContribution 
-      id="org.savara.tools.common.object.contribution"
-   			objectClass="org.eclipse.core.resources.IFile"
-   				nameFilter="*.bpmn2">
-	  <menu
-         id="org.savara.tools.menu"
-         label="Savara"
-         path="additions">
-      	<separator name="group1"/>
-      </menu>
-	  <menu
-         id="generate.menu"
-         label="Generate"
-         path="org.savara.tools.menu/additions">
-      	<separator name="group2"/>
-      </menu>
-      <action
-           label="Contract"
-           class="org.savara.tools.common.generation.ui.GenerateServiceContractAction"
-           menubarPath="org.savara.tools.menu/generate.menu/group2"
-           enablesFor="1"
-           id="org.savara.tools.common.generation.ui.GenerateServiceContractAction">
-     </action> 
-      <action
-           label="Service"
-           class="org.savara.tools.common.generation.ui.GenerateServiceImplementationAction"
-           menubarPath="org.savara.tools.menu/generate.menu/group2"
-           enablesFor="1"
-           id="org.savara.tools.common.generation.ui.GenerateServiceImplementationAction">
-     </action> 
-    </objectContribution>
-  </extension>
 </plugin>

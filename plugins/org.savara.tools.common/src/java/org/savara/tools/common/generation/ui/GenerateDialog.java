@@ -46,7 +46,9 @@ import org.savara.tools.common.ArtifactType;
 import org.savara.tools.common.generation.Generator;
 import org.savara.tools.common.logging.FeedbackHandlerDialog;
 import org.scribble.common.resource.Content;
+import org.scribble.common.resource.DefaultResourceLocator;
 import org.scribble.common.resource.FileContent;
+import org.scribble.protocol.DefaultProtocolContext;
 import org.scribble.protocol.model.*;
 
 /**
@@ -158,7 +160,11 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 		try {
 			Content content=new FileContent(res.getRawLocation().toFile());
 			
-			m_protocolModel = ProtocolServices.getParserManager().parse(null, content,
+			DefaultProtocolContext context=
+					new DefaultProtocolContext(ProtocolServices.getParserManager(),
+						new DefaultResourceLocator(res.getRawLocation().toFile().getParentFile()));
+			
+			m_protocolModel = ProtocolServices.getParserManager().parse(context, content,
 							new JournalProxy(journal));
 			
 			if (m_protocolModel == null) {
