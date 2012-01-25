@@ -85,7 +85,19 @@ public class BPMN2GeneratorImpl extends AbstractGenerator {
 			logger.fine("Generate local model '"+role+"' for: "+model);
 		}
 		
-		ProtocolModel local=getProtocolModelForRole(model, role, modelResource, handler);
+		ProtocolModel local=null;
+		
+		if (model.isLocated()) {
+			if (role == null || role.equals(model.getProtocol().getLocatedRole())) {
+				local = model;
+			} else {
+				handler.error(MessageFormatter.format(java.util.PropertyResourceBundle.getBundle(
+						"org.savara.tools.bpmn2.Messages"), "SAVARA-BPMN2TOOLS-00003",
+									model.getProtocol().getLocatedRole(), role), null);
+			}
+		} else {
+			local = getProtocolModelForRole(model, role, modelResource, handler);
+		}
 		
 		if (local != null) {
 			ProtocolToBPMN2ProcessModelGenerator generator=new ProtocolToBPMN2ProcessModelGenerator();
