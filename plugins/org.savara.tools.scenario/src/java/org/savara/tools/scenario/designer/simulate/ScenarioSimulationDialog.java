@@ -55,6 +55,8 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+import org.savara.common.resources.DefaultResourceLocator;
+import org.savara.common.resources.ResourceLocator;
 import org.savara.scenario.model.Role;
 import org.savara.scenario.model.Scenario;
 import org.savara.scenario.simulation.DefaultSimulationContext;
@@ -87,6 +89,7 @@ public class ScenarioSimulationDialog extends Dialog {
 	private java.io.File m_scenarioFile=null;
 	private IFile m_scenarioIFile=null;
 	private java.util.List<SimulationModel> m_simulationModels=new java.util.Vector<SimulationModel>();
+	private java.util.List<ResourceLocator> m_resourceLocators=new java.util.Vector<ResourceLocator>();
 	private Scenario m_scenario=null;
 	private org.savara.tools.scenario.designer.editor.ScenarioDesigner m_designer=null;
 	private boolean m_simulate=false;
@@ -672,8 +675,12 @@ public class ScenarioSimulationDialog extends Dialog {
     	}
     	
     	try {
-    		SimulationModel sm=new SimulationModel(m_models.get(index).getText().trim(), is);
+    		java.io.File modelFile=new java.io.File(m_models.get(index).getText().trim());
+    		
+    		SimulationModel sm=new SimulationModel(modelFile.getName(), is);
     		m_simulationModels.set(index, sm);
+    		m_resourceLocators.set(index, new DefaultResourceLocator(modelFile.getParentFile()));
+    		
     	} catch(Exception e) {
     		logger.log(Level.SEVERE, "Failed to initialize simulation model for '"+
 					m_models.get(index).getText()+"'", e);    		
@@ -686,7 +693,8 @@ public class ScenarioSimulationDialog extends Dialog {
     	java.util.List<RoleSimulator> rsims=RoleSimulatorFactory.getRoleSimulators();
     	for (RoleSimulator rsim : rsims) {
     		if (rsim.isSupported(m_simulationModels.get(index))) {
-        		Object model=rsim.getModel(m_simulationModels.get(index));
+        		Object model=rsim.getModel(m_simulationModels.get(index),
+        						m_resourceLocators.get(index));
 
         		m_simulatorTypes.get(index).add(rsim.getName());
     			
@@ -747,7 +755,8 @@ public class ScenarioSimulationDialog extends Dialog {
 					roleDetails.setScenarioRole(m_scenario.getRole().get(i).getName());	
 					roleDetails.setModel(m_simulationModels.get(i).getName());
 					
-					Object model=rsim.getModel(m_simulationModels.get(i));
+					Object model=rsim.getModel(m_simulationModels.get(i),
+    						m_resourceLocators.get(i));
 					
 					if (model != null) {
 						java.util.List<Role> roles=rsim.getModelRoles(model);
@@ -769,7 +778,8 @@ public class ScenarioSimulationDialog extends Dialog {
 							} else {
 								roleDetails.setModelRole(selected.getName());
 								
-								context.setModel(rsim.getModelForRole(model, selected));
+								context.setModel(rsim.getModelForRole(model, selected,
+		        						m_resourceLocators.get(i)));
 							}
 							
 							m_contexts.put(m_scenario.getRole().get(i), context);
