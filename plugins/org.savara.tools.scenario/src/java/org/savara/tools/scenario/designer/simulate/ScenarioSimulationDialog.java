@@ -272,6 +272,7 @@ public class ScenarioSimulationDialog extends Dialog {
         	
         	try {
         		m_simulationModels.add(new SimulationModel(null, null));
+        		m_resourceLocators.add(new DefaultResourceLocator(null));
         	} catch(Exception e) {
         		logger.log(Level.SEVERE, "Failed to initialize simulation model", e);
         	}
