@@ -94,7 +94,7 @@ public class ScenarioSimulationDialog extends Dialog {
 	private org.savara.tools.scenario.designer.editor.ScenarioDesigner m_designer=null;
 	private boolean m_simulate=false;
 	private java.util.Map<Role,RoleSimulator> m_roleSimulators=new java.util.HashMap<Role,RoleSimulator>();
-	private java.util.Map<Role,SimulationContext> m_contexts=new java.util.HashMap<Role,SimulationContext>();
+	//private java.util.Map<Role,SimulationContext> m_contexts=new java.util.HashMap<Role,SimulationContext>();
 	private Simulation m_simulation=null;
 	private boolean f_initialConfig=true;
 		
@@ -810,18 +810,18 @@ public class ScenarioSimulationDialog extends Dialog {
 						if (selected != null || roles.size() == 0) {
 							m_roleSimulators.put(m_scenario.getRole().get(i), rsim);
 							
-							DefaultSimulationContext context=new DefaultSimulationContext(getScenarioFile());
+							//DefaultSimulationContext context=new DefaultSimulationContext(getScenarioFile());
 							
-							if (roles.size() == 0) {
-								context.setModel(model);
-							} else {
+							if (roles.size() != 0) {
+								//context.setModel(model);
+							//} else {
 								roleDetails.setModelRole(selected.getName());
 								
-								context.setModel(rsim.getModelForRole(model, selected,
-		        						m_resourceLocators.get(i)));
+								//context.setModel(rsim.getModelForRole(model, selected,
+		        				//		m_resourceLocators.get(i)));
 							}
 							
-							m_contexts.put(m_scenario.getRole().get(i), context);
+							//m_contexts.put(m_scenario.getRole().get(i), context);
 						} else {
 							logger.severe("Missing role '"+m_modelRoles.get(i).getText()+"'");
 						}

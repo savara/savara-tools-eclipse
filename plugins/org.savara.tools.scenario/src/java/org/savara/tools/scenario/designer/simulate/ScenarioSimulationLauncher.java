@@ -371,25 +371,36 @@ public class ScenarioSimulationLauncher
 	protected java.util.List<Bundle> getBundles() {
 		java.util.List<Bundle> ret=new java.util.Vector<Bundle>();
 		
-		Bundle bundle=Platform.getBundle("org.savara.scenario");
+		Bundle bundle=Platform.getBundle("org.savara.tools.scenario");
 		
 		if (bundle != null) {
 			getBundles(bundle, ret);
-			
-			// Check for role simulators
-			ServiceReference<?>[] refs=bundle.getServicesInUse();
-			for (ServiceReference<?> ref : refs) {
-				getBundles(ref.getBundle(), ret);
-			}
+		}
+
+		if (logger.isLoggable(Level.FINE)) {
+			logger.fine("Number of bundles is: "+ret.size());
 		}
 		
 		return(ret);
 	}
 	
 	protected void getBundles(Bundle bundle, java.util.List<Bundle> list) {
+		
 		if (list.contains(bundle) == false) {
 			list.add(bundle);
 			
+			// Check for role simulators
+			ServiceReference<?>[] refs=bundle.getServicesInUse();
+			
+			if (refs != null) {
+				for (ServiceReference<?> ref : refs) {
+					if (logger.isLoggable(Level.FINER)) {
+						logger.finer("Bundle: "+bundle+" Referenced="+ref.getBundle());	
+					}
+					getBundles(ref.getBundle(), list);
+				}
+			}
+
 			// Get required bundles
 			String required=bundle.getHeaders().get(Constants.REQUIRE_BUNDLE);
 			
@@ -404,7 +415,11 @@ public class ScenarioSimulationLauncher
 						bundleId = bundleId.substring(0, index);
 					}
 					
-;					Bundle other=Platform.getBundle(bundleId);
+					Bundle other=Platform.getBundle(bundleId);
+					
+					if (logger.isLoggable(Level.FINER)) {
+						logger.finer("Bundle: "+bundle+" Required="+other);	
+					}
 					
 					if (other == null) {
 						logger.finest("Failed to find bundle '"+bundleId+"'");
