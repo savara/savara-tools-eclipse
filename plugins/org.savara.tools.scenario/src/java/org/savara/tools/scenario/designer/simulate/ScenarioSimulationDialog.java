@@ -364,21 +364,16 @@ public class ScenarioSimulationDialog extends Dialog {
         	simulatorTypeData.top = new FormAttachment(modelRole, 5);
         	simulatorType.setLayoutData(simulatorTypeData);
         	
-        	/*
+        	final int pos=i;
+        	
         	simulatorType.addSelectionListener(new SelectionListener() {
 				public void widgetDefaultSelected(SelectionEvent arg0) {
 					widgetSelected(arg0);
 				}
 				public void widgetSelected(SelectionEvent arg0) {
-					if (simulatorType == m_simulatorTypes.get(0) &&
-							m_sameSimulatorButton.getSelection()) {
-						for (int i=1; i < m_simulatorTypes.size(); i++) {
-							m_simulatorTypes.get(i).select(simulatorType.getSelectionIndex());
-						}
-					}
+					updateModelRoleList(pos);
 				}
         	});
-        	*/
         	
         	updateModel(i);
     	}
@@ -601,13 +596,14 @@ public class ScenarioSimulationDialog extends Dialog {
     		    			RoleDetails rd=m_simulation.getRoles().get(j);
     		    			if (rd.getScenarioRole().equals(m_scenario.getRole().get(i).getName())) {
     		    				m_models.get(i).setText(rd.getModel());
-    		    				if (rd.getModelRole() != null) {
-    		    					m_modelRoles.get(i).setText(rd.getModelRole());
-    		    				}
     		    				int index=m_simulatorTypes.get(i).indexOf(rd.getSimulator());
     		    				
     		    				if (index != -1) {
     		    					m_simulatorTypes.get(i).select(index);
+    		    					updateModelRoleList(i);
+    		    				}
+    		    				if (rd.getModelRole() != null) {
+    		    					m_modelRoles.get(i).setText(rd.getModelRole());
     		    				}
     		    				f_initialized = true;
     		    			}
@@ -678,7 +674,7 @@ public class ScenarioSimulationDialog extends Dialog {
     	try {
     		java.io.File modelFile=new java.io.File(m_models.get(index).getText().trim());
     		
-    		SimulationModel sm=new SimulationModel(modelFile.getName(), is);
+    		SimulationModel sm=new SimulationModel(modelFile.getAbsolutePath(), is);
     		m_simulationModels.set(index, sm);
     		m_resourceLocators.set(index, new DefaultResourceLocator(modelFile.getParentFile()));
     		
@@ -694,11 +690,11 @@ public class ScenarioSimulationDialog extends Dialog {
     	java.util.List<RoleSimulator> rsims=RoleSimulatorFactory.getRoleSimulators();
     	for (RoleSimulator rsim : rsims) {
     		if (rsim.isSupported(m_simulationModels.get(index))) {
-        		Object model=rsim.getModel(m_simulationModels.get(index),
-        						m_resourceLocators.get(index));
-
         		m_simulatorTypes.get(index).add(rsim.getName());
     			
+        		Object model=rsim.getModel(m_simulationModels.get(index),
+						m_resourceLocators.get(index));
+
     			m_modelRoles.get(index).removeAll();
     			
     			int mainDefaultRole=-1;
@@ -733,6 +729,48 @@ public class ScenarioSimulationDialog extends Dialog {
     	}
     	
     	m_simulatorTypes.get(index).select(m_simulatorTypes.get(index).getItemCount() > 0 ? 1 : 0);
+    	
+    	updateModelRoleList(index);
+    }
+    
+    protected void updateModelRoleList(int index) {
+    	RoleSimulator rsim=RoleSimulatorFactory.getRoleSimulator(m_simulatorTypes.get(index).getText());
+    	
+    	if (rsim != null) {
+			Object model=rsim.getModel(m_simulationModels.get(index),
+					m_resourceLocators.get(index));
+	
+			m_modelRoles.get(index).removeAll();
+			
+			int mainDefaultRole=-1;
+			int secondaryDefaultRole=-1;
+			
+			// Model type may be supported, but might not be retrievable
+			// in the Eclipse environment, but that is ok as simulation
+			// is being done externally with classpath including user's
+			// project
+			if (model != null) {
+				java.util.List<Role> roles=rsim.getModelRoles(model);
+				
+				for (Role role : roles) {    				
+					if (role.getName().endsWith(m_scenario.getRole().get(index).getName())) {
+						mainDefaultRole = m_modelRoles.get(index).getItemCount();
+					}
+					
+					if (role.getName().indexOf(m_scenario.getRole().get(index).getName()) != -1) {
+						secondaryDefaultRole = m_modelRoles.get(index).getItemCount();
+					}
+	
+					m_modelRoles.get(index).add(role.getName());
+				}
+			}
+			
+			if (mainDefaultRole != -1) {
+				m_modelRoles.get(index).select(mainDefaultRole);
+			} else if (secondaryDefaultRole != -1) {
+				m_modelRoles.get(index).select(secondaryDefaultRole);
+			}
+    	}
     }
     
     protected void initSimulation() {
