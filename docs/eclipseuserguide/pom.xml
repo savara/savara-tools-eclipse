@@ -4,14 +4,14 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.savara.docs</groupId>
+    <groupId>org.savara.tools.docs</groupId>
     <artifactId>eclipseuserguide</artifactId>
     <packaging>jdocbook</packaging>
     <name>Savara::Docs::EclipseUserGuide</name>
     <version>2.0.0-SNAPSHOT</version>
 
    <parent>
-    <groupId>org.savara</groupId>
+    <groupId>org.savara.tools</groupId>
     <artifactId>docs</artifactId>
     <version>2.0.0-SNAPSHOT</version>
    </parent>

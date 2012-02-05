@@ -3,7 +3,10 @@
 <book>
   <xi:include href="Book_Info.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="chapter-1-EUG_Overview.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-  <xi:include href="chapter-2-BPEL.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-  <xi:include href="chapter-3-Conversation_Validation_with_CDL.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="chapter-2-Scenarios.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="chapter-3-Choreography.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="chapter-4-Service_Contract.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="chapter-5-Service_Design_and_Implementation.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
+  <xi:include href="Revision_History.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 </book>

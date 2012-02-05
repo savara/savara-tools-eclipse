@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="sid-19693843">
+    
+    <title>Choreography</title>
+    <section id="sid-19693874">
+      
+      <title>What is a Choreography?</title>
+      <para>A Choreography represents the description of how multiple participants (or roles) interact to achieve a goal.</para>
+      <para>In a Service Oriented Architecture context, it provides a service neutral view of a complete architecture, documenting how the services should communicate with each other in a more peer-to-peer manner, as opposed to the orchestration centric approach typically associated with service composition.</para>
+    </section>
+    <section id="sid-19693876">
+      
+      <title>Creating a Choreography</title>
+      <para>Currently there are two standards that can be used to define a choreography.</para>
+      <section id="sid-19693876_CreatingaChoreography-BPMN2Choreography">
+        
+        <title>BPMN2 Choreography</title>
+        <para>The BPMN standard has been around for some time, although it was focused on providing a standard notation for describing business processes.</para>
+        <para>In 2011 a major new version of the standard was created under the OMG with the following goals:</para>
+        <itemizedlist>
+          <listitem>
+            <para>provide a standard meta-model, to support interchange</para>
+          </listitem>
+          <listitem>
+            <para>define execution semantics for the process model</para>
+          </listitem>
+          <listitem>
+            <para>add a choreography model to the existing process and collaboration models</para>
+          </listitem>
+        </itemizedlist>
+        <para>
+          The BPMN2 Choreography can be created using the Eclipse BPMN2 modeller that is bundled with the Savara Eclipse tooling, as well as being available from:
+          <ulink url="http://eclipse.org/projects/project.php?id=soa.bpmn2-modeler"/>
+        </para>
+        <para>To create a BPMN2 choreography, select the "New-&gt;Other..."  menu item from the context menu of the project/folder in which the  choreography should contained. This will display the following dialog:</para>
+        <para>
+          <figure>
+<title>Wizard for creating a BPMN2 Choreography</title>
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="author/download/attachments/19693876/NewOtherBPMN2.png" width="3in" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </para>
+        <para>
+          When the
+          <emphasis role="italics">Next</emphasis>
+          button is pressed, it will show the list of BPMN2 diagrams that can be created. Select the final 'Choreography' diagram template and press the
+          <emphasis role="italics">Next</emphasis>
+          button again, where the name of the choreography file can be specified, before finally pressing the
+          <emphasis role="italics">Finish</emphasis>
+          button to create the diagram.
+        </para>
+      </section>
+      <section id="sid-19693876_CreatingaChoreography-WSCDL">
+        
+        <title>CDL</title>
+        <para>The WS-CDL (or Choreography Description Language) standard was  defined by W3C in 2005, as a means of describing the service neutral  peer to peer interactions between Web Services. Although the standard  had a web service focus, it was not web service specific, and could be  used to describe interactions between any types of service in theory.</para>
+        <para>This standard never received vendor support, and therefore was not widely used within industry. Savara uses the open source pi4soa editor to create WS-CDL descriptions.</para>
+        <para>To create a WS-CDL based choreography, select the "New-&gt;Other..." menu item from the context menu of the project/folder in which the choreography should contained. This will display the following dialog:</para>
+        <para>
+          <figure>
+<title>Wizard for creating a WS-CDL Choreography</title>
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="author/download/attachments/19693876/NewOtherChoreography.png" width="3in" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </para>
+        <para>
+          Select the
+          <emphasis role="italics">"Choreography Description"</emphasis>
+          item from the
+          <emphasis role="italics">"Choreography"</emphasis>
+          category, and then the
+          <emphasis role="italics">Next</emphasis>
+          button to enter the name of the choreography file. Finally press the
+          <emphasis role="italics">Finish</emphasis>
+          button to create the choreography.
+        </para>
+      </section>
+    </section>
+    <section id="sid-19693849">
+      
+      <title>Verify the Choreography</title>
+      <para>The Choreography represents an overall description of the architecture intended to support a set of scenarios that define the business requirements.</para>
+      <para>Therefore, to ensure that the choreography correctly reflects those business requirements, it is import that we can verify the choreography against those scenarios.</para>
+      <para>As described in the previous Scenarios chapter, each scenario can be simulated against the choreography, to statically verify that the choreography addresses all of the use cases outlined in the scenarios.Once the choreography successfully verifies against each of the scenarios, it can then be deemed to represent the business requirements, and then be used to generate further service related artifacts.</para>
+    </section>
+  </chapter>

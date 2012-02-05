@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="sid-19693845">
+    
+    <title>Service Contract</title>
+    <section id="sid-19693870">
+      
+      <title>Generating a Contract</title>
+      <para>The Savara Eclipse tooling includes the ability to generate contracts  from source models. These models can vary, including (currently)  choreographies and BPEL process definitions.</para>
+      <para>Select the "Savara-&gt;Generate-&gt;Contract" menu item associated with the context menu of the source model. For example,</para>
+      <para>
+        <figure>
+<title>Menu item for generating a service contract</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/19693870/GenerateContractMenu.png" width="5in" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>This will display a dialog window to allow the user to select how  each role, identified within the source model, should be generated as a  service contract:</para>
+      <para>
+        <figure>
+<title>Dialog for specifying the service contract information for each role in the source model</title>
+         <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/19693870/GenerateContractDialog.png" width="3in" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>
+        The
+        <emphasis role="italics">"Service Role"</emphasis>
+        check box is used to indicate whether that role, within the source model, should result in a service contract being created.
+      </para>
+      <para>
+        The
+        <emphasis role="italics">"Contract Type"</emphasis>
+        field displays a list of contract  generation types. This list will be dependent upon the source model  type, and so will not be discussed in detail here.
+      </para>
+      <para>When the OK button is pressed, each of the contracts for the enabled roles will be created with their relevant artifacts, within the current Eclipse project containing the source model.</para>
+    </section>
+  </chapter>

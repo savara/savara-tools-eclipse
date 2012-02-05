@@ -16,7 +16,7 @@
       or peer-to-peer service collaboration will be used.
     </para>
     <para>
-      Although in simple situations, a BPEL process description can provide a description of the interactions between multiple services, this only works where a
+      Although in simple situations, a BPEL process description (or BPMN process model) can provide a description of the interactions between multiple services, this only works where a
       
       single orchestrating process is in control. The benefit of the choreography description is that it can be used to provide a global view of a process across multiple
       
@@ -27,54 +27,19 @@
       
       for each phase of the SOA lifecycle.
     </para>
-    <para>
-      When a validated design has been approved by the users, it can be used to generate an initial skeleton of the implementation for each service.
-      
-      The current version of SAVARA enables a skeleton implementation to be generated as a service
-      
-      implementation (e.g. WS-BPEL process).
-    </para>
+    <para>When a validated design has been approved by the users, it can be used to generate an initial skeleton of the design and/or implementation for each service.</para>
     <section id="sid-5931151">
       
-      <title>CDL</title>
+      <title>Describing an Architecture using Choreography</title>
       <para>
         WS-CDL, or Web Service Choreography Description Language, is a candidate recommendation from W3C. Although associated with W3C and Web Services, it is important to begin by stating that the Choreography Description Language (CDL) is
         <emphasis role="italics">not</emphasis>
         web service specific.
       </para>
-      <para>The purpose of CDL is to enable the interactions between a collection of peer to peer services to be described from a neutral (or global) perspective. This is different to other standards, such as WS-BPEL, that describe interactions from a service specific viewpoint.</para>
-      <para>In essence a choreography description declares roles which will pass messages between each other, called interactions. The interactions are ordered based on a number of structuring mechanism which enables loops, conditional, choices and parallelism to be described. In CDL variables used for messages and for conditionals are all situated at roles. There is no shared state rather there is a precise description of the state at each role and a precise description of how these roles interact in order to reach some notion of common state in which information is exchanged and processed between them.</para>
-      <para>In CDL we use interactions and these structuring mechanisms to describe the observable behaviour, the messages exchanges and the rules for those exchanges and any supporting observable state on which they depend, of a system.</para>
-    </section>
-    <section id="sid-5931154">
-      
-      <title>pi4soa</title>
-      <para>
-        <emphasis role="italics">pi4soa</emphasis>
-        is an open source project established to demonstrate the potential benefits that a global model (as described using CDL) can provide when building an SOA. The open source project is managed by the Pi4 Technologies Foundation, which is a collaboration between industry and academia.
-      </para>
-      <para>Building complex distributed systems, without introducing unintended consequences, is a real challenge. Although the Choreography Description Language provides a means of describing complex systems at a higher level, and therefore help to reduce such complexity, it does not necessarily guarantee that erronous situations cannot occur due to inappropriately specified interactions. The research, being carried out by members of the Pi4 Technologies Foundation, into the global model and endpoint projection is targeted at identifying potential unintended consequences, to ensure that a global description of a system can be reliably executed and can be free from unintended consequences.</para>
-      <para>The tool suite currently offers the ability to:</para>
-      <itemizedlist>
-        <listitem>
-          <para>
-            
-            Define a choreography description
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-            
-            Export the description to a range of other formats, such as BPMN, UML activity/state/sequence models, and HTML
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-            
-            Define scenarios (equivalent to sequence diagrams), with example messages, which can then be simulated against an associated choreography
-          </para>
-        </listitem>
-      </itemizedlist>
+      <para>More recently the BPMN standard, under the guidance of the OMG, has introduced its own Choreography Model to complement the previous Process and Collaboration Models.</para>
+      <para>The purpose of a Choreography is to enable the interactions between a collection of peer to peer services to be described from a neutral (or global) perspective. This is different to other standards, such as WS-BPEL, that describe interactions from a service specific viewpoint.</para>
+      <para>In essence a Choreography description declares roles which will pass messages between each other, called interactions. The interactions are ordered based on a number of structuring mechanism which enables loops, choices and parallelism to be described. In WS-CDL and BPMN2 Choreography, variables used for messages and for conditionals are all situated at roles. There is no shared state rather there is a precise description of the state at each role and a precise description of how these roles interact in order to reach some notion of common state in which information is exchanged and processed between them.</para>
+      <para>In Choreography we use interactions and these structuring mechanisms to describe the observable behaviour, the messages exchanges and the rules for those exchanges and any supporting observable state on which they depend, of a system.</para>
     </section>
     <section id="sid-5931155">
       
@@ -125,10 +90,7 @@
         </para>
         <itemizedlist>
           <listitem>
-            <para>
-              
-              Service lookup – the choreography description can be used to determine if a service already exists in the Service Repository that meets the appropriate behavioural requirements.
-            </para>
+            <para>Service lookup – the choreography description can be used to determine if a service already exists in the Service Repository that meets the appropriate behavioural requirements.</para>
           </listitem>
           <listitem>
             <para>
@@ -145,9 +107,9 @@
         
         <title>Runtime Governance</title>
         <para>Runtime governance ensures that the SOA executes as expected according to predefined policies. In this context, a choreography description can be used in two ways.</para>
-        <section id="sid-5931155_SOALifecycleGovernance-Servicevalidator">
+        <section id="sid-5931155_SOALifecycleGovernance-Servicevalidator%28Futurefeature%29">
           
-          <title>Service validator</title>
+          <title>Service validator (Future feature)</title>
           <para>
             The choreography description represents the interactions between multiple services to deliver a business goal.
             
@@ -162,20 +124,12 @@
             
             The error can also be reported to a central management capability.
           </para>
-          <para>
-            The SAVARA Validator provides the ability to configure service validators to monitor the behaviour of individual services.
-            
-            An enhanced version of the JBossESB trailblazer example has been included, with the appropriate validator configuration, to demonstrate this mechanism.
-          </para>
+          <para>The SAVARA runtime governance infrastructure will provide the ability to configure service validators to monitor the behaviour of individual services.</para>
         </section>
-        <section id="sid-5931155_SOALifecycleGovernance-Processcorrelation">
+        <section id="sid-5931155_SOALifecycleGovernance-Processcorrelation%28Futurefeature%29">
           
-          <title>Process correlation</title>
-          <para>
-            Validating each service locally can enable errors to be detected quickly,
-            
-            and the effects of the error prevented from contaminating other systems by blocking the erroneous messages.
-          </para>
+          <title>Process correlation (Future feature)</title>
+          <para>Validating each service locally can enable errors to be detected quickly, and the effects of the error prevented from contaminating other systems by blocking the erroneous messages.</para>
           <para>
             However local service specific validation may not be adequate to identify errors that would affect the end-to-end business process.
             
@@ -184,11 +138,6 @@
             and determine if it matches the expected behaviour as defined in the choreography description.
           </para>
           <para>The benefit of a correlated global view of the distributed business transaction is that it can be further analysed to ensure other governance polices have been followed – e.g. SLAs.</para>
-          <para>
-            The pi4soa tool suite includes a simple GUI based monitoring tool to display the information obtained from correlating message events associated with individual services.
-            
-            The trailblazer example has been written to cause out of sequence messages under certain circumstances. See the “Samples Guide” for more information on how to run this example.
-          </para>
         </section>
       </section>
     </section>
@@ -196,28 +145,6 @@
       
       <title>First Steps</title>
       <para>The first step will be to follow the instructions in the Getting Started Guide to install SAVARA.</para>
-      <para>Once installed, the next step should be to try out the examples in the samples folder. The examples consistent of:</para>
-      <itemizedlist>
-        <listitem>
-          <para>
-            Choreography related examples
-            
-            These examples provide an illustration of how to use scenarios, choreographies
-            
-            and other associated artifacts.
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-            Service Validation related examples
-            
-            The samples folder contains an enhanced version of the trailblazer example from the
-            
-            JBossESB, with the addition of a File Based Bank, and message content including a
-            
-            conversation id to enable the messages to be correlated with a specific session.
-          </para>
-        </listitem>
-      </itemizedlist>
+      <para>Once installed, the next step should be to try out the examples available on the Savara downloads page.</para>
     </section>
   </chapter>

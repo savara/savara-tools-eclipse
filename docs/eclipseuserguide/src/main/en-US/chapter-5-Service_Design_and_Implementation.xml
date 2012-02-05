@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="sid-19693847">
+    
+    <title>Service Design and Implementation</title>
+    <section id="sid-19693863">
+      
+      <title>Generating a Service</title>
+      <para>The Savara Eclipse tooling includes the ability to generate services from source models. These models can vary, including (currently) choreographies and BPEL process definitions.</para>
+      <para>Select the "Savara-&gt;Generate-&gt;Service" menu item associated with the context menu of the source model. For example,</para>
+      <para>
+        <figure>
+<title>Menu item for generating a service design or implementation</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/19693863/GenerateServiceMenu.png" width="5in" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>This will display a dialog window to allow the user to select how each role, identified within the source model, should be generated as a service design or implementation:</para>
+      <para>
+        <figure>
+<title>Dialog for specifying the service generation information information for each role in the source model</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/19693863/GenerateServiceDialog.png" width="4in" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>
+        The
+        <emphasis role="italics">"Service Role"</emphasis>
+        check box is used to indicate whether that role, within the source model, should result in a service being created.
+      </para>
+      <para>
+        The
+        <emphasis role="italics">"Project Name"</emphasis>
+        field is used to enter the name of the project that will be generated. The project name is constructed from a combination of the model name and the role. If the project already exists, then the background of this field will be red, and the OK button will be disabled until either the service role checkbox for that role is unchecked, or the project name changed.
+      </para>
+      <para>
+        The
+        <emphasis role="italics">"Service Type"</emphasis>
+        field displays a list of service generation types. This list will be dependent upon the source model type, and so will not be discussed in detail here. The particular structure of each generated project will be dependent upon the service type selected. Some of these service types will relate to implementation technologies (e.g. SCA Java and BPEL), while others may be used to represent a service design (e.g. BPMN2 Process - although a BPMN2 Process can also evolve into an executable implementation).
+      </para>
+      <para>When the OK button is pressed, each of the projects for the enabled roles will be created with their relevant artifacts.</para>
+      <para>NOTE: The list of target 'service types' is not related to the source model type. So (for example) if the source model is a BPEL process definition, then it is still possible that BPEL will be offered as a target service type. Although this may seem redundant, it can offer the opportunity to generate a abstract skeleton (observable behavior) version of a fully implemented executable BPEL process.</para>
+    </section>
+    <section id="sid-19693851">
+      
+      <title>Verify the Design or Implementation</title>
+      <para>A Service Design or Implementation can be verified in two ways.</para>
+      <section id="sid-19693851_VerifytheDesignorImplementation-Staticallyverifytheexternallyobservablebehavior">
+        
+        <title>Statically verify the externally observable behavior</title>
+        <para>For service designs, which have no executable semantics (i.e. cannot be executed), or implementations where no simulator exists that can perform dynamic verification, it may be possible to simulate valid behavior (as defined by a set of scenarios) against the protocol derived from the service design/implementation.</para>
+        <para>This ensures that the design or implementation has the correct communications structure to be able to interact with other services (whether consumers or other producers).</para>
+        <para>For example, a scenario can be simulated against a BPEL process definition (and in the near future a BPMN2 process model) to determine whether they have the correct communication structure, even before they contain enough details to be executed.</para>
+      </section>
+      <section id="sid-19693851_VerifytheDesignorImplementation-Dynamicallyverifytheserviceimplementation">
+        
+        <title>Dynamically verify the service implementation</title>
+        <para>Where a simulator exists associated with the service implementation technology, it is possible to replay the message events defined in the scenarios against an executing version of the service implementation, to ensure that a real service instance handles the scenario correctly.</para>
+        <para>For example, a scenario can be simulated against a SCA composite definition. (Switchyard services will be supported in the near future).</para>
+      </section>
+    </section>
+  </chapter>
