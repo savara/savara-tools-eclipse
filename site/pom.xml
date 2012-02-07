@@ -16,11 +16,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
    	<dependencies>
  		<dependency>
  			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.activity</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
 			<artifactId>org.savara.common</artifactId> 
 			<version>${savara.core.version}</version>
  		</dependency>
@@ -57,11 +52,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
  		<dependency>
  			<groupId>org.savara.bundles</groupId>
 			<artifactId>org.savara.scenario.simulator.protocol</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.scenario.simulator.scribble</artifactId> 
 			<version>${savara.core.version}</version>
  		</dependency>
  		<dependency>

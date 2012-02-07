@@ -1,4 +1,4 @@
-package org.savara.tools.validator.osgi;
+package org.savara.tools.pi4soa.cdm.osgi;
 
 import java.util.logging.Logger;
 

@@ -17,7 +17,7 @@
  * Change History:
  * 21 Oct 2008 : Initial version created by gary
  */
-package org.savara.tools.validator.osgi;
+package org.savara.tools.pi4soa.cdm.osgi;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

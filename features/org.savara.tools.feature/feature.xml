@@ -39,10 +39,6 @@ source code, or contact Red Hat Legal Affairs, 1801 Varsity Drive,
 Raleigh NC 27606 USA.
    </license>
 
-   <requires>
-      <import feature="org.pi4soa.core.feature"/>
-   </requires>
-
    <plugin
          id="org.savara.contract"
          download-size="0"
@@ -65,13 +61,6 @@ Raleigh NC 27606 USA.
          unpack="false"/>
 
    <plugin
-         id="org.savara.tools.bpel"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.savara.bpel"
          download-size="0"
          install-size="0"
@@ -86,21 +75,7 @@ Raleigh NC 27606 USA.
          unpack="false"/>
 
    <plugin
-         id="org.savara.tools.sca.java"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.savara.tools.switchyard.bpel"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.savara.tools.validator"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -128,21 +103,7 @@ Raleigh NC 27606 USA.
          unpack="false"/>
 
    <plugin
-         id="org.savara.pi4soa.cdm"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.savara.protocol"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.savara.sca.java"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -163,20 +124,6 @@ Raleigh NC 27606 USA.
          unpack="false"/>
 
    <plugin
-         id="org.savara.scenario.simulator.cdm"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.savara.scenario.simulator.sca"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.savara.scenario.simulator.protocol"
          download-size="0"
          install-size="0"
@@ -185,13 +132,6 @@ Raleigh NC 27606 USA.
 
    <plugin
          id="org.savara.tools.scenario"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.savara.activity"
          download-size="0"
          install-size="0"
          version="0.0.0"

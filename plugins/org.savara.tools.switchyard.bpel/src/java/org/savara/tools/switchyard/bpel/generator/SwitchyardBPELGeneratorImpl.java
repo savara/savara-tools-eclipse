@@ -68,7 +68,7 @@ import org.eclipse.jdt.core.JavaCore;
 public class SwitchyardBPELGeneratorImpl extends AbstractGenerator {
 
 	private static final String SWITCHYARD_XML_FILENAME = "switchyard.xml";
-	private static final String GENERATOR_NAME = "Switchyard BPEL";
+	private static final String GENERATOR_NAME = "BPEL (Switchyard)";
 	private static final String SCHEMA_LOCATION_ATTR = "schemaLocation";
 	private static final String INCLUDE_ELEMENT = "include";
 	private static final String XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";

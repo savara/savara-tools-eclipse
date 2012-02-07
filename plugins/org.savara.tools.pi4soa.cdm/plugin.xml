@@ -4,7 +4,7 @@
    <extension
          point="org.pi4soa.common.annotationsManager">
       <annotationsManager
-            class="org.savara.tools.validator.osgi.ValidatorAnnotations">
+            class="org.savara.tools.pi4soa.cdm.osgi.ValidatorAnnotations">
       </annotationsManager>
    </extension>
 
