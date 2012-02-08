@@ -283,6 +283,7 @@ public class ScenarioSimulationLauncher
 							// Container's not currently handled - but
 							// problem need to retrieve from project and
 							// iterate over container entries
+							/*
 						} else if (curclspath[i].getEntryKind() ==
 										IClasspathEntry.CPE_SOURCE) {
 							// TODO: Possibly temporary addition to classpath list
@@ -295,6 +296,7 @@ public class ScenarioSimulationLauncher
 										getRoot().getFile(curclspath[i].getPath());
 		
 							classpathEntries.add(file.getLocation().toString());
+							*/
 						}
 					}
 					
