@@ -283,6 +283,18 @@ public class ScenarioSimulationLauncher
 							// Container's not currently handled - but
 							// problem need to retrieve from project and
 							// iterate over container entries
+						} else if (curclspath[i].getEntryKind() ==
+										IClasspathEntry.CPE_SOURCE) {
+							// TODO: Possibly temporary addition to classpath list
+							// as SCA Java simulator needs to access composite from
+							// classpath :(, and so need to convert path to a location
+							// on the classpath, which may actually be in the source
+							// location
+							IFile file=
+									ResourcesPlugin.getWorkspace().
+										getRoot().getFile(curclspath[i].getPath());
+		
+							classpathEntries.add(file.getLocation().toString());
 						}
 					}
 					
