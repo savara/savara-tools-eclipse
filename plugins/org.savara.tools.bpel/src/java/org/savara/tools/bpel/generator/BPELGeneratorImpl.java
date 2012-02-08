@@ -518,7 +518,7 @@ public class BPELGeneratorImpl extends AbstractGenerator {
 		// Add required project facets
 		try {
 			IProjectFacet bpelFacet =
-						ProjectFacetsManager.getProjectFacet("jbt.bpel.facet.core");
+						ProjectFacetsManager.getProjectFacet("bpel.facet.core");
 			IProjectFacetVersion ipfv = bpelFacet.getVersion("2.0");
 			IFacetedProject ifp = ProjectFacetsManager.create(project, true, null);
 			ifp.installProjectFacet(ipfv, null,
