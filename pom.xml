@@ -95,19 +95,6 @@
 
 	<repositories>
 	    <repository>
-	        <id>scribble-staging-repo</id>
-	        <name>Scribble Staging Repo</name>
-		<url>https://repository.jboss.org/nexus/content/repositories/jboss_thirdparty_releases_staging_profile-205/</url>
-		<releases>
-		  <enabled>true</enabled>
-		  <updatePolicy>never</updatePolicy>
-		</releases>
-		<snapshots>
-		  <enabled>true</enabled>
-		  <updatePolicy>never</updatePolicy>
-		</snapshots>
-	    </repository>
-	    <repository>
 	        <id>jboss-developer-repository-group</id>
 	        <name>JBoss Developer Maven Repository Group</name>
 		<url>https://repository.jboss.org/nexus/content/groups/developer/</url>
