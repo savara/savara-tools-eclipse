@@ -95,6 +95,19 @@
 
 	<repositories>
 	    <repository>
+	        <id>savara-core-staging-repo</id>
+	        <name>Savara Core Staging Repo</name>
+		<url>https://repository.jboss.org/nexus/content/repositories/jboss_thirdparty_releases_staging_profile-211/</url>
+		<releases>
+		  <enabled>true</enabled>
+		  <updatePolicy>never</updatePolicy>
+		</releases>
+		<snapshots>
+		  <enabled>true</enabled>
+		  <updatePolicy>never</updatePolicy>
+		</snapshots>
+	    </repository>
+	    <repository>
 	        <id>jboss-developer-repository-group</id>
 	        <name>JBoss Developer Maven Repository Group</name>
 		<url>https://repository.jboss.org/nexus/content/groups/developer/</url>
