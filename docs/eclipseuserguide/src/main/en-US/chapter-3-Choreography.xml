@@ -7,81 +7,249 @@
       
       <title>What is a Choreography?</title>
       <para>A Choreography represents the description of how multiple participants (or roles) interact to achieve a goal.</para>
-      <para>In a Service Oriented Architecture context, it provides a service neutral view of a complete architecture, documenting how the services should communicate with each other in a more peer-to-peer manner, as opposed to the orchestration centric approach typically associated with service composition.</para>
+      <para>In a Service Oriented Architecture context, it provides a service neutral view of a complete architecture, documenting how the services should communicate with each other in a peer-to-peer manner. This description can be used to understand the complete process at a higher level, and then used to generate initial template service designs (or implementations) for each of the participants within the choreography.</para>
+      <para>The BPMN standard has been around for some time, although it was  focused on providing a standard notation for describing business  processes.</para>
+      <para>In 2011 a major new version of the standard was created under the OMG with the following goals:</para>
+      <itemizedlist>
+        <listitem>
+          <para>provide a standard meta-model, to support interchange</para>
+        </listitem>
+        <listitem>
+          <para>define execution semantics for the process model</para>
+        </listitem>
+        <listitem>
+          <para>add a choreography model to the existing process and collaboration models</para>
+        </listitem>
+      </itemizedlist>
+      <para>
+        The BPMN2 Choreography can be created using the Eclipse BPMN2  modeller that is bundled with the Savara Eclipse tooling, as well as  being available from:
+        <ulink url="http://eclipse.org/projects/project.php?id=soa.bpmn2-modeler"/>
+      </para>
     </section>
     <section id="sid-19693876">
       
       <title>Creating a Choreography</title>
-      <para>Currently there are two standards that can be used to define a choreography.</para>
-      <section id="sid-19693876_CreatingaChoreography-BPMN2Choreography">
+      <para>To create a BPMN2 Choreography, select the “New-&gt;Other...” menu  item on the context menu for the project or folder that will contain the file, which will display the following dialog:</para>
+      <para>
+        <figure>
+<title>Select the 'New->Other...' menu item to create a BPMN2 diagram</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/19693876/NewOtherBPMN2.png" width="3in" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>Select the “BPMN2 Diagram” under the BPMN2 category and press the Next button.</para>
+      <para>
+        <figure>
+<title>Choose the Choreography button at the bottom</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/19693876/SelectChoreo.png" width="3in" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>As we wish to create a choreography, you should now select the bottom button and press the Next button.</para>
+      <para>
+        <figure>
+<title>Enter the name of the Choreography file</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/19693876/BPMN2ProcessFileName.png" width="2in" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>The final step in creating the diagram is to name it, and then press the Finish button.</para>
+    </section>
+    <section id="sid-19694001">
+      
+      <title>Importing Schemas</title>
+      <para>Once the diagram has been created, it is useful to establish any XSD schemas (with their namespaces and prefixes) before making use of them when building the diagram.</para>
+      <para>
+        <figure>
+<title>Add schemas to the Eclipse project</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/19694001/ProjectStart.png" width="2in" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>In this example, we copy two existing schema files into the newly created project.</para>
+      <para>NOTE: Normally this information can be established on the fly when specifying the item definition, but currently does not work, so needs to be done as a separate step. So could possibly remove this step when this feature is available again.</para>
+      <para>
+        <figure>
+<title>Use the 'Import List' available from the Properties view</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/19694001/DefnsImportList.png" width="3in" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>Open the Properties view and select the diagram background. Then select the 'Definitions' tab (as shown in the image) and scroll down to the Import List section. Pressing the 'Add' button will show the following dialog:</para>
+      <para>
+        <figure>
+<title>Locate and import the schemas</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/19694001/ImportStoreXSD.png" width="2in" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>Locate the XSD schema file(s) and press the OK button. Although in this case we have two schemas within the project, it is possible for the schemas to be located using a few different mechanisms.</para>
+      <para>NOTE: URL location does not seem to work currently – and it would also be useful to define an import for a namespace/prefix that does not have an associated schema, as the location is optional.</para>
+    </section>
+    <section id="sid-19694005">
+      
+      <title>Defining a Choreography Task</title>
+      <para>When a Choreography Diagram is initially created, it will create a default Choreography Task. It is possible to simply change this information as the starting point for your diagram, but for the purposes of this article we will create a choreography task from scratch – so select this default choreography task and delete it.</para>
+      <para>Components to be included in the Choreography Diagram are provided in the palette on the right hand side of the canvas. We initially want to start the diagram with a “Start Event”, a “Choreography Task” and a “Sequence Flow” to connect the two. This should then look like this....</para>
+      <para>
+        <figure>
+<title>Add the first Choreography Task to the canvas</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/19694005/FirstChoreoTask.png" width="5in" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>The Properties view will show the details for the newly create Choreography Task, allowing you to change its name to something that reflects what it represents, e.g. “Submit Purchase Order”.</para>
+      <para>
+        <figure>
+<title>Use the 'Add Participant' button to add participants to the Choreography Task</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/19694005/FirstChoreoTaskAddPartButton.png" width="5in" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>The next step is to establish the Participants that will be performing the interaction associated with the Choreography Task. As shown in the diagram, the Choreography Task has a short cut button (also available via its context menu) to add a participant.</para>
+      <para>When this button is pressed, it will add a new participant to the task, or if available, also present a list of existing participants that can be selected. The first participant added to the choreography task will be considered the 'initiating participant', which means it will send the message. If two messages are associated with the same choreography task (e.g. representing a request/response pattern), then the initiator sends the request, and the other participant would return the response. In general, only associate two messages with a choreography task if the associated 'operation' will only have the single response type. If it has multiple response types (e.g. one normal and one or more faults), then separate choreography tasks should be used – as will be seen later in the purchasing example.</para>
+      <para>
+        <figure>
+<title>First participant added to the Choreography Task</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/19694005/FirstChoreoTaskNewPart.png" width="2in" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>When the participant band has been added to the choreography task, it can be selected to focus the Properties view on its properties. The name can then be changed to something more meaningful, for example Buyer. The following image shows the task after both participants have been added and their names changed.</para>
+      <para>
+        <figure>
+<title>Participants given names using the Properties view when focusing on the participant band</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/19694005/FirstChoreoTaskPartsNamed.png" width="2in" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>Now that we have defined the choreography task to represent an interaction from the Buyer to the Seller, we now need to describe the message that will be passed between them.</para>
+      <para>
+        <figure>
+<title>Associated message with the sending participant</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/19694005/FirstChoreoTaskAddMesgIcon.png" width="5in" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>As with adding participants, there is a short cut button (and context menu item) for adding a message, associated with the participant band that is sending the message. So in the image above, adding a message to the Buyer would define the request, as the Buyer is the initiator for this task (denoted by its white background).</para>
+      <para>
+        <figure>
+<title>Message envelope decorator identifies the message being sent by the participant</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/19694005/FirstChoreoTaskMesg1.png" width="2in" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>As with the 'Add Participant' action, if there are existing message definitions, then these will be presented to the user to enable them to select a previously defined message. Otherwise a message icon will simply be added.</para>
+      <para>
+        <figure>
+<title>Naming the Message</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/19694005/Mesg1Named.png" width="2in" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>The user can now select this message 'envelope' to view its properties and set its name, e.g. “BuyRequest”.</para>
+      <para>
+        <figure>
+<title>Create item definition using the 'Create New' button</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/19694005/Mesg1ItemCreateNewButton.png" width="5in" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>However the BuyRequest name is only a logical name, it does not define the details of the message structure. This is ok when we are simply sketching the high level representation of a choreography, but to enable the choreography to represent concrete details, we need to associate the message with an item definition.</para>
+      <para>In the Properties view associated with the selected message there is an 'Item' field. This allows the user to select a previously defined message type (e.g. from an imported XSD schema), or if an appropriate entry does not exist, then we can press the 'Create New' button.</para>
+      <para>
+        <figure>
+<title>Set the data type associated with the item definition</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/19694005/Mesg1SetDataType.png" width="3in" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>The 'Item Kind' field will always be 'Information', unless defining some abstract choreography describing how physical items are exchanged. The 'Data Type' field references the detailed message schema type. To set the field, press the 'Edit...' button and set the value:</para>
+      <para>
+        <figure>
+<title>Set the name of the message type associated with the item definition</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/19694005/Mesg1SetDataTypeValue.png" width="4in" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>NOTE: Currently this only enables a free format string value to be defined – but should bring up the import dialog and enable the user to select a specific type, creating the import entry on the fly if necessary.</para>
+      <para>
+        <figure>
+<title>Message envelope text updated to reflect concrete message type</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/19694005/Mesg1ItemSet.png" width="5in" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>Now that the message details have been provided, the diagram displays that information in place of the logical message name.</para>
+      <para>NOTE: Currently does not actively update after this information is set – or when the message name is changed (when no item definition set).</para>
+    </section>
+    <section id="sid-19694010">
+      
+      <title>A Complete Choreography</title>
+      <para>Using the same steps as defined above, each of the choreography tasks can be created, and with a couple of decision points we end up with the following business process.....</para>
+      <para>
+        <figure>
+<title>A completed Choreography</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/19694010/Purchasing.bmp" width="6in" />
+            </imageobject>
+          </mediaobject>
+        </figure>
         
-        <title>BPMN2 Choreography</title>
-        <para>The BPMN standard has been around for some time, although it was focused on providing a standard notation for describing business processes.</para>
-        <para>In 2011 a major new version of the standard was created under the OMG with the following goals:</para>
-        <itemizedlist>
-          <listitem>
-            <para>provide a standard meta-model, to support interchange</para>
-          </listitem>
-          <listitem>
-            <para>define execution semantics for the process model</para>
-          </listitem>
-          <listitem>
-            <para>add a choreography model to the existing process and collaboration models</para>
-          </listitem>
-        </itemizedlist>
-        <para>
-          The BPMN2 Choreography can be created using the Eclipse BPMN2 modeller that is bundled with the Savara Eclipse tooling, as well as being available from:
-          <ulink url="http://eclipse.org/projects/project.php?id=soa.bpmn2-modeler"/>
-        </para>
-        <para>To create a BPMN2 choreography, select the "New-&gt;Other..."  menu item from the context menu of the project/folder in which the  choreography should contained. This will display the following dialog:</para>
-        <para>
-          <figure>
-<title>Wizard for creating a BPMN2 Choreography</title>
-            <mediaobject>
-              <imageobject>
-                <imagedata fileref="author/download/attachments/19693876/NewOtherBPMN2.png" width="3in" />
-              </imageobject>
-            </mediaobject>
-          </figure>
-        </para>
-        <para>
-          When the
-          <emphasis role="italics">Next</emphasis>
-          button is pressed, it will show the list of BPMN2 diagrams that can be created. Select the final 'Choreography' diagram template and press the
-          <emphasis role="italics">Next</emphasis>
-          button again, where the name of the choreography file can be specified, before finally pressing the
-          <emphasis role="italics">Finish</emphasis>
-          button to create the diagram.
-        </para>
-      </section>
-      <section id="sid-19693876_CreatingaChoreography-WSCDL">
-        
-        <title>CDL</title>
-        <para>The WS-CDL (or Choreography Description Language) standard was  defined by W3C in 2005, as a means of describing the service neutral  peer to peer interactions between Web Services. Although the standard  had a web service focus, it was not web service specific, and could be  used to describe interactions between any types of service in theory.</para>
-        <para>This standard never received vendor support, and therefore was not widely used within industry. Savara uses the open source pi4soa editor to create WS-CDL descriptions.</para>
-        <para>To create a WS-CDL based choreography, select the "New-&gt;Other..." menu item from the context menu of the project/folder in which the choreography should contained. This will display the following dialog:</para>
-        <para>
-          <figure>
-<title>Wizard for creating a WS-CDL Choreography</title>
-            <mediaobject>
-              <imageobject>
-                <imagedata fileref="author/download/attachments/19693876/NewOtherChoreography.png" width="3in" />
-              </imageobject>
-            </mediaobject>
-          </figure>
-        </para>
-        <para>
-          Select the
-          <emphasis role="italics">"Choreography Description"</emphasis>
-          item from the
-          <emphasis role="italics">"Choreography"</emphasis>
-          category, and then the
-          <emphasis role="italics">Next</emphasis>
-          button to enter the name of the choreography file. Finally press the
-          <emphasis role="italics">Finish</emphasis>
-          button to create the choreography.
-        </para>
-      </section>
+        NOTES: Currently shows item definition kind as 'physical' – default is 'information'.
+      </para>
     </section>
     <section id="sid-19693849">
       
