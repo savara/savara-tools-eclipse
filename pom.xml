@@ -5,7 +5,7 @@
 	<groupId>org.savara</groupId>
 	<artifactId>tools</artifactId>
 	<packaging>pom</packaging>
-	<version>2.0.0-SNAPSHOT</version>
+	<version>2.0.0.CR1</version>
 	<name>Savara::Tools</name>
 
 	<!-- use JBoss Tools' trunk/build/parent/pom.xml - must be built locally first! 
@@ -28,8 +28,8 @@
 
 	<properties>
 		<BUILD_ALIAS>M6</BUILD_ALIAS>
-		<savara.core.version>2.0.0-SNAPSHOT</savara.core.version>
-		<scribble.version>2.1.0-SNAPSHOT</scribble.version>
+		<savara.core.version>2.0.0.CR1</savara.core.version>
+		<scribble.version>2.1.0.20120208-M1</scribble.version>
         	<jaxb.version>2.1</jaxb.version>
 		<tuscany.version>2.0-Beta2</tuscany.version>
 		<cxf.version>2.4.0</cxf.version>
@@ -94,6 +94,19 @@
   </build>
 
 	<repositories>
+	    <repository>
+	        <id>savara-core-staging-repo</id>
+	        <name>Savara Core Staging Repo</name>
+		<url>https://repository.jboss.org/nexus/content/repositories/jboss_thirdparty_releases_staging_profile-211/</url>
+		<releases>
+		  <enabled>true</enabled>
+		  <updatePolicy>never</updatePolicy>
+		</releases>
+		<snapshots>
+		  <enabled>true</enabled>
+		  <updatePolicy>never</updatePolicy>
+		</snapshots>
+	    </repository>
 	    <repository>
 	        <id>jboss-developer-repository-group</id>
 	        <name>JBoss Developer Maven Repository Group</name>
