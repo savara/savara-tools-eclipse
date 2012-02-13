@@ -243,12 +243,54 @@
 <title>A completed Choreography</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="author/download/attachments/19694010/Purchasing.bmp" width="6in" />
+              <imagedata fileref="author/download/attachments/19694010/Purchasing.png" width="6in" />
             </imageobject>
           </mediaobject>
         </figure>
         
         NOTES: Currently shows item definition kind as 'physical' – default is 'information'.
+      </para>
+    </section>
+    <section id="sid-20938765">
+      
+      <title>Adding Service Interfaces</title>
+      <para>Although the choreography diagram (and underling model) now shows how messages are exchanged by participants in the choreography, these exchanges have not been defined in an SOA context, based on service interfaces. Therefore we also need to define (within the model) how these message exchanges are grouped into message exchange patterns (MEP) on interfaces associated with the participants.</para>
+      <para>Although this can be achieved by adding Interface and Operation components within the model, and establishing the appropriate associations from the participants to the interfaces, there is a short cut that will derive this information from the interactions in the model.</para>
+      <para>However before invoking this utility, we have one final step that needs to be done. In the preceding sections you have seen how to create messages and exchange them between participants as part of a Choreography Task. Although this is adequate information from a message passing perspective, as it defines a reference to the specific message schema that is used, it does not indicate whether the message exchange represents a fault associated with a preceding request.</para>
+      <para>Therefore it is necessary to distinguish whether a particular message type is actually a fault (or error), to enable the service interface derivation to correctly distinguish between normal and fault responses in a service operation.</para>
+      <para>For each message type that needs to be highlighted as a fault, we need to create an Error component that references the same item definition. This Error component will essentially define the fault code for the fault, which will be used when constructing the RPC operation signature.</para>
+      <para>
+        Select the
+        <emphasis role="italics">Data Items</emphasis>
+        tab, from the Properties associated with the diagram canvas, and expand the
+        <emphasis role="italics">Error List</emphasis>
+        :
+      </para>
+      <para>
+        <figure>
+<title>Locate and expand the Error List in the Properties view</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/20938765/ErrorList.png" width="5in" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>Using the 'Add' button, create a new entry and configure its details to reference the required item definition (representing the message schema) and error code:</para>
+      <para>
+        <figure>
+<title>Add the required Error definitions</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/20938765/ErrorListDetails.png" width="5in" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>
+        Once all of the required Error components have been created and configured, then select the "
+        <emphasis role="italics">Savara-&gt;BPMN2-&gt;Add Service Interfaces</emphasis>
+        " menu item, associated with the BPMN2 choreography file, to create the appropriate interfaces and establish the necessary relationships.
       </para>
     </section>
     <section id="sid-19693849">
