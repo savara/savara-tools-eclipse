@@ -18,7 +18,8 @@ Require-Bundle: org.eclipse.ui,
  org.savara.protocol,
  org.savara.common,
  org.savara.tools.common,
- org.savara.switchyard.java
+ org.savara.switchyard.java,
+ org.switchyard.tools.ui
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: www.savara.org

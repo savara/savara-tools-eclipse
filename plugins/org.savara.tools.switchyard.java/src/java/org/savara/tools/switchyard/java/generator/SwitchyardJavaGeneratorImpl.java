@@ -17,6 +17,7 @@
  */
 package org.savara.tools.switchyard.java.generator;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,10 +31,11 @@ import javax.xml.transform.stream.StreamResult;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.logging.MessageFormatter;
+import org.savara.common.resources.DefaultResourceLocator;
 import org.savara.common.util.XMLUtils;
 import org.savara.contract.model.Contract;
 import org.savara.contract.model.Interface;
@@ -49,10 +51,11 @@ import org.savara.wsdl.generator.WSDLGeneratorFactory;
 import org.savara.wsdl.generator.soap.SOAPDocLitWSDLBinding;
 import org.scribble.protocol.model.*;
 import org.scribble.protocol.util.RoleUtil;
+import org.switchyard.tools.ui.common.ISwitchYardComponentExtension;
+import org.switchyard.tools.ui.common.SwitchYardComponentExtensionManager;
+import org.switchyard.tools.ui.operations.CreateSwitchYardProjectOperation;
+import org.switchyard.tools.ui.operations.CreateSwitchYardProjectOperation.NewSwitchYardProjectMetaData;
 import org.eclipse.core.runtime.*;
-import org.eclipse.jdt.core.IClasspathEntry;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
 
 /**
  * This class provides the mechanism for generating SCA Java
@@ -60,6 +63,7 @@ import org.eclipse.jdt.core.JavaCore;
  */
 public class SwitchyardJavaGeneratorImpl extends AbstractGenerator {
 
+	private static final String SWITCHYARD_COMPONENT_BEAN = "org.switchyard.components:switchyard-component-bean";
 	private static final String GENERATOR_NAME = "Java (Switchyard)";
 	private static final String SCHEMA_LOCATION_ATTR = "schemaLocation";
 	private static final String INCLUDE_ELEMENT = "include";
@@ -69,7 +73,10 @@ public class SwitchyardJavaGeneratorImpl extends AbstractGenerator {
 	private static final String RESOURCE_PATH = "src/main/resources/";
 	private static final String WSDL_PATH = RESOURCE_PATH+WSDL_FOLDER;
 
-	private static Logger logger = Logger.getLogger(SwitchyardJavaGeneratorImpl.class.getName());
+    private static final String DEFAULT_PROJECT_VERSION = "0.0.1-SNAPSHOT";
+    private static final String DEFAULT_RUNTIME_VERSION = "0.4.0-SNAPSHOT"; // TODO: Need to get from switchyard config
+
+    private static Logger logger = Logger.getLogger(SwitchyardJavaGeneratorImpl.class.getName());
 
 	/**
 	 * This is the constructor for the generator.
@@ -177,7 +184,8 @@ public class SwitchyardJavaGeneratorImpl extends AbstractGenerator {
 					gen.createServiceImplementationFromWSDL(role, wsdlRoles, stateless,
 							wsdlFile.getLocation().toOSString(),
 							wsdlLocation, refWsdlFilePaths, 
-							proj.getFolder(JAVA_PATH).getLocation().toOSString());
+							proj.getFolder(JAVA_PATH).getLocation().toOSString(),
+							new DefaultResourceLocator(((IFile)modelResource).getLocation().toFile().getParentFile()));
 
 					// Generate composite for role
 					gen.createServiceComposite(role, wsdlRoles, wsdlFile.getLocation().toOSString(),
@@ -435,91 +443,33 @@ public class SwitchyardJavaGeneratorImpl extends AbstractGenerator {
 		// Create project
 		IProject project = resource.getWorkspace().getRoot().getProject(projectName);
 		
-		project.create(new org.eclipse.core.runtime.NullProgressMonitor());
-				
-		// Open the project
-		project.open(new org.eclipse.core.runtime.NullProgressMonitor());
-		
-		// Add wtp natures
-		//WtpUtils.addNatures(project);
-		
-		IJavaProject jproject=JavaCore.create(project);
-		
-		// Create the java project
-		createJavaProject(jproject);
-		
+        final NewSwitchYardProjectMetaData projectMetaData = new NewSwitchYardProjectMetaData();
+        
+        // get a project handle
+        projectMetaData.setNewProjectHandle(project);
+
+        projectMetaData.setPackageName("org.savara");
+        projectMetaData.setGroupId("org.example.service");
+        
+        projectMetaData.setProjectVersion(DEFAULT_PROJECT_VERSION);
+        projectMetaData.setRuntimeVersion(DEFAULT_RUNTIME_VERSION);
+        
+        java.util.List<ISwitchYardComponentExtension> components=
+        		new java.util.Vector<ISwitchYardComponentExtension>();
+        components.add(SwitchYardComponentExtensionManager.instance().getComponentExtension(SWITCHYARD_COMPONENT_BEAN));
+
+        projectMetaData.setComponents(components);
+
+        // create the new project operation
+        final CreateSwitchYardProjectOperation op =
+        		new CreateSwitchYardProjectOperation(projectMetaData, null);
+        
+        try {
+            ResourcesPlugin.getWorkspace().run(op, new org.eclipse.core.runtime.NullProgressMonitor());
+        } catch (CoreException e) {
+            throw new InvocationTargetException(e);
+        }
+        
 		return(project);
 	}
-	
-	protected void createJavaProject(IJavaProject project) {
-
-		try {
-			IProjectDescription description = project.getProject().getDescription();
-			String[] prevNatures= description.getNatureIds();
-			String[] newNatures= new String[prevNatures.length + 1];
-			System.arraycopy(prevNatures, 0, newNatures, 0, prevNatures.length);
-			newNatures[prevNatures.length]= JavaCore.NATURE_ID;
-			description.setNatureIds(newNatures);
-
-			project.getProject().setDescription(description,
-						new org.eclipse.core.runtime.NullProgressMonitor());
-			
-			IClasspathEntry[] classpaths=new IClasspathEntry[3];
-
-			classpaths[0] = JavaCore.newContainerEntry(
-					new Path("org.eclipse.jdt.launching.JRE_CONTAINER"));
-			
-			IFolder srcFolder=project.getProject().getFolder("src/main/java");
-			GeneratorUtil.createFolder(srcFolder);
-
-			classpaths[1] = JavaCore.newSourceEntry(srcFolder.getFullPath());
-
-			IFolder resFolder=project.getProject().getFolder("src/main/resources");
-			GeneratorUtil.createFolder(resFolder);
-
-			classpaths[2] = JavaCore.newSourceEntry(resFolder.getFullPath());
-
-/*
-			// Install SCA API library
-			Bundle bundle=
-					org.eclipse.core.runtime.Platform.getBundle("org.savara.sca.java");
-				
-			java.net.URL url=bundle.getEntry("/lib/tuscany-sca-api.jar");
-			
-			if (url != null) {
-				url = org.eclipse.core.runtime.FileLocator.toFileURL(url);
-			} else {
-				url = bundle.getResource("lib/tuscany-sca-api.jar");
-			}
-			
-			java.io.InputStream is=url.openStream();
-			
-			byte[] b=new byte[is.available()];
-			is.read(b);
-						
-			is.close();
-			
-			IFolder libFolder=project.getProject().getFolder("lib");
-			GeneratorUtil.createFolder(libFolder);
-			
-			IFile scaapijar=libFolder.getFile("sca-api.jar");
-			
-			is = new java.io.ByteArrayInputStream(b);
-			
-			scaapijar.create(is, true, null);
-			
-			is.close();
-			
-
-			classpaths[3] = JavaCore.newLibraryEntry(scaapijar.getFullPath(), null, null);
-*/
-
-			// Set classpath
-			project.setRawClasspath(classpaths,
-					new org.eclipse.core.runtime.NullProgressMonitor());
-			
-		} catch(Exception e) {
-			logger.severe("Failed to create Java project: "+e);
-		}
-	} 
 }
