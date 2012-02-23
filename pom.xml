@@ -27,7 +27,7 @@
 	</parent> -->
 
 	<properties>
-		<BUILD_ALIAS>M6</BUILD_ALIAS>
+		<BUILD_ALIAS>Final</BUILD_ALIAS>
 		<savara.core.version>2.0.0-SNAPSHOT</savara.core.version>
 		<scribble.version>2.1.0.20120208-M1</scribble.version>
         	<jaxb.version>2.1</jaxb.version>
