@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
@@ -471,37 +472,55 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 	 */
 	public void okPressed() {
 		
-		try {
-			FeedbackHandlerDialog journal=new FeedbackHandlerDialog(Display.getCurrent().getActiveShell());			
+		final Display display=getShell().getDisplay();
+		
+		try {			
+			//Display.getCurrent().sleep();
 			
-			for (int i=0; i < m_roles.size(); i++) {
+			Runnable job=new Runnable() {
 				
-				if (m_roleButtons.get(i).getSelection()) {
+				public void run() {
+					final FeedbackHandlerDialog journal=new FeedbackHandlerDialog(display.getActiveShell());			
 					
-					// Get generator
-					Combo combo=m_roleArtifactTypes.get(i);
-					
-					int index=combo.getSelectionIndex();
-					
-					if (index >= 0) {
-						Generator generator=m_generators.get(index);
-						String projectName=null;
+					for (int i=0; i < m_roles.size(); i++) {
 						
-						if (m_projectNames.size() > 0) {
-							projectName = m_projectNames.get(i).getText();
+						if (m_roleButtons.get(i).getSelection()) {
+							
+							// Get generator
+							Combo combo=m_roleArtifactTypes.get(i);
+							
+							int index=combo.getSelectionIndex();
+							
+							if (index >= 0) {
+								Generator generator=m_generators.get(index);
+								String projectName=null;
+								
+								if (m_projectNames.size() > 0) {
+									projectName = m_projectNames.get(i).getText();
+								}
+								
+								generator.generate(m_protocolModel, m_roles.get(i),
+										projectName, m_file, journal);
+							}
 						}
-						
-						generator.generate(m_protocolModel, m_roles.get(i),
-								projectName, m_file, journal);
 					}
+					
+					display.syncExec(new Runnable() {
+						public void run() {							
+							journal.show();							
+						}
+					});
 				}
-			}
+			};
 			
-			journal.show();
-			
+			BusyIndicator.showWhile(display, job);
+
 			super.okPressed();
+			
 		} catch(Exception e) {
 			error("Failed to generate artifacts", e);
+		//} finally {
+		//	Display.getCurrent().wake();
 		}
 	}
 	
