@@ -71,6 +71,7 @@ public class SwitchyardJavaGeneratorImpl extends AbstractGenerator {
 	private static final String JAVA_PATH = "src/main/java";
 	private static final String WSDL_FOLDER = "wsdl";
 	private static final String RESOURCE_PATH = "src/main/resources/";
+	private static final String META_INF_PATH = RESOURCE_PATH+java.io.File.separator+"META-INF";
 	private static final String WSDL_PATH = RESOURCE_PATH+WSDL_FOLDER;
 
     private static final String DEFAULT_PROJECT_VERSION = "0.0.1-SNAPSHOT";
@@ -189,7 +190,7 @@ public class SwitchyardJavaGeneratorImpl extends AbstractGenerator {
 
 					// Generate composite for role
 					gen.createServiceComposite(role, wsdlRoles, wsdlFile.getLocation().toOSString(),
-							refWsdlFilePaths, proj.getFolder(RESOURCE_PATH).getLocation().toOSString());
+							refWsdlFilePaths, proj.getFolder(META_INF_PATH).getLocation().toOSString());
 				}
 				
 				proj.refreshLocal(IResource.DEPTH_INFINITE,
@@ -456,6 +457,7 @@ public class SwitchyardJavaGeneratorImpl extends AbstractGenerator {
         
         java.util.List<ISwitchYardComponentExtension> components=
         		new java.util.Vector<ISwitchYardComponentExtension>();
+        components.add(SwitchYardComponentExtensionManager.instance().getRuntimeComponentExtension());
         components.add(SwitchYardComponentExtensionManager.instance().getComponentExtension(SWITCHYARD_COMPONENT_BEAN));
 
         projectMetaData.setComponents(components);
