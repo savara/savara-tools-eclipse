@@ -21,5 +21,5 @@ Require-Bundle: org.eclipse.ui,
  org.savara.sca.java
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-Vendor: www.savara.org
+Bundle-Vendor: Red Hat, Inc.
 Bundle-ClassPath: .

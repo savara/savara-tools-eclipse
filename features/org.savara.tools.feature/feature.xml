@@ -3,7 +3,7 @@
       id="org.savara.tools.feature"
       label="SAVARA Tools Feature"
       version="2.0.0.qualifier"
-      provider-name="www.savara.org">
+      provider-name="Red Hat, Inc.">
 
    <description>
       The Tools for Savara.

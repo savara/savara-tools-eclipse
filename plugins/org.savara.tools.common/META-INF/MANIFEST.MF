@@ -15,7 +15,7 @@ Require-Bundle: org.eclipse.ui,
  org.savara.contract,
  org.savara.common
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-Vendor: www.savara.org
+Bundle-Vendor: Red Hat, Inc.
 Export-Package: org.savara.tools.common,
  org.savara.tools.common.generation,
  org.savara.tools.common.logging

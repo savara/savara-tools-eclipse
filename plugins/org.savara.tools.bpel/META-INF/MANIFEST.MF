@@ -27,5 +27,5 @@ Require-Bundle: org.eclipse.ui,
  org.savara.tools.common
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-Vendor: www.savara.org
+Bundle-Vendor: Red Hat, Inc.
 Scribble-Extensions: org.savara.tools.bpel.editor.BPELEditorManager

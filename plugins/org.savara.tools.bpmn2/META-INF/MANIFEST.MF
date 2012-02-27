@@ -4,7 +4,7 @@ Bundle-Name: SAVARA Tools BPMN2 Plug-in
 Bundle-SymbolicName: org.savara.tools.bpmn2;singleton:=true
 Bundle-Version: 2.0.0.qualifier
 Bundle-Activator: org.savara.tools.bpmn2.osgi.Activator
-Bundle-Vendor: www.savara.org
+Bundle-Vendor: Red Hat, Inc.
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.scribble.protocol,

@@ -3,7 +3,7 @@
       id="org.savara.tools.incubator.feature"
       label="SAVARA Tools Incubator Feature"
       version="2.0.0.qualifier"
-      provider-name="www.savara.org">
+      provider-name="Red Hat, Inc.">
 
    <description>
       The Incubator for Savara Tools.

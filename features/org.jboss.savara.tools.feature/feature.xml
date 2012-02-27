@@ -3,7 +3,7 @@
       id="org.jboss.savara.tools.feature"
       label="JBoss SAVARA Tools Feature"
       version="2.0.0.qualifier"
-      provider-name="www.jboss.org">
+      provider-name="Red Hat, Inc.">
 
    <description>
       The JBoss Tools for Savara.
