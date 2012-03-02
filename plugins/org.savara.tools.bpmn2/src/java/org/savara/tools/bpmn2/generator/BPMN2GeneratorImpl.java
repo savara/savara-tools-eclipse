@@ -102,11 +102,11 @@ public class BPMN2GeneratorImpl extends AbstractGenerator {
 		if (local != null) {
 			ProtocolToBPMN2ProcessModelGenerator generator=new ProtocolToBPMN2ProcessModelGenerator();
 			
-			Object target=generator.generate(local, handler, null);
+			java.util.Map<String,Object> target=generator.generate(local, handler, null);
 			
-			if (target instanceof TDefinitions) {
+			if (target != null && target.size() > 0) {
 				try {
-					generateRoleProject(model, projectName, role, (TDefinitions)target,
+					generateRoleProject(model, projectName, role, target,
 							local, modelResource, handler);
 				} catch(Exception e) {
 					logger.log(Level.SEVERE, "Failed to create BPMN2 project '"+projectName+"'", e);
@@ -120,47 +120,54 @@ public class BPMN2GeneratorImpl extends AbstractGenerator {
 	}
 	
 	protected void generateRoleProject(ProtocolModel model, String projectName, Role role,
-			TDefinitions process, ProtocolModel localcm,
+			java.util.Map<String,Object> target, ProtocolModel localcm,
 					IResource resource, FeedbackHandler journal) throws Exception {
 		
 		final IProject proj=createProject(resource, projectName, journal);
 		
-		if (proj != null && process != null) {
+		if (proj != null) {
 
-			// Store BPMN2 process
-			IPath bpmn2Path=proj.getFullPath().append(localcm.getProtocol().getName()+"_"+
-							localcm.getProtocol().getLocatedRole().getName()+".bpmn");
-			
-			IFile bpmn2File=proj.getProject().getWorkspace().getRoot().getFile(bpmn2Path);
-			
-			bpmn2File.create(null, true,
-					new org.eclipse.core.runtime.NullProgressMonitor());
-			
-			// Obtain any namespace prefix map
-			java.util.Map<String, String> prefixes=
-					new java.util.HashMap<String, String>();
-			
-			java.util.List<Annotation> list=
-				AnnotationDefinitions.getAnnotations(localcm.getProtocol().getAnnotations(),
-						AnnotationDefinitions.TYPE);
-			
-			for (Annotation annotation : list) {
-				if (annotation.getProperties().containsKey(AnnotationDefinitions.NAMESPACE_PROPERTY) &&
-						annotation.getProperties().containsKey(AnnotationDefinitions.PREFIX_PROPERTY)) {
-					prefixes.put((String)annotation.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY),
-							(String)annotation.getProperties().get(AnnotationDefinitions.PREFIX_PROPERTY));
+			for (String modelName : target.keySet()) {
+				Object val=target.get(modelName);
+				
+				if (val instanceof TDefinitions) {
+					TDefinitions process=(TDefinitions)val;
+					
+					// Store BPMN2 process
+					IPath bpmn2Path=proj.getFullPath().append(modelName);
+					
+					IFile bpmn2File=proj.getProject().getWorkspace().getRoot().getFile(bpmn2Path);
+					
+					bpmn2File.create(null, true,
+							new org.eclipse.core.runtime.NullProgressMonitor());
+					
+					// Obtain any namespace prefix map
+					java.util.Map<String, String> prefixes=
+							new java.util.HashMap<String, String>();
+					
+					java.util.List<Annotation> list=
+						AnnotationDefinitions.getAnnotations(localcm.getProtocol().getAnnotations(),
+								AnnotationDefinitions.TYPE);
+					
+					for (Annotation annotation : list) {
+						if (annotation.getProperties().containsKey(AnnotationDefinitions.NAMESPACE_PROPERTY) &&
+								annotation.getProperties().containsKey(AnnotationDefinitions.PREFIX_PROPERTY)) {
+							prefixes.put((String)annotation.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY),
+									(String)annotation.getProperties().get(AnnotationDefinitions.PREFIX_PROPERTY));
+						}
+					}
+					
+					//String bpelText=XMLUtils.toText(bpelProcess.getDOMElement());
+					ByteArrayOutputStream os=new ByteArrayOutputStream();
+					BPMN2ModelUtil.serialize(process, os, prefixes, BPMN2GeneratorImpl.class.getClassLoader());
+					
+					os.close();
+					
+					bpmn2File.setContents(new java.io.ByteArrayInputStream(
+								os.toByteArray()), true, false,
+								new org.eclipse.core.runtime.NullProgressMonitor());
 				}
 			}
-			
-			//String bpelText=XMLUtils.toText(bpelProcess.getDOMElement());
-			ByteArrayOutputStream os=new ByteArrayOutputStream();
-			BPMN2ModelUtil.serialize(process, os, prefixes, BPMN2GeneratorImpl.class.getClassLoader());
-			
-			os.close();
-			
-			bpmn2File.setContents(new java.io.ByteArrayInputStream(
-						os.toByteArray()), true, false,
-						new org.eclipse.core.runtime.NullProgressMonitor());
 		}
 	}
 	

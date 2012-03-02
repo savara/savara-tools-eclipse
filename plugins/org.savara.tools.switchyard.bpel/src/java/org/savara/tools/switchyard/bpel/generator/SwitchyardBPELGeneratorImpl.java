@@ -129,79 +129,86 @@ public class SwitchyardBPELGeneratorImpl extends AbstractGenerator {
 				
 				ProtocolToBPELModelGenerator generator=new ProtocolToBPELModelGenerator();
 				
-				Object target=generator.generate(local, handler, null);
+				java.util.Map<String,Object> map=generator.generate(local, handler, null);
 				
-				if (target instanceof TProcess) {
-					TProcess bpelProcess=(TProcess)target;
-					
-					// Store BPEL configuration
-					IPath bpelPath=proj.getFullPath().append(
-							new Path(BPEL_PATH)).
-								append(local.getProtocol().getName()+"_"+
-										local.getProtocol().getLocatedRole().getName()+".bpel");
-					
-					IFile bpelFile=proj.getProject().getWorkspace().getRoot().getFile(bpelPath);
-					
-					bpelFile.create(null, true,
-							new org.eclipse.core.runtime.NullProgressMonitor());
-					
-					// Obtain any namespace prefix map
-					java.util.Map<String, String> prefixes=
-							new java.util.HashMap<String, String>();
-					
-					java.util.List<Annotation> list=
-						AnnotationDefinitions.getAnnotations(local.getProtocol().getAnnotations(),
-								AnnotationDefinitions.TYPE);
-					
-					for (Annotation annotation : list) {
-						if (annotation.getProperties().containsKey(AnnotationDefinitions.NAMESPACE_PROPERTY) &&
-								annotation.getProperties().containsKey(AnnotationDefinitions.PREFIX_PROPERTY)) {
-							prefixes.put((String)annotation.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY),
-									(String)annotation.getProperties().get(AnnotationDefinitions.PREFIX_PROPERTY));
-						}
-					}
-					
-					ByteArrayOutputStream os=new ByteArrayOutputStream();
-					BPELModelUtil.serialize(bpelProcess, os, prefixes);
-					
-					os.close();
-					
-					bpelFile.setContents(new java.io.ByteArrayInputStream(
-								os.toByteArray()), true, false,
-								new org.eclipse.core.runtime.NullProgressMonitor());
-					
-					
-					// Generate WSDL with partner link types
-					org.w3c.dom.Document pty=generatePartnerLinkTypes(model, role,
-								proj, local, bpelProcess, wsdls.values(), handler);					
-					
-					java.util.Set<Role> refRoles=RoleUtil.getDeclaredRoles(local.getProtocol().getBlock());
-					
-					// Write the WSDL files
-					for (Role refRole : refRoles) {
-						Contract contract=ContractGeneratorFactory.getContractGenerator().generate(local.getProtocol(),
-											null, refRole, handler);
-						
-						if (contract.getInterfaces().size() > 0) {
-							generateWSDL(model, refRole, proj, local,
-										modelResource, handler, wsdls);
-						}
-					}
-					
-					generateWSDL(model, role, proj, local, modelResource,
-											handler, wsdls);
-					
-					// Generate BPEL deployment descriptor
-					org.w3c.dom.Document deployDescriptor=
-							generateBPELDeploy(model, role, proj, local, bpelProcess,
-									wsdls.values(), pty.getDocumentElement(), handler);
+				if (map== null || map.size() != 1) {
+					logger.severe("Protocol to BPEL model generator didn't return a single BPEL process definition");
+				} else {
+					String targetName=map.keySet().iterator().next();
+					Object target=map.get(targetName);
 
-					// Generate the switchyard descriptor
-					createSwitchyardDescriptor(proj, role.getName(),
-									deployDescriptor.getDocumentElement(), wsdls);
-					
-					proj.refreshLocal(IResource.DEPTH_INFINITE,
-										new NullProgressMonitor());
+					if (target instanceof TProcess) {
+						TProcess bpelProcess=(TProcess)target;
+						
+						// Store BPEL configuration
+						IPath bpelPath=proj.getFullPath().append(
+								new Path(BPEL_PATH)).
+									append(local.getProtocol().getName()+"_"+
+											local.getProtocol().getLocatedRole().getName()+".bpel");
+						
+						IFile bpelFile=proj.getProject().getWorkspace().getRoot().getFile(bpelPath);
+						
+						bpelFile.create(null, true,
+								new org.eclipse.core.runtime.NullProgressMonitor());
+						
+						// Obtain any namespace prefix map
+						java.util.Map<String, String> prefixes=
+								new java.util.HashMap<String, String>();
+						
+						java.util.List<Annotation> list=
+							AnnotationDefinitions.getAnnotations(local.getProtocol().getAnnotations(),
+									AnnotationDefinitions.TYPE);
+						
+						for (Annotation annotation : list) {
+							if (annotation.getProperties().containsKey(AnnotationDefinitions.NAMESPACE_PROPERTY) &&
+									annotation.getProperties().containsKey(AnnotationDefinitions.PREFIX_PROPERTY)) {
+								prefixes.put((String)annotation.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY),
+										(String)annotation.getProperties().get(AnnotationDefinitions.PREFIX_PROPERTY));
+							}
+						}
+						
+						ByteArrayOutputStream os=new ByteArrayOutputStream();
+						BPELModelUtil.serialize(bpelProcess, os, prefixes);
+						
+						os.close();
+						
+						bpelFile.setContents(new java.io.ByteArrayInputStream(
+									os.toByteArray()), true, false,
+									new org.eclipse.core.runtime.NullProgressMonitor());
+						
+						
+						// Generate WSDL with partner link types
+						org.w3c.dom.Document pty=generatePartnerLinkTypes(model, role,
+									proj, local, bpelProcess, wsdls.values(), handler);					
+						
+						java.util.Set<Role> refRoles=RoleUtil.getDeclaredRoles(local.getProtocol().getBlock());
+						
+						// Write the WSDL files
+						for (Role refRole : refRoles) {
+							Contract contract=ContractGeneratorFactory.getContractGenerator().generate(local.getProtocol(),
+												null, refRole, handler);
+							
+							if (contract.getInterfaces().size() > 0) {
+								generateWSDL(model, refRole, proj, local,
+											modelResource, handler, wsdls);
+							}
+						}
+						
+						generateWSDL(model, role, proj, local, modelResource,
+												handler, wsdls);
+						
+						// Generate BPEL deployment descriptor
+						org.w3c.dom.Document deployDescriptor=
+								generateBPELDeploy(model, role, proj, local, bpelProcess,
+										wsdls.values(), pty.getDocumentElement(), handler);
+	
+						// Generate the switchyard descriptor
+						createSwitchyardDescriptor(proj, role.getName(),
+										deployDescriptor.getDocumentElement(), wsdls);
+						
+						proj.refreshLocal(IResource.DEPTH_INFINITE,
+											new NullProgressMonitor());
+					}
 				}
 			} catch(Exception e) {
 				org.savara.tools.switchyard.bpel.osgi.Activator.logError("Failed to create Switchyard BPEL project '"+

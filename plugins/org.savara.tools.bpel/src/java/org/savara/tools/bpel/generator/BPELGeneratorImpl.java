@@ -120,25 +120,32 @@ public class BPELGeneratorImpl extends AbstractGenerator {
 			// TODO: Obtain model generator from manager class (SAVARA-156)
 			ProtocolToBPELModelGenerator generator=new ProtocolToBPELModelGenerator();
 			
-			Object target=generator.generate(local, handler, null);
+			java.util.Map<String,Object> target=generator.generate(local, handler, null);
 			
-			if (target instanceof TProcess) {
-				try {
-					generateRoleProject(model, projectName, role, (TProcess)target,
-							local, modelResource, handler);
-				} catch(Exception e) {
-					logger.log(Level.SEVERE, "Failed to create BPEL project '"+projectName+"'", e);
-					
-					handler.error(MessageFormatter.format(java.util.PropertyResourceBundle.getBundle(
-							"org.savara.tools.bpel.Messages"), "SAVARA-BPELTOOLS-00001",
-										projectName), null);
+			if (target == null || target.size() != 1) {
+				logger.severe("Protocol to BPEL model generator didn't return a single BPEL process definition");
+			} else {
+				String targetName=target.keySet().iterator().next();
+				Object targetProcess=target.get(targetName);
+
+				if (targetProcess instanceof TProcess) {
+					try {
+						generateRoleProject(model, projectName, role, targetName,
+								(TProcess)targetProcess, local, modelResource, handler);
+					} catch(Exception e) {
+						logger.log(Level.SEVERE, "Failed to create BPEL project '"+projectName+"'", e);
+						
+						handler.error(MessageFormatter.format(java.util.PropertyResourceBundle.getBundle(
+								"org.savara.tools.bpel.Messages"), "SAVARA-BPELTOOLS-00001",
+											projectName), null);
+					}
 				}
 			}
 		}
 	}
 	
 	protected void generateRoleProject(ProtocolModel model, String projectName, Role role,
-			TProcess bpelProcess, ProtocolModel localcm,
+			String bpelName, TProcess bpelProcess, ProtocolModel localcm,
 					IResource resource, FeedbackHandler journal) throws Exception {
 		java.util.List<javax.wsdl.Definition> wsdls=
 				new java.util.Vector<javax.wsdl.Definition>();
@@ -150,8 +157,7 @@ public class BPELGeneratorImpl extends AbstractGenerator {
 			// Store BPEL configuration
 			IPath bpelPath=proj.getFullPath().append(
 					new Path(BPEL_PATH)).
-						append(localcm.getProtocol().getName()+"_"+
-							localcm.getProtocol().getLocatedRole().getName()+".bpel");
+						append(bpelName);
 			
 			IFile bpelFile=proj.getProject().getWorkspace().getRoot().getFile(bpelPath);
 			createFolder(bpelFile);
