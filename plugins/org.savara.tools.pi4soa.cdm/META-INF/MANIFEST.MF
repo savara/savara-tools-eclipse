@@ -9,6 +9,15 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.pi4soa.common,
  org.eclipse.core.resources,
- org.pi4soa.cdl
+ org.pi4soa.cdl,
+ org.savara.bpmn2,
+ org.savara.common,
+ org.savara.pi4soa.cdm,
+ org.scribble.common,
+ org.savara.protocol,
+ org.scribble.protocol,
+ org.savara.tools.common
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: lib/jaxb-impl-2.2.4-1.jar,
+ .

@@ -8,4 +8,30 @@
       </annotationsManager>
    </extension>
 
+  <extension point="org.eclipse.ui.popupMenus"> 
+	<objectContribution 
+      id="org.savara.tools.pi4soa.cdm.object.contribution"
+   			objectClass="org.eclipse.core.resources.IFile"
+   				nameFilter="*.cdm">
+	  <menu
+         id="org.savara.tools.menu"
+         label="Savara"
+         path="additions">
+      	<separator name="group1"/>
+      </menu>
+	  <menu
+         id="CDM.menu"
+         label="CDM"
+         path="org.savara.tools.menu/additions">
+      	<separator name="group2"/>
+      </menu>
+      <action
+           label="Generate BPMN2 Choreography"
+           class="org.savara.tools.pi4soa.cdm.actions.GenerateBPMN2ChoreographyAction"
+           menubarPath="org.savara.tools.menu/CDM.menu/group2"
+           enablesFor="1"
+           id="org.savara.tools.pi4soa.cdm.actions.GenerateBPMN2ChoreographyAction">
+     </action> 
+    </objectContribution>
+  </extension>
 </plugin>
