@@ -41,13 +41,13 @@
 	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/p2/osgi/bundle/org.eclipse.ui.workbench/3.7.0.I20110519-0100/org.eclipse.ui.workbench-3.7.0.I20110519-0100.jar"/>
 	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/p2/osgi/bundle/org.hamcrest.core/1.1.0.v20090501071000/org.hamcrest.core-1.1.0.v20090501071000.jar"/>
 	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/.cache/tycho/org.junit-4.8.2.v4_8_2_v20110321-1705.jar/junit.jar"/>
-	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/savara/bundles/org.savara.bpel/2.0.0-SNAPSHOT/org.savara.bpel-2.0.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/savara/bundles/org.savara.common/2.0.0-SNAPSHOT/org.savara.common-2.0.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/savara/bundles/org.savara.contract/2.0.0-SNAPSHOT/org.savara.contract-2.0.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/savara/bundles/org.savara.protocol/2.0.0-SNAPSHOT/org.savara.protocol-2.0.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/savara/bundles/org.savara.switchyard.bpel/2.0.0-SNAPSHOT/org.savara.switchyard.bpel-2.0.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/savara/tools/org.savara.tools.common/2.0.0-SNAPSHOT/org.savara.tools.common-2.0.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/savara/bundles/org.savara.wsdl/2.0.0-SNAPSHOT/org.savara.wsdl-2.0.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/savara/bundles/org.savara.bpel/2.1.0-SNAPSHOT/org.savara.bpel-2.1.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/savara/bundles/org.savara.common/2.1.0-SNAPSHOT/org.savara.common-2.1.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/savara/bundles/org.savara.contract/2.1.0-SNAPSHOT/org.savara.contract-2.1.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/savara/bundles/org.savara.protocol/2.1.0-SNAPSHOT/org.savara.protocol-2.1.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/savara/bundles/org.savara.switchyard.bpel/2.1.0-SNAPSHOT/org.savara.switchyard.bpel-2.1.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/savara/tools/org.savara.tools.common/2.1.0-SNAPSHOT/org.savara.tools.common-2.1.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/savara/bundles/org.savara.wsdl/2.1.0-SNAPSHOT/org.savara.wsdl-2.1.0-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/scribble/bundles/org.scribble.common/2.1.0-SNAPSHOT/org.scribble.common-2.1.0-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/scribble/bundles/org.scribble.protocol/2.1.0-SNAPSHOT/org.scribble.protocol-2.1.0-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/.cache/tycho/org.scribble.protocol.parser-2.1.0-SNAPSHOT.jar/lib/antlr-3.2.jar"/>
