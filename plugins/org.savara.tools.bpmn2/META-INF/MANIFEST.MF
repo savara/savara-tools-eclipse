@@ -24,6 +24,7 @@ Require-Bundle: org.eclipse.ui,
  org.savara.bpmn2,
  org.savara.protocol,
  org.savara.common,
+ org.savara.scenario,
  org.savara.tools.common
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

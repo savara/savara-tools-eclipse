@@ -24,6 +24,23 @@
 			<artifactId>org.savara.common</artifactId> 
 			<version>${savara.core.version}</version>
  		</dependency>
+ 		<dependency>
+ 			<groupId>org.savara.bundles</groupId>
+			<artifactId>org.savara.scenario</artifactId> 
+			<version>${savara.core.version}</version>
+ 		</dependency>
+ 		<!-- 
+ 		<dependency>
+ 			<groupId>org.scribble.bundles</groupId>
+			<artifactId>org.scribble.common</artifactId> 
+			<version>${scribble.core.version}</version>
+ 		</dependency>
+ 		<dependency>
+ 			<groupId>org.scribble.bundles</groupId>
+			<artifactId>org.scribble.protocol</artifactId> 
+			<version>${scribble.core.version}</version>
+ 		</dependency>
+ 		-->
  	</dependencies>
   
 </project>

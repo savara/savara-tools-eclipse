@@ -30,7 +30,6 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.savara.bpmn2.model.TDefinitions;
 import org.savara.bpmn2.util.BPMN2ModelUtil;
-import org.savara.common.logging.DefaultFeedbackHandler;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.pi4soa.cdm.parser.CDMProtocolParser;
