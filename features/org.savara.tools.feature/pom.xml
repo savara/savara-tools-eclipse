@@ -45,12 +45,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
  		</dependency>
  		<dependency>
  			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.pi4soa.cdm</artifactId> 
+			<artifactId>org.savara.protocol</artifactId> 
 			<version>${savara.core.version}</version>
  		</dependency>
  		<dependency>
  			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.protocol</artifactId> 
+			<artifactId>org.savara.java</artifactId> 
 			<version>${savara.core.version}</version>
  		</dependency>
  		<dependency>
@@ -65,12 +65,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
  		</dependency>
  		<dependency>
  			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.scenario</artifactId> 
+			<artifactId>org.savara.switchyard.java</artifactId> 
 			<version>${savara.core.version}</version>
  		</dependency>
  		<dependency>
  			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.scenario.simulator.cdm</artifactId> 
+			<artifactId>org.savara.scenario</artifactId> 
 			<version>${savara.core.version}</version>
  		</dependency>
  		<dependency>

@@ -49,6 +49,11 @@
 			<artifactId>org.savara.sca.java</artifactId>
 			<version>${savara.core.version}</version>
  		</dependency>
+ 		<dependency>
+ 			<groupId>org.savara.bundles</groupId>
+			<artifactId>org.savara.java</artifactId>
+			<version>${savara.core.version}</version>
+ 		</dependency>
  	</dependencies>
   
 </project>

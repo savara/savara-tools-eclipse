@@ -18,6 +18,7 @@ Require-Bundle: org.eclipse.ui,
  org.savara.protocol,
  org.savara.common,
  org.savara.tools.common,
+ org.savara.java,
  org.savara.sca.java
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
