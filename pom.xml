@@ -119,6 +119,17 @@
 			</releases>
 		</repository>
 		<repository>
+			<id>SwitchYard-Tools</id>
+			<url>http://download.jboss.org/jbosstools/builds/staging/SwitchYard-Tools/all/</url>
+			<layout>p2</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+		<repository>
 			<id>graphiti</id>
 			<url>http://download.eclipse.org/graphiti/updates/0.8.0/</url>
 			<layout>p2</layout>
