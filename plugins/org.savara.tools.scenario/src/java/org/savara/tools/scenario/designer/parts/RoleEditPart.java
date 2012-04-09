@@ -35,13 +35,14 @@ import org.savara.scenario.model.*;
 import org.savara.tools.scenario.designer.figures.*;
 import org.savara.tools.scenario.designer.model.*;
 import org.savara.tools.scenario.designer.policies.*;
+import org.savara.tools.scenario.designer.simulate.SimulationEntity;
 import org.savara.tools.scenario.designer.view.ViewSupport;
 
 /**
  * This class provides a simple type part.
  */
 public class RoleEditPart extends ScenarioBaseEditPart  
-					implements org.eclipse.gef.NodeEditPart {
+					implements org.eclipse.gef.NodeEditPart, SimulationEntity {
     
 	private IPropertySource propertySource = null;
 
@@ -277,4 +278,27 @@ public class RoleEditPart extends ScenarioBaseEditPart
     public ConnectionAnchor getTargetConnectionAnchor() {
         return(((RoleFigure)getFigure()).getConnectionAnchor());
     }
+
+    public void reset() {
+    	((RoleFigure)getFigure()).setState(RoleFigure.STATE_RESET);
+    	
+		super.reset();
+    }
+    
+	public void processing() {
+    	((RoleFigure)getFigure()).setState(RoleFigure.STATE_PROCESSING);
+	}
+	
+    public void successful() {
+    	((RoleFigure)getFigure()).setState(RoleFigure.STATE_SUCCESSFUL);
+    }
+    
+    public void unsuccessful() {
+    	((RoleFigure)getFigure()).setState(RoleFigure.STATE_UNSUCCESSFUL);
+    }
+    
+	public boolean isUnsuccessful() {
+		return(((RoleFigure)getFigure()).getState() ==
+				RoleFigure.STATE_UNSUCCESSFUL);
+	}
 }

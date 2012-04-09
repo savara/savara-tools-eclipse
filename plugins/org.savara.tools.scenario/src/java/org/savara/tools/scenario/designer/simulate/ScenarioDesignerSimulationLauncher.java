@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 import org.eclipse.swt.widgets.Display;
 import org.savara.common.logging.MessageFormatter;
 import org.savara.scenario.model.Event;
+import org.savara.scenario.model.Role;
 import org.savara.tools.scenario.osgi.Activator;
 
 /**
@@ -133,28 +134,70 @@ public class ScenarioDesignerSimulationLauncher extends ScenarioSimulationLaunch
 		int tagEndPos=line.indexOf(' ');
 		tag = line.substring(0, tagEndPos);
 		
-		int idstart=line.indexOf("[ID=");
-		int idend=line.indexOf(']');
+		if (tag.startsWith("ROLE_")) {
+			
+			int roleStartPos=line.indexOf('[', tagEndPos);
+			int roleEndPos=line.indexOf(']', tagEndPos);
+			
+			if (roleStartPos != -1 && roleEndPos != -1) {
+				String roleName=line.substring(roleStartPos+1, roleEndPos);
+				Role role=null;
+				
+				for (Role r : m_scenario.getRole()) {
+					if (r.getName().equals(roleName)) {
+						role = r;
+						break;
+					}
+				}
+				
+				if (role != null) {
+					SimulationEntity se=getScenarioEntity(role);
+
+					if (se == null) {
+						// TODO: error
+					} else if (tag.equals("ROLE_START")) {
+						se.processing();
+						se.setLogStartPosition(start-4);
+					} else if (tag.equals("ROLE_INIT")) {
+						se.successful();
+						se.setLogEndPosition(end);
+					} else if (tag.equals("ROLE_FAIL")) {
+						se.unsuccessful();
+						se.setLogEndPosition(end);
+					}				
+				}
+			} else {
+				// TODO: error
+			}
+		} else {
 		
-		String id=line.substring(idstart+4, idend);
-		
-		// Get scenario entity
-		SimulationEntity se=getScenarioEntity(id);
-		
-		if (se != null) {
-			if (tag.equals("START")) {
-				se.processing();
-				se.setLogStartPosition(start-4);
-			} else if (tag.equals("END")) {
-				se.setLogEndPosition(end);
-			} else if (tag.equals("SUCCESS")) {
-				se.successful();
-			} else if (tag.equals("FAIL")) {
-				se.unsuccessful();
-			} else if (tag.equals("NO_SIMULATOR")) {
-				se.reset();
+			int idstart=line.indexOf("[ID=");
+			int idend=line.indexOf(']');
+			
+			String id=line.substring(idstart+4, idend);
+			
+			// Get scenario entity
+			SimulationEntity se=getScenarioEntity(id);
+			
+			if (se != null) {
+				if (tag.equals("START")) {
+					se.processing();
+					se.setLogStartPosition(start-4);
+				} else if (tag.equals("END")) {
+					se.setLogEndPosition(end);
+				} else if (tag.equals("SUCCESS")) {
+					se.successful();
+				} else if (tag.equals("FAIL")) {
+					se.unsuccessful();
+				} else if (tag.equals("NO_SIMULATOR")) {
+					se.reset();
+				}
 			}
 		}
+	}
+	
+	protected SimulationEntity getScenarioEntity(Role role) {
+		return (m_scenarioSimulation.getSimulationEntity(role, false));
 	}
 	
 	protected SimulationEntity getScenarioEntity(String id) {

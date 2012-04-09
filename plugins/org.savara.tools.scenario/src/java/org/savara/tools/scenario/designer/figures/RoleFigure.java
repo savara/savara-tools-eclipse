@@ -27,6 +27,7 @@ import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.savara.tools.scenario.designer.view.ViewSupport;
 import org.eclipse.draw2d.MarginBorder;
+import org.eclipse.swt.graphics.Color;
 
 /**
  * This class provides a figure for the simple type.
@@ -144,9 +145,38 @@ public class RoleFigure extends GroupingFigure {//org.eclipse.draw2d.Figure {
 		return(m_connectionAnchor);
 	}
 	
+	public void setState(int state) {
+		m_state = state;
+		
+		switch(m_state) {
+		case STATE_RESET:
+			((org.eclipse.draw2d.Label)getHeader()).setBackgroundColor(ColorConstants.menuBackground);
+			break;
+		case STATE_PROCESSING:
+			((org.eclipse.draw2d.Label)getHeader()).setBackgroundColor(ColorConstants.yellow);
+			break;
+		case STATE_SUCCESSFUL:
+			((org.eclipse.draw2d.Label)getHeader()).setBackgroundColor(ColorConstants.green);
+			break;
+		case STATE_UNSUCCESSFUL:
+			((org.eclipse.draw2d.Label)getHeader()).setBackgroundColor(ColorConstants.red);
+			break;
+		}
+	}
+	
+	public int getState() {
+		return(m_state);
+	}
+	
 	private ConnectionAnchor m_connectionAnchor=null;
 	
 	private boolean selected;
 	private boolean hasFocus;
 	private String m_text=null;
+	private int m_state=STATE_RESET;
+	
+	public static final int STATE_RESET=0;
+	public static final int STATE_PROCESSING=1;
+	public static final int STATE_SUCCESSFUL=2;
+	public static final int STATE_UNSUCCESSFUL=3;
 }
