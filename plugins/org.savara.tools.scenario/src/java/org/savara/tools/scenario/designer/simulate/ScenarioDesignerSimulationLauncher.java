@@ -60,7 +60,7 @@ public class ScenarioDesignerSimulationLauncher extends ScenarioSimulationLaunch
 	 */
 	protected void handleResults(String results, boolean errorStream) {		
 		if (logger.isLoggable(Level.FINER)) {
-			logger.finer(">>: "+results);
+			logger.finer(">>(err? "+errorStream+"): "+results);
 		}
 		
 		if (errorStream) {
