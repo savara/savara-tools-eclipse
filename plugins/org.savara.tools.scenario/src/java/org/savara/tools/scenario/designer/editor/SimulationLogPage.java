@@ -31,7 +31,6 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class SimulationLogPage extends AbstractEditorPage {
 	   
-    //private org.eclipse.swt.widgets.Text m_text=null;
     private org.eclipse.swt.browser.Browser m_text=null;
 
 	/**
@@ -56,11 +55,7 @@ public class SimulationLogPage extends AbstractEditorPage {
 	 * This method creates the page control.
 	 */
     protected void createPageControl(Composite parent) {
-    	m_text =
-        		new org.eclipse.swt.browser.Browser(parent,
-        				SWT.MULTI|SWT.READ_ONLY|SWT.H_SCROLL|SWT.V_SCROLL);
-        		//new org.eclipse.swt.widgets.Text(parent,
-        		//		SWT.MULTI|SWT.READ_ONLY|SWT.H_SCROLL|SWT.V_SCROLL);
+    	m_text = new org.eclipse.swt.browser.Browser(parent, SWT.READ_ONLY);
     }
 
     /**
