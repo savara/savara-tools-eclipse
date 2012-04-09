@@ -36,4 +36,23 @@
     </objectContribution>
   </extension>
 
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            objectClass="org.eclipse.core.resources.IFile"
+            class="org.savara.tools.common.properties.SavaraPropertyPage"
+            name="Savara"
+            id="org.savara.tools.common.properties.SavaraPropertyPage"/>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            objectClass="org.eclipse.core.resources.IFile"
+            class="org.savara.tools.common.properties.ValidationPropertyPage"
+            name="Validation"
+            category="org.savara.tools.common.properties.SavaraPropertyPage"
+            id="org.savara.tools.common.properties.ValidationPropertyPage"/>
+    </extension>
+
 </plugin>

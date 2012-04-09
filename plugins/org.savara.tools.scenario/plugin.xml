@@ -122,20 +122,4 @@
       </propertySections>
    </extension>
 
-  <extension
-        point="org.eclipse.ui.preferencePages">
-     <page
-           category="org.savara.tools.preferences.SavaraPreferencePage"
-           class="org.savara.tools.scenario.designer.preferences.ScenarioPreferencePage"
-           id="org.savara.tools.scenario.designer.preferences.ScenarioPreferencePage"
-           name="Scenario">
-     </page>
-  </extension>
-  <extension
-        point="org.eclipse.core.runtime.preferences">
-     <initializer
-           class="org.savara.tools.scenario.designer.preferences.PreferenceInitializer">
-     </initializer>
-  </extension>
-
 </plugin>

@@ -19,47 +19,14 @@
  */
 package org.savara.tools.scenario.designer;
 
-//import org.pi4soa.common.resource.ResourceLocator;
-
 /**
  * This interface contains general definitions used within the
  * designer.
  */
 public class DesignerDefinitions {
 
-    /**
-     * This method returns a configuration message for the
-     * designer plugin.
-     * 
-     * @param key The key
-     * @param params The list of parameters
-     * @return The message
-     */
-	/*
-	public static String getMessage(String key, Object[] params) {
-		return(ResourceLocator.getMessage(DesignerDefinitions.DESIGNER_RESOURCE,
-				key, params));
-	}
-	*/
-    
-	/**
-	 * This method returns the boolean preference value associated
-	 * with the supplied name.
-	 * 
-	 * @param pref The preference name
-	 * @return Whether the boolean preference is true
-	 */
-	public static boolean isPreference(String pref) {
-		return(org.savara.tools.scenario.osgi.Activator.getDefault().getPreferenceStore().
-					getBoolean(pref));
-	}
-    
     public static final String DESIGNER_PLUGIN_ID=
     			org.savara.tools.scenario.osgi.Activator.PLUGIN_ID;
-
-    public static final String DESIGNER_RESOURCE="tsdesigner";
-    
-    public static final String BUSINESS_VIEW="businessView";
 
 	public static final String SCENARIO_FILE_EXTENSION="scn";
 

@@ -20,11 +20,18 @@ package org.savara.tools.common.osgi;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.savara.tools.common.properties.PropertyDefinitions;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -37,7 +44,7 @@ public class Activator extends AbstractUIPlugin {
 	// The shared instance
 	private static Activator plugin;
 	
-	private static Logger logger = Logger.getLogger(Activator.class.getName());
+	private static final Logger LOG=Logger.getLogger(Activator.class.getName());
 	
 	/**
 	 * The constructor
@@ -69,13 +76,82 @@ public class Activator extends AbstractUIPlugin {
 						bundle.getSymbolicName().startsWith("org.savara.tools.") == false)) {
 				
 					//if (bundle.getState() == Bundle.RESOLVED) {
-						logger.fine("Pre-empt bundle start: "+bundle);
+						LOG.fine("Pre-empt bundle start: "+bundle);
 						bundle.start();
 					//}
 				}
 			}
 		}
 
+		// Register resource change listener
+		IResourceChangeListener rcl=
+				new IResourceChangeListener() {
+		
+			public void resourceChanged(IResourceChangeEvent evt) {
+	
+				try {
+					evt.getDelta().accept(new IResourceDeltaVisitor() {
+						
+				        public boolean visit(IResourceDelta delta) {
+				        	boolean ret=true;
+				        	IResource res = delta.getResource();
+				        	
+							// Determine if the change is relevant
+							if (isChangeRelevant(res,
+										delta)) {
+								
+								// Validate the resource
+								validateResource(res);
+							}
+							
+				        	return(ret);
+				        }
+				 	});
+				} catch(Exception e) {
+					LOG.log(Level.SEVERE, "Failed to process resource change event", e);
+				}
+			}
+		};
+	
+		// Register the resource change listener
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(rcl,
+				IResourceChangeEvent.POST_CHANGE);		
+
+	}
+
+	/**
+	 * This method validates the supplied resource.
+	 * 
+	 * @param res The resource
+	 */
+	protected void validateResource(IResource res) {
+		
+        try {
+        	// TODO: Check if protocol parser available, and if so, then
+        	// validate
+        } catch (Exception e) {
+            Activator.logError("Failed to record validation issue on resource '"+res+"'", e);
+        }
+	}
+	
+	/**
+	 * This method determines whether the supplied resource
+	 * change event is relevant.
+	 * 
+	 * @param res The resource
+	 * @param deltaFlags The flags
+	 * @return Whether the change is relevant
+	 */
+	protected boolean isChangeRelevant(IResource res, IResourceDelta delta) {
+		boolean ret=false;
+
+		if (res != null && PropertyDefinitions.isValidationEnabled(res) &&
+				(((delta.getFlags() & IResourceDelta.CONTENT) != 0) ||
+				delta.getKind() == IResourceDelta.ADDED)) {
+			ret = true;
+		}
+
+		return(ret);
 	}
 
 	/*
@@ -111,7 +187,7 @@ public class Activator extends AbstractUIPlugin {
 			getDefault().getLog().log(status);
 		}
 		
-		logger.log(Level.SEVERE, "LOG ERROR: "+mesg+
+		LOG.log(Level.SEVERE, "LOG ERROR: "+mesg+
 				(t == null ? "" : ": "+t), t);
 	}
 }
