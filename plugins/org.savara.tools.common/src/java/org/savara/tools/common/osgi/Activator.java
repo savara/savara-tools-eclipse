@@ -20,6 +20,7 @@ package org.savara.tools.common.osgi;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -31,7 +32,15 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import org.savara.tools.common.Tools;
+import org.savara.tools.common.logging.EclipseLogger;
 import org.savara.tools.common.properties.PropertyDefinitions;
+import org.scribble.common.resource.FileContent;
+import org.scribble.protocol.DefaultProtocolContext;
+import org.scribble.protocol.model.ProtocolModel;
+import org.scribble.protocol.parser.ProtocolParserManager;
+import org.scribble.protocol.validation.ProtocolValidationManager;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -59,6 +68,20 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		
+		// Locate protocol parser manager
+		ServiceReference<ProtocolParserManager> sref1=context.getServiceReference(ProtocolParserManager.class);
+		
+		if (sref1 != null) {
+			Tools.setProtocolParserManager(context.getService(sref1));
+		}
+
+		// Locate protocol validation manager
+		ServiceReference<ProtocolValidationManager> sref2=context.getServiceReference(ProtocolValidationManager.class);
+		
+		if (sref2 != null) {
+			Tools.setProtocolValidationManager(context.getService(sref2));
+		}
 
 		// Make sure any bundles, associated with scribble and savara, are started (excluding
 		// the designer itself)
@@ -127,8 +150,26 @@ public class Activator extends AbstractUIPlugin {
 	protected void validateResource(IResource res) {
 		
         try {
-        	// TODO: Check if protocol parser available, and if so, then
-        	// validate
+             FileContent content=new FileContent(((IFile)res).getRawLocation().toFile());
+             
+             if (Tools.getProtocolParserManager().isParserAvailable(content)) {
+
+                 DefaultProtocolContext context=new DefaultProtocolContext();
+                 context.setProtocolParserManager(Tools.getProtocolParserManager());
+                 
+                 EclipseLogger journal=new EclipseLogger((IFile)res);
+
+                 ProtocolModel pm=Tools.getProtocolParserManager().parse(context, content, journal);
+            	 
+System.out.println("PARSE: "+res+" errors? "+journal.hasErrorOccurred());                	 
+                 if (!journal.hasErrorOccurred()) {
+                	 Tools.getProtocolValidationManager().validate(context, pm, journal);
+System.out.println("VALIDATE: "+res+" errors? "+journal.hasErrorOccurred());                	 
+                 }
+                 
+                 journal.finished();
+             }
+            
         } catch (Exception e) {
             Activator.logError("Failed to record validation issue on resource '"+res+"'", e);
         }
