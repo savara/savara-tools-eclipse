@@ -65,6 +65,9 @@ public class ScenarioDesignerSimulationLauncher extends ScenarioSimulationLaunch
 		
 		if (errorStream) {
 			
+			// Transform results into HTML
+			results = transformToHTML(results);
+			
 			m_scenarioSimulation.appendLogEntry(results);
 			
 			m_log.append(results);
@@ -82,6 +85,32 @@ public class ScenarioDesignerSimulationLauncher extends ScenarioSimulationLaunch
 		}
 	}
 	
+	protected static String transformToHTML(String results) {
+		results = results.replaceAll("\n", "<br>");
+		
+		StringBuffer buf=new StringBuffer(results);
+		
+		int ind=0;
+		
+		do {
+			ind = buf.indexOf("SEVERE:", ind);
+			
+			if (ind != -1) {
+				buf.insert(ind, "<font color=\"red\">");
+				
+				int endind=buf.indexOf("<br>", ind);
+				
+				if (endind != -1) {
+					buf.insert(endind, "</font>");
+				}
+				
+				ind = endind;
+			}
+		} while (ind != -1);
+		
+		return(buf.toString());
+	}
+	
 	protected synchronized void processResults() {
 		int infoPos=0;
 		
@@ -96,6 +125,8 @@ public class ScenarioDesignerSimulationLauncher extends ScenarioSimulationLaunch
 			if ((newlinePos=m_log.indexOf("\r",
 					infoPos)) != -1 ||
 				(newlinePos=m_log.indexOf("\n",
+							infoPos)) != -1 ||
+				(newlinePos=m_log.indexOf("<br>",
 							infoPos)) != -1) {
 			
 				// Complete line found

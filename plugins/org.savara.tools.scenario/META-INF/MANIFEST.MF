@@ -21,7 +21,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.views.properties.tabbed,
  org.eclipse.jdt.debug.ui,
  org.savara.common,
- org.savara.tools.common
+ org.savara.tools.common,
+ org.junit
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
