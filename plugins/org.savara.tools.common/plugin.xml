@@ -66,5 +66,9 @@
            value="true">
      </persistent>
   </extension>
+  <extension
+        id="org.savara.tools.common.startup"
+        point="org.eclipse.ui.startup">
+  </extension>
 
 </plugin>

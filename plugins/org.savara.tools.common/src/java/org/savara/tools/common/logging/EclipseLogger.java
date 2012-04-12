@@ -17,11 +17,11 @@
  */
 package org.savara.tools.common.logging;
 
-import java.util.logging.Logger;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
+import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.scribble.common.logging.Journal;
+import org.scribble.protocol.model.ModelProperties;
 
 /**
  * The Eclipse implementation of the journal.
@@ -29,8 +29,6 @@ import org.scribble.common.logging.Journal;
  */
 public class EclipseLogger implements Journal {
     
-    private static final Logger LOG=Logger.getLogger(EclipseLogger.class.getName());
-
     private IFile _file=null;
     private boolean _finished=false;
     private boolean _errorOccurred=false;
@@ -165,8 +163,13 @@ public class EclipseLogger implements Journal {
                 marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
             }
             
-            derivePosition(_file, marker, props);
-
+            if (props != null &&
+            			props.containsKey(ModelProperties.URI)) {
+            	Object srcComp=props.get(ModelProperties.URI);
+            	
+            	marker.setAttribute("uri", srcComp);
+            }
+            
         } catch (Exception e) {
             
             // TODO: report error
@@ -174,118 +177,6 @@ public class EclipseLogger implements Journal {
         }
     }
     
-    /**
-     * This method derives the position.
-     * 
-     * @param file The file
-     * @param marker The marker
-     * @param props The properties
-     * @throws Exception Failed to derive position
-     */
-    protected void derivePosition(IFile file, IMarker marker, java.util.Map<String,Object> props)
-                            throws Exception {
-        int endMarkerAfter=-1;
-        String contents=null;
-        
-        if (props == null) {
-            LOG.severe("Unable to derive position associated with marker as not properties provided");
-            return;
-        }
-        
-        if (props.containsKey(START_POSITION)) {
-            marker.setAttribute(IMarker.CHAR_START, (Integer)props.get(START_POSITION));
-            
-            if (props.containsKey(END_POSITION)) {
-                marker.setAttribute(IMarker.CHAR_END, (Integer)props.get(END_POSITION));
-            } else {
-                endMarkerAfter = (Integer)props.get(START_POSITION);
-            }
-        } else if (props.containsKey(START_LINE)) {
-            int pos=-1;
-            
-            contents = getContents(file);
-            
-            if (contents != null) {
-                pos = 0;
-                
-                int curline=1;
-                int line=(Integer)props.get(START_LINE);
-                
-                while (curline < line) {
-                    // Find next end of line
-                    int nextPos=contents.indexOf('\n', pos);
-                    
-                    curline++;
-                    pos = nextPos+1;
-                }
-                
-                if (props.containsKey(START_COLUMN)) {
-                    pos += (Integer)props.get(START_COLUMN);
-                }
-            }
-            
-            marker.setAttribute(IMarker.CHAR_START, pos);
-
-            if (props.containsKey(END_LINE)) {
-                if (contents != null) {
-                    pos = 0;
-                    
-                    int curline=1;
-                    int line=(Integer)props.get(END_LINE);
-                    
-                    while (curline < line) {
-                        // Find next end of line
-                        int nextPos=contents.indexOf('\n', pos);
-                        
-                        curline++;
-                        pos = nextPos+1;
-                    }
-                    
-                    if (props.containsKey(END_COLUMN)) {
-                        pos += (Integer)props.get(END_COLUMN);
-                    }
-                    
-                    marker.setAttribute(IMarker.CHAR_END, pos);
-                }
-            } else {
-                endMarkerAfter = pos;
-            }
-        }
-        
-        if (endMarkerAfter != -1) {
-            if (contents == null) {
-                contents = getContents(file);
-            }
-            
-            // Find next whitespace after this position
-            int nextPos=endMarkerAfter;
-            
-            while (nextPos < contents.length() && !Character.isWhitespace(contents.charAt(nextPos))) {
-                nextPos++;
-            }
-            
-            if (nextPos != -1) {
-                marker.setAttribute(IMarker.CHAR_END, nextPos);
-            }
-        }
-    }
-    
-    /**
-     * This method returns the file contents.
-     * 
-     * @param file The file
-     * @return The contents
-     * @throws Exception Failed to get contents
-     */
-    protected String getContents(IFile file) throws Exception {
-        java.io.InputStream is=file.getContents();
-        byte[] b=new byte[is.available()];
-        is.read(b);
-        is.close();
-        
-        return (new String(b));
-    }
-
     /**
      * This is a simple data container class to hold the
      * information reported during validation.

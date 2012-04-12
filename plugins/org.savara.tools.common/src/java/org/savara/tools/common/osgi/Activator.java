@@ -29,6 +29,7 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.IStartup;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -45,7 +46,7 @@ import org.scribble.protocol.validation.ProtocolValidationManager;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class Activator extends AbstractUIPlugin {
+public class Activator extends AbstractUIPlugin implements IStartup {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.savara.tools.core";
@@ -69,20 +70,6 @@ public class Activator extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 		
-		// Locate protocol parser manager
-		ServiceReference<ProtocolParserManager> sref1=context.getServiceReference(ProtocolParserManager.class);
-		
-		if (sref1 != null) {
-			Tools.setProtocolParserManager(context.getService(sref1));
-		}
-
-		// Locate protocol validation manager
-		ServiceReference<ProtocolValidationManager> sref2=context.getServiceReference(ProtocolValidationManager.class);
-		
-		if (sref2 != null) {
-			Tools.setProtocolValidationManager(context.getService(sref2));
-		}
-
 		// Make sure any bundles, associated with scribble and savara, are started (excluding
 		// the designer itself)
 		// TODO: This should may be in a more general Eclipse plugin, but currently
@@ -104,6 +91,20 @@ public class Activator extends AbstractUIPlugin {
 					//}
 				}
 			}
+		}
+
+		// Locate protocol parser manager
+		ServiceReference<ProtocolParserManager> sref1=context.getServiceReference(ProtocolParserManager.class);
+		
+		if (sref1 != null) {
+			Tools.setProtocolParserManager(context.getService(sref1));
+		}
+
+		// Locate protocol validation manager
+		ServiceReference<ProtocolValidationManager> sref2=context.getServiceReference(ProtocolValidationManager.class);
+		
+		if (sref2 != null) {
+			Tools.setProtocolValidationManager(context.getService(sref2));
 		}
 
 		// Register resource change listener
@@ -230,5 +231,9 @@ System.out.println("VALIDATE: "+res+" errors? "+journal.hasErrorOccurred());
 		
 		LOG.log(Level.SEVERE, "LOG ERROR: "+mesg+
 				(t == null ? "" : ": "+t), t);
+	}
+
+	@Override
+	public void earlyStartup() {
 	}
 }
