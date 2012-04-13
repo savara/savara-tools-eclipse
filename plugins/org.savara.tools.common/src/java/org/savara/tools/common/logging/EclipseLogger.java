@@ -19,7 +19,6 @@ package org.savara.tools.common.logging;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
-import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.scribble.common.logging.Journal;
 import org.scribble.protocol.model.ModelProperties;
 
@@ -242,6 +241,25 @@ public class EclipseLogger implements Journal {
          */
         public java.util.Map<String,Object> getProperties() {
             return (_properties);
+        }
+        
+        protected String getKey() {
+        	Object uri=getProperties().get("uri");
+        	return (_issue+":"+_type+":"+uri);
+        }
+        
+        public int hashCode() {
+        	return (getKey().hashCode());
+        }
+        
+        public boolean equals(Object obj) {
+        	boolean ret=false;
+        	
+        	if (obj instanceof ReportEntry) {
+        		ret = ((ReportEntry)obj).getKey().equals(getKey());
+        	}
+        	
+        	return (ret);
         }
     }
 }
