@@ -12,11 +12,12 @@
 	     Then, build like this to suck in latest pi4soa + target-platform:
 	     	mvn3 clean install -U -B -e -fae -P jbosstools-nightly-trunk,helios-remote-target,\!helios
 	-->
-        <parent>
-                <groupId>org.jboss.tools</groupId>
-                <artifactId>org.jboss.tools.parent.pom</artifactId>
-        	<version>0.0.4-SNAPSHOT</version>
-        </parent>
+	<parent>
+		<groupId>org.jboss.tools</groupId>
+		<artifactId>parent</artifactId>
+		<version>3.3.0.Beta3-SNAPSHOT</version>
+		<relativePath>../build/parent/pom.xml</relativePath>
+	</parent>
 
         <!-- Don't use Savara's own local parent-pom.xml. ~nickb
         <parent>
