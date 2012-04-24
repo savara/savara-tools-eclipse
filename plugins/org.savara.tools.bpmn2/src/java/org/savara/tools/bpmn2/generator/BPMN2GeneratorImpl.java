@@ -31,6 +31,7 @@ import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.logging.MessageFormatter;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
+import org.savara.tools.bpmn2.properties.BPMN2Properties;
 import org.savara.tools.common.ArtifactType;
 import org.savara.tools.common.generation.AbstractGenerator;
 import org.scribble.protocol.model.*;
@@ -101,6 +102,8 @@ public class BPMN2GeneratorImpl extends AbstractGenerator {
 		
 		if (local != null) {
 			ProtocolToBPMN2ProcessModelGenerator generator=new ProtocolToBPMN2ProcessModelGenerator();
+			
+			generator.setMessageBasedInvocation(BPMN2Properties.isGenerateMessageBasedInvocation(modelResource));
 			
 			java.util.Map<String,Object> target=generator.generate(local, handler, null);
 			

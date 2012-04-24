@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.tools.common.properties;
+package org.savara.tools.bpmn2.properties;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,37 +23,32 @@ import java.util.logging.Logger;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
-import org.savara.tools.common.osgi.Activator;
+import org.savara.tools.bpmn2.osgi.Activator;
 
 /**
- * This interface defines the common property definitions.
+ * This class provides access to the BPMN2 specific Eclipse properties.
  *
  */
-public class PropertyDefinitions {
+public class BPMN2Properties {
 
-	private static final Logger LOG=Logger.getLogger(PropertyDefinitions.class.getName());
+	private static final Logger LOG=Logger.getLogger(BPMN2Properties.class.getName());
+	
+	public static final String GENERATE_MESSAGE_BASED_INVOCATION="savara.bpmn2.genmbi";
 	
 	/**
-	 * This property is a boolean flag to indicate whether
-	 * validation should be performed on the associated
-	 * resource.
-	 */
-	public static final String VALIDATE_PROPERTY="savara.validate";
-	
-	/**
-	 * This method determines whether validation has been enabled for the supplied
-	 * resource.
+	 * This method determines if message based invocation should be used
+	 * when generating BPMN2.
 	 * 
 	 * @param res The resource
-	 * @return Whether validation has been enabled
+	 * @return Whether to use message based invocation
 	 */
-	public static boolean isValidationEnabled(IResource res) {
+	public static boolean isGenerateMessageBasedInvocation(IResource res) {
 		boolean ret=false;
 		
 		try {
 			if (res.exists()) {
 				String val=res.getPersistentProperty(new QualifiedName(Activator.PLUGIN_ID,
-								PropertyDefinitions.VALIDATE_PROPERTY));
+								BPMN2Properties.GENERATE_MESSAGE_BASED_INVOCATION));
 				
 				if (val != null) {
 					ret = Boolean.parseBoolean(val);
@@ -63,6 +58,6 @@ public class PropertyDefinitions {
 			LOG.log(Level.SEVERE, "Failed to get validation property", e);
 		}
 
-		return(ret);
+		return (ret);
 	}
 }
