@@ -162,10 +162,8 @@ public class Activator extends AbstractUIPlugin implements IStartup {
 
                  ProtocolModel pm=Tools.getProtocolParserManager().parse(context, content, journal);
             	 
-System.out.println("PARSE: "+res+" errors? "+journal.hasErrorOccurred());                	 
                  if (!journal.hasErrorOccurred()) {
                 	 Tools.getProtocolValidationManager().validate(context, pm, journal);
-System.out.println("VALIDATE: "+res+" errors? "+journal.hasErrorOccurred());                	 
                  }
                  
                  journal.finished();

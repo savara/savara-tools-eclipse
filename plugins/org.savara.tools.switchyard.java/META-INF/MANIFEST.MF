@@ -20,7 +20,7 @@ Require-Bundle: org.eclipse.ui,
  org.savara.tools.common,
  org.savara.java,
  org.savara.switchyard.java,
- org.switchyard.tools.ui
+ org.switchyard.tools.ui;resolution:=optional
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: www.savara.org

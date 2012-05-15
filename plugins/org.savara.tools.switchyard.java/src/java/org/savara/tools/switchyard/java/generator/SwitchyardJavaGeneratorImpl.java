@@ -78,6 +78,9 @@ public class SwitchyardJavaGeneratorImpl extends AbstractGenerator {
     private static final String DEFAULT_RUNTIME_VERSION = "0.4.0-SNAPSHOT"; // TODO: Need to get from switchyard config
 
     private static Logger logger = Logger.getLogger(SwitchyardJavaGeneratorImpl.class.getName());
+    
+    private static final SwitchYardComponentExtensionManager EXTENSION_MGR=
+    					SwitchYardComponentExtensionManager.instance();
 
 	/**
 	 * This is the constructor for the generator.
@@ -457,8 +460,8 @@ public class SwitchyardJavaGeneratorImpl extends AbstractGenerator {
         
         java.util.List<ISwitchYardComponentExtension> components=
         		new java.util.Vector<ISwitchYardComponentExtension>();
-        components.add(SwitchYardComponentExtensionManager.instance().getRuntimeComponentExtension());
-        components.add(SwitchYardComponentExtensionManager.instance().getComponentExtension(SWITCHYARD_COMPONENT_BEAN));
+        components.add(EXTENSION_MGR.getRuntimeComponentExtension());
+        components.add(EXTENSION_MGR.getComponentExtension(SWITCHYARD_COMPONENT_BEAN));
 
         projectMetaData.setComponents(components);
 

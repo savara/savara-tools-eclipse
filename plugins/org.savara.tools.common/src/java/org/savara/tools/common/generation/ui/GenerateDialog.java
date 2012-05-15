@@ -41,7 +41,6 @@ import org.savara.protocol.contract.generator.ContractGenerator;
 import org.savara.protocol.contract.generator.ContractGeneratorFactory;
 import org.savara.protocol.util.JournalProxy;
 import org.savara.protocol.util.ProtocolServices;
-//import org.savara.tools.common.generation.Generator;
 import org.savara.tools.common.ArtifactType;
 import org.savara.tools.common.generation.Generator;
 import org.savara.tools.common.logging.FeedbackHandlerDialog;
