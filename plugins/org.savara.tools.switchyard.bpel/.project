@@ -25,4 +25,36 @@
 		<nature>org.eclipse.pde.PluginNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>antlr-2.7.7.jar</name>
+			<type>1</type>
+			<location>/home/gbrown/NotBackedUp/.m2/repository/antlr/antlr/2.7.7/antlr-2.7.7.jar</location>
+		</link>
+		<link>
+			<name>antlr-3.2.jar</name>
+			<type>1</type>
+			<location>/home/gbrown/NotBackedUp/.m2/repository/.cache/tycho/org.scribble.protocol.parser-2.1.0-SNAPSHOT.jar/lib/antlr-3.2.jar</location>
+		</link>
+		<link>
+			<name>antlr-runtime-3.2.jar</name>
+			<type>1</type>
+			<location>/home/gbrown/NotBackedUp/.m2/repository/org/antlr/antlr-runtime/3.2/antlr-runtime-3.2.jar</location>
+		</link>
+		<link>
+			<name>junit.jar</name>
+			<type>1</type>
+			<location>/home/gbrown/NotBackedUp/.m2/repository/.cache/tycho/org.junit-4.8.2.v4_8_2_v20110321-1705.jar/junit.jar</location>
+		</link>
+		<link>
+			<name>stringtemplate-3.2.jar</name>
+			<type>1</type>
+			<location>/home/gbrown/NotBackedUp/.m2/repository/org/antlr/stringtemplate/3.2/stringtemplate-3.2.jar</location>
+		</link>
+		<link>
+			<name>wsdl4j-1.6.2.jar</name>
+			<type>1</type>
+			<location>/home/gbrown/NotBackedUp/.m2/repository/wsdl4j/wsdl4j/1.6.2/wsdl4j-1.6.2.jar</location>
+		</link>
+	</linkedResources>
 </projectDescription>
