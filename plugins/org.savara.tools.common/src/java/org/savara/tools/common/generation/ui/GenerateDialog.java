@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
@@ -469,39 +470,47 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 	 * The ok button has been pressed.
 	 */
 	public void okPressed() {
-		
-		try {
-			FeedbackHandlerDialog journal=new FeedbackHandlerDialog(Display.getCurrent().getActiveShell());			
-			
-			for (int i=0; i < m_roles.size(); i++) {
 				
-				if (m_roleButtons.get(i).getSelection()) {
+		BusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
+			public void run() {
+				try {
+					//Display.getCurrent().sleep();
 					
-					// Get generator
-					Combo combo=m_roleArtifactTypes.get(i);
+					FeedbackHandlerDialog journal=new FeedbackHandlerDialog(Display.getCurrent().getActiveShell());			
 					
-					int index=combo.getSelectionIndex();
-					
-					if (index >= 0) {
-						Generator generator=m_generators.get(index);
-						String projectName=null;
+					for (int i=0; i < m_roles.size(); i++) {
 						
-						if (m_projectNames.size() > 0) {
-							projectName = m_projectNames.get(i).getText();
+						if (m_roleButtons.get(i).getSelection()) {
+							
+							// Get generator
+							Combo combo=m_roleArtifactTypes.get(i);
+							
+							int index=combo.getSelectionIndex();
+							
+							if (index >= 0) {
+								Generator generator=m_generators.get(index);
+								String projectName=null;
+								
+								if (m_projectNames.size() > 0) {
+									projectName = m_projectNames.get(i).getText();
+								}
+								
+								generator.generate(m_protocolModel, m_roles.get(i),
+										projectName, m_file, journal);
+							}
 						}
-						
-						generator.generate(m_protocolModel, m_roles.get(i),
-								projectName, m_file, journal);
 					}
+					
+					journal.show();
+					
+				} catch(Throwable e) {
+					error(MessageFormatter.format(java.util.PropertyResourceBundle.getBundle(
+							"org.savara.tools.common.Messages"), "SAVARA-COMMONTOOLS-00003"), e);
 				}
 			}
-			
-			journal.show();
-			
-			super.okPressed();
-		} catch(Exception e) {
-			error("Failed to generate artifacts", e);
-		}
+		});
+		
+		super.okPressed();
 	}
 	
 	/**
@@ -510,7 +519,7 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 	 * @param mesg The error message
 	 * @param ex The exception 
 	 */
-	public void error(String mesg, Exception ex) {
+	public void error(String mesg, Throwable ex) {
 		
 		org.savara.tools.common.osgi.Activator.logError(mesg, ex);
 		
