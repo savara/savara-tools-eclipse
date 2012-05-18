@@ -322,7 +322,7 @@
           </mediaobject>
         </figure>
       </para>
-      <para>When the "Simulate" button is pressed, then message events (associated with the specific roles) in the scenario are simulated against the models specified in the dialog. If the message event is valid, its node will be displayed in green. If however the event is unexpected, then it will be displayed in red. When this occurs, either select the message link or particular red node, and then pick the "Simulation Log" tab at the bottom, to see log information returned from the simulator regarding the erroneous events.</para>
+      <para>When the "Simulate" button is pressed, then message events (associated with the specific roles) in the scenario are simulated against the models specified in the dialog. If the message event is valid, its node will be displayed in green. If however the event is unexpected, then it will be displayed in red. When this occurs, either select the role, message link or particular red node, and then pick the "Simulation Log" tab at the bottom, to see log information returned from the simulator regarding the erroneous role or events.</para>
       <para>NOTE: If a scenario 'message event' has been marked as 'Error Expected', then it will be displayed with a red border - but when simulated, the color within the message event node will be green if the node failed as expected, but red if the event did not generated an error.</para>
       <para>
         <figure>
@@ -344,6 +344,51 @@
             </imageobject>
           </mediaobject>
         </figure>
+      </para>
+    </section>
+    <section id="sid-25821554">
+      
+      <title>Create BPMN2 Choreography and Process Models</title>
+      <para>Version 2.1 of the tools introduces a preview feature that will take a group of scenarios, representing different valid paths through a business process, and generate the appropriate BPMN2 Choreography Model (i.e. Architecture) and BPMN2 Process Models (i.e. designs - one per distinct role in the scenarios).</para>
+      <para>To perform this action, select all of the relevant scenarios and then select the "Savara-&gt;BPMN2-&gt;Create Architecture and Designs" menu item, as shown in the following figure:</para>
+      <para>
+        <figure>
+<title>Menu item for creating the BPMN2 architecture and design artifacts</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/25821554/CreateArchAndDesignsMenu.png" width="4in" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>Once selected, this menu item will display a dialog to obtain the main name of the models to be created:</para>
+      <para>
+        <figure>
+<title>Define the name of the architecture and design models</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/25821554/CreateArchAndDesignsNameDialog.png" width="4in" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>When the "OK" button is pressed, this will cause the Choreography and Process Models to be created:</para>
+      <para>
+        <figure>
+<title>List of generated models</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/25821554/CreateArchAndDesignsModelList.png" width="3in" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>
+        The Choreography is defined in
+        <code>Purchasing.bpmn</code>
+        , with each role having a process model named
+        <code>Purchasing_&lt;RoleName&gt;.bpmn</code>
+        .
       </para>
     </section>
   </chapter>

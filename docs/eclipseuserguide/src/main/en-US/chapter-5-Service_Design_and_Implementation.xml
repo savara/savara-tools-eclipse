@@ -42,27 +42,37 @@
       <para>
         The
         <emphasis role="italics">"Service Type"</emphasis>
-        field displays a list of service generation types. This list will be dependent upon the source model type, and so will not be discussed in detail here. The particular structure of each generated project will be dependent upon the service type selected. Some of these service types will relate to implementation technologies (e.g. SCA Java and BPEL), while others may be used to represent a service design (e.g. BPMN2 Process - although a BPMN2 Process can also evolve into an executable implementation).
+        field displays a list of service generation types, which will be dependent upon the installed plugins and will change as new target representations are supported. The particular structure of each generated project will be dependent upon the service type selected. Some of these service types will relate to implementation technologies (e.g. SCA Java and BPEL), while others may be used to represent a service design (e.g. BPMN2 Process - although a BPMN2 Process can also evolve into an executable implementation).
       </para>
       <para>When the OK button is pressed, each of the projects for the enabled roles will be created with their relevant artifacts.</para>
       <para>NOTE: The list of target 'service types' is not related to the source model type. So (for example) if the source model is a BPEL process definition, then it is still possible that BPEL will be offered as a target service type. Although this may seem redundant, it can offer the opportunity to generate a abstract skeleton (observable behavior) version of a fully implemented executable BPEL process.</para>
-    </section>
-    <section id="sid-19693851">
-      
-      <title>Verify the Design or Implementation</title>
-      <para>A Service Design or Implementation can be verified in two ways.</para>
-      <section id="sid-19693851_VerifytheDesignorImplementation-Staticallyverifytheexternallyobservablebehavior">
+      <section id="sid-25821559">
         
-        <title>Statically verify the externally observable behavior</title>
-        <para>For service designs, which have no executable semantics (i.e. cannot be executed), or implementations where no simulator exists that can perform dynamic verification, it may be possible to simulate valid behavior (as defined by a set of scenarios) against the protocol derived from the service design/implementation.</para>
-        <para>This ensures that the design or implementation has the correct communications structure to be able to interact with other services (whether consumers or other producers).</para>
-        <para>For example, a scenario can be simulated against a BPEL process definition (and in the near future a BPMN2 process model) to determine whether they have the correct communication structure, even before they contain enough details to be executed.</para>
-      </section>
-      <section id="sid-19693851_VerifytheDesignorImplementation-Dynamicallyverifytheserviceimplementation">
-        
-        <title>Dynamically verify the service implementation</title>
-        <para>Where a simulator exists associated with the service implementation technology, it is possible to replay the message events defined in the scenarios against an executing version of the service implementation, to ensure that a real service instance handles the scenario correctly.</para>
-        <para>For example, a scenario can be simulated against a SCA composite definition. (Switchyard services will be supported in the near future).</para>
+        <title>BPMN2 Process</title>
+        <para>When generating a BPMN2 Process model, there are some configuration properties that will guide how the process is generated.</para>
+        <para>Select the source model (e.g. a BPMN2 Choreography) and select the Properties item from the menu:</para>
+        <para>
+          <figure>
+<title>BPMN2 Properties menu item</title>
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="author/download/attachments/25821559/BPMN2PropertiesMenu.png" width="4in"/>
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </para>
+        <para>This will display the properties dialog, from which the Savara-&gt;BPMN2 node can be selected:</para>
+        <para>
+          <figure>
+<title>BPMN2 Properties dialog</title>
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="author/download/attachments/25821559/PropertiesSavaraBPMN2+.png" width="4in"/>
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </para>
+        <para>The default (false) is to generate ServiceTask nodes when a client role is invoking a service role (e.g. RPC style). If the value is set to true, then individual SendTask and ReceiveTask nodes are generated.</para>
       </section>
     </section>
   </chapter>
