@@ -2,7 +2,7 @@
 <feature
       id="org.savara.tools.switchyard.feature"
       label="SAVARA SwitchYard Tools Feature"
-      version="2.1.0.qualifier"
+      version="2.1.0.20120522-M1"
       provider-name="www.savara.org">
 
    <description>

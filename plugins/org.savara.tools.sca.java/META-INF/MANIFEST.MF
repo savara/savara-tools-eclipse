@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Savara::Tools::Plugins::ToolsSCAJava
 Bundle-SymbolicName: org.savara.tools.sca.java;singleton:=true
-Bundle-Version: 2.1.0.qualifier
+Bundle-Version: 2.1.0.20120522-M1
 Bundle-Activator: org.savara.tools.sca.java.osgi.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
