@@ -2,7 +2,7 @@
 <feature
       id="org.jboss.savara.tools.feature"
       label="JBoss SAVARA Tools Feature"
-      version="2.1.0.20120522-M1"
+      version="2.1.0.qualifier"
       provider-name="Red Hat, Inc.">
 
    <description>

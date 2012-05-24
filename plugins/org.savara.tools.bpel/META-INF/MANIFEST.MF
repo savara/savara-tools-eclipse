@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SAVARA Tools BPEL Plug-in
 Bundle-SymbolicName: org.savara.tools.bpel;singleton:=true
-Bundle-Version: 2.1.0.20120522-M1
+Bundle-Version: 2.1.0.qualifier
 Bundle-Activator: org.savara.tools.bpel.osgi.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
