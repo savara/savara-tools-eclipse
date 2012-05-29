@@ -16,6 +16,11 @@
    	<dependencies>
  		<dependency>
  			<groupId>org.savara.bundles</groupId>
+			<artifactId>org.savara.bpmn2.model</artifactId> 
+			<version>${savara.core.version}</version>
+ 		</dependency>
+ 		<dependency>
+ 			<groupId>org.savara.bundles</groupId>
 			<artifactId>org.savara.bpmn2</artifactId> 
 			<version>${savara.core.version}</version>
  		</dependency>

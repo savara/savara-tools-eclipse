@@ -44,16 +44,15 @@
 	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/savara/bundles/org.savara.contract/2.1.0-SNAPSHOT/org.savara.contract-2.1.0-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/savara/bundles/org.savara.wsdl/2.1.0-SNAPSHOT/org.savara.wsdl-2.1.0-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/savara/bundles/org.savara.common/2.1.0-SNAPSHOT/org.savara.common-2.1.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/scribble/bundles/org.scribble.common/2.1.0-SNAPSHOT/org.scribble.common-2.1.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/scribble/bundles/org.scribble.protocol/2.1.0-SNAPSHOT/org.scribble.protocol-2.1.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/scribble/bundles/org.scribble.protocol.parser/2.1.0-SNAPSHOT/org.scribble.protocol.parser-2.1.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/.cache/tycho/org.scribble.protocol.parser-2.1.0-SNAPSHOT.jar/lib/antlr-3.2.jar"/>
+	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/scribble/bundles/org.scribble.common/2.1.0.20120522-M2/org.scribble.common-2.1.0.20120522-M2.jar"/>
+	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/scribble/bundles/org.scribble.protocol/2.1.0.20120522-M2/org.scribble.protocol-2.1.0.20120522-M2.jar"/>
+	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/scribble/bundles/org.scribble.protocol.parser/2.1.0.20120522-M2/org.scribble.protocol.parser-2.1.0.20120522-M2.jar"/>
+	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/.cache/tycho/org.scribble.protocol.parser-2.1.0.20120522-M2.jar/lib/antlr-3.2.jar"/>
 	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/savara/bundles/org.savara.protocol/2.1.0-SNAPSHOT/org.savara.protocol-2.1.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/scribble/bundles/org.scribble.protocol.projection/2.1.0-SNAPSHOT/org.scribble.protocol.projection-2.1.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/scribble/bundles/org.scribble.protocol.export.monitor/2.1.0-SNAPSHOT/org.scribble.protocol.export.monitor-2.1.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/scribble/bundles/org.scribble.protocol.monitor/2.1.0-SNAPSHOT/org.scribble.protocol.monitor-2.1.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/scribble/bundles/org.scribble.protocol.projection/2.1.0.20120522-M2/org.scribble.protocol.projection-2.1.0.20120522-M2.jar"/>
+	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/scribble/bundles/org.scribble.protocol.export.monitor/2.1.0.20120522-M2/org.scribble.protocol.export.monitor-2.1.0.20120522-M2.jar"/>
+	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/scribble/bundles/org.scribble.protocol.monitor/2.1.0.20120522-M2/org.scribble.protocol.monitor-2.1.0.20120522-M2.jar"/>
 	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/savara/bundles/org.savara.switchyard.bpel/2.1.0-SNAPSHOT/org.savara.switchyard.bpel-2.1.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/org/savara/tools/org.savara.tools.common/2.1.0-SNAPSHOT/org.savara.tools.common-2.1.0-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/p2/osgi/bundle/javax.wsdl/1.6.2.v201012040545/javax.wsdl-1.6.2.v201012040545.jar"/>
 	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/p2/osgi/bundle/org.eclipse.swt.cocoa.macosx/3.7.2.v3740f/org.eclipse.swt.cocoa.macosx-3.7.2.v3740f.jar"/>
 	<classpathentry kind="lib" path="/home/gbrown/NotBackedUp/.m2/repository/p2/osgi/bundle/org.eclipse.swt.carbon.macosx/3.7.2.v3740f/org.eclipse.swt.carbon.macosx-3.7.2.v3740f.jar"/>
