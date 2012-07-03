@@ -504,6 +504,7 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 					journal.show();
 					
 				} catch(Throwable e) {
+					e.printStackTrace();
 					error(MessageFormatter.format(java.util.PropertyResourceBundle.getBundle(
 							"org.savara.tools.common.Messages"), "SAVARA-COMMONTOOLS-00003"), e);
 				}
