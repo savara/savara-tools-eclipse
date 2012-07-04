@@ -235,7 +235,7 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 		label.setLayoutData(gd);
 
 		if (m_protocolModel != null) {
-			java.util.List<Role> roles=m_protocolModel.getProtocol().getRoles();
+			java.util.List<Role> roles=m_protocolModel.getRoles();
 			
 			if (roles.size() == 0 && m_protocolModel.isLocated()) {
 				roles.add(m_protocolModel.getProtocol().getLocatedRole());
