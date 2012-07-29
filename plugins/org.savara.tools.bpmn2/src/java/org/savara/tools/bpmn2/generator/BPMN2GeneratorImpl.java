@@ -26,7 +26,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.savara.bpmn2.generation.process.ProtocolToBPMN2ProcessModelGenerator;
 import org.savara.bpmn2.model.TDefinitions;
-import org.savara.bpmn2.util.BPMN2ModelUtil;
+import org.savara.bpmn2.model.util.BPMN2ModelUtil;
 import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.logging.MessageFormatter;
 import org.savara.common.model.annotation.Annotation;

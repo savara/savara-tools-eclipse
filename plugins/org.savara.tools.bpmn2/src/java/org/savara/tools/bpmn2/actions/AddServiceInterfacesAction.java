@@ -29,7 +29,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.savara.bpmn2.model.TDefinitions;
 import org.savara.bpmn2.model.TInterface;
 import org.savara.bpmn2.model.TParticipant;
-import org.savara.bpmn2.util.BPMN2ModelUtil;
+import org.savara.bpmn2.model.util.BPMN2ModelUtil;
 import org.savara.bpmn2.util.BPMN2ServiceUtil;
 import org.savara.common.logging.MessageFormatter;
 import org.savara.tools.bpmn2.osgi.Activator;

@@ -39,6 +39,32 @@
   <extension point="org.eclipse.ui.popupMenus"> 
 	<objectContribution 
       id="org.savara.tools.bpmn2.object.contribution"
+   			objectClass="org.eclipse.core.resources.IFile" >
+	  <menu
+         id="org.savara.tools.menu"
+         label="Savara"
+         path="additions">
+      	<separator name="group1"/>
+      </menu>
+	  <menu
+         id="BPMN2.menu"
+         label="BPMN2"
+         path="org.savara.tools.menu/additions">
+      	<separator name="group2"/>
+      </menu>
+      <action
+           label="Create Choreography"
+           class="org.savara.tools.bpmn2.actions.CreateChoreographyAction"
+           menubarPath="org.savara.tools.menu/BPMN2.menu/group2"
+           enablesFor="2+"
+           id="org.savara.tools.bpmn2.actions.CreateChoreographyAction">
+     </action> 
+    </objectContribution>
+  </extension>
+  
+  <extension point="org.eclipse.ui.popupMenus"> 
+	<objectContribution 
+      id="org.savara.tools.bpmn2.object.contribution"
    			objectClass="org.eclipse.core.resources.IFile"
    				nameFilter="*.scn">
 	  <menu

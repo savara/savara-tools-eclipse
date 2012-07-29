@@ -17,7 +17,8 @@
  */
 package org.savara.tools.bpmn2.actions;
 
-import java.io.ByteArrayOutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -30,7 +31,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
-import org.savara.bpmn2.generation.process.ProtocolToBPMN2ProcessModelGenerator;
 import org.savara.bpmn2.model.TDefinitions;
 import org.savara.bpmn2.model.util.BPMN2ModelUtil;
 import org.savara.common.logging.FeedbackHandler;
@@ -38,50 +38,49 @@ import org.savara.common.logging.MessageFormatter;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.protocol.aggregator.ProtocolAggregatorFactory;
-import org.savara.scenario.model.Scenario;
-import org.savara.scenario.protocol.ProtocolModelGeneratorFactory;
-import org.savara.tools.bpmn2.generator.BPMN2GeneratorImpl;
-import org.savara.tools.bpmn2.osgi.Activator;
+import org.savara.protocol.util.JournalProxy;
+import org.savara.protocol.util.ProtocolServices;
 import org.savara.tools.common.logging.FeedbackHandlerDialog;
+import org.scribble.common.resource.Content;
+import org.scribble.common.resource.DefaultResourceLocator;
+import org.scribble.common.resource.ResourceContent;
+import org.scribble.protocol.DefaultProtocolContext;
 import org.scribble.protocol.model.ProtocolModel;
 
 
 /**
- * This class implements the action to generate service architecture and design
- * BPMN2 models from interaction models (e.g. scenarios).
+ * This class implements the action to generate a BPMN2 choreography
+ * from BPMN2 process models.
  */
-public class CreateArchitectureDesignAction implements IObjectActionDelegate {
+public class CreateChoreographyAction implements IObjectActionDelegate {
 
-	private ISelection m_selection=null;
-    private IWorkbenchPart m_targetPart=null;
+	private static final Logger LOG=Logger.getLogger(CreateChoreographyAction.class.getName());
+	
+	private ISelection _selection=null;
+    private IWorkbenchPart _targetPart=null;
     
-	private static org.savara.scenario.protocol.ProtocolModelGenerator PMG=
-				ProtocolModelGeneratorFactory.createProtocolModelGenerator();
 	private static org.savara.protocol.aggregator.ProtocolAggregator PA=
 				ProtocolAggregatorFactory.createProtocolAggregator();
-	private static ProtocolToBPMN2ProcessModelGenerator P2PMG=
-				new ProtocolToBPMN2ProcessModelGenerator();
 	private static org.savara.bpmn2.generation.choreo.ProtocolToBPMN2ChoreoModelGenerator P2CMG=
 			new org.savara.bpmn2.generation.choreo.ProtocolToBPMN2ChoreoModelGenerator();	
 
-	public CreateArchitectureDesignAction() {
+	/**
+	 * The default constructor.
+	 */
+	public CreateChoreographyAction() {
 	}
 
 	/**
-	 * This method implements the action's run method.
-	 * 
-	 * @param action The action
+	 * {@inheritDoc}
 	 */
 	public void run(IAction action) {
-		if (m_selection instanceof StructuredSelection) {
-			StructuredSelection sel=(StructuredSelection)m_selection;
+		if (_selection instanceof StructuredSelection) {
+			StructuredSelection sel=(StructuredSelection)_selection;
 			
-			FeedbackHandlerDialog handler=new FeedbackHandlerDialog(m_targetPart.getSite().getShell());
-			
-			java.util.Map<String,java.util.List<ProtocolModel>> messageTraces=
-						new java.util.HashMap<String,java.util.List<ProtocolModel>>();
+			FeedbackHandlerDialog handler=new FeedbackHandlerDialog(_targetPart.getSite().getShell());
 			
 			IContainer container=null;
+			java.util.List<ProtocolModel> localModels=new java.util.Vector<ProtocolModel>();
 			
 			for (Object res : sel.toList()) {			
 				if (res instanceof IFile) {
@@ -89,36 +88,47 @@ public class CreateArchitectureDesignAction implements IObjectActionDelegate {
 						container = ((IFile)res).getParent();
 					}
 					
-					deriveMessageTrace((IFile)res, messageTraces, handler);
+					try {
+						Content content=new ResourceContent(((IFile)res).getRawLocationURI());
+						
+						DefaultProtocolContext context=
+								new DefaultProtocolContext(ProtocolServices.getParserManager(),
+									new DefaultResourceLocator(((IFile)res).getRawLocation().toFile().getParentFile()));
+						
+						ProtocolModel model=
+								ProtocolServices.getParserManager().parse(context, content,
+										new JournalProxy(handler));
+						
+						if (model == null || !model.isLocated()) {
+							handler.error(MessageFormatter.format(java.util.PropertyResourceBundle.getBundle(
+									"org.savara.tools.bpmn2.Messages"), "SAVARA-BPMN2TOOLS-00008",
+									((IFile)res).getRawLocationURI()), null);
+						} else {
+							localModels.add(model);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+						
+						String mesg=MessageFormatter.format(java.util.PropertyResourceBundle.getBundle(
+								"org.savara.tools.bpmn2.Messages"), "SAVARA-BPMN2TOOLS-00007",
+								((IFile)res).getRawLocationURI());
+						
+						handler.error(mesg, null);
+						
+						LOG.log(Level.SEVERE, mesg, e);
+					}
 				}
 			}
 			
 			if (handler.hasErrors()) {
 				handler.show();
 			} else {
-				InputDialog dialog=new InputDialog(m_targetPart.getSite().getShell(),
-						"Architecture & Design Models", "Enter the model name",
+				InputDialog dialog=new InputDialog(_targetPart.getSite().getShell(),
+						"Choreography Model", "Enter the model name",
 						null, null);
 				
 				if (dialog.open() == InputDialog.OK) {
 					String modelName=dialog.getValue();
-					
-					java.util.List<ProtocolModel> localModels=new java.util.Vector<ProtocolModel>();
-					
-					for (String roleName : messageTraces.keySet()) {
-						ProtocolModel lm=PA.aggregateLocalModel(modelName, messageTraces.get(roleName),
-												handler);
-						
-						if (lm != null) {
-							generateBPMN2ProcessModel(container, lm, handler);
-						
-							localModels.add(lm);
-						} else {
-							handler.error(MessageFormatter.format(java.util.PropertyResourceBundle.getBundle(
-									"org.savara.tools.bpmn2.Messages"), "SAVARA-BPMN2TOOLS-00005",
-									roleName), null);
-						}
-					}
 					
 					// If multiple local models
 					ProtocolModel globalModel=PA.aggregateGlobalModel(modelName,
@@ -139,58 +149,6 @@ public class CreateArchitectureDesignAction implements IObjectActionDelegate {
 		}
 	}
 	
-	protected void generateBPMN2ProcessModel(IContainer container, ProtocolModel lm,
-						FeedbackHandler handler) {
-		java.util.Map<String,Object> target=P2PMG.generate(lm, handler, null);
-		
-		if (target != null && target.size() > 0) {
-			
-			for (String modelName : target.keySet()) {
-				Object val=target.get(modelName);
-				
-				if (val instanceof TDefinitions) {
-					TDefinitions process=(TDefinitions)val;
-					
-					try {
-						// Store BPMN2 process
-						IFile bpmn2File=container.getFile(new Path(modelName));
-						
-						bpmn2File.create(null, true,
-								new org.eclipse.core.runtime.NullProgressMonitor());
-						
-						// Obtain any namespace prefix map
-						java.util.Map<String, String> prefixes=
-								new java.util.HashMap<String, String>();
-						
-						java.util.List<Annotation> list=
-							AnnotationDefinitions.getAnnotations(lm.getProtocol().getAnnotations(),
-									AnnotationDefinitions.TYPE);
-						
-						for (Annotation annotation : list) {
-							if (annotation.getProperties().containsKey(AnnotationDefinitions.NAMESPACE_PROPERTY) &&
-									annotation.getProperties().containsKey(AnnotationDefinitions.PREFIX_PROPERTY)) {
-								prefixes.put((String)annotation.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY),
-										(String)annotation.getProperties().get(AnnotationDefinitions.PREFIX_PROPERTY));
-							}
-						}
-						
-						//String bpelText=XMLUtils.toText(bpelProcess.getDOMElement());
-						ByteArrayOutputStream os=new ByteArrayOutputStream();
-						BPMN2ModelUtil.serialize(process, os, prefixes, BPMN2GeneratorImpl.class.getClassLoader());
-						
-						os.close();
-						
-						bpmn2File.setContents(new java.io.ByteArrayInputStream(
-									os.toByteArray()), true, false,
-									new org.eclipse.core.runtime.NullProgressMonitor());
-					} catch(Exception e) {
-						handler.error("Failed to store BPMN2 process model", null);
-					}
-				}
-			}
-		}
-	}
-
 	protected void generateBPMN2ChoreographyModel(IContainer container, ProtocolModel choreo,
 						FeedbackHandler handler) {
 		java.util.Map<String,Object> models=P2CMG.generate(choreo, handler, null);
@@ -222,7 +180,7 @@ public class CreateArchitectureDesignAction implements IObjectActionDelegate {
 						java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
 						
 						BPMN2ModelUtil.serialize(defns, baos, prefixes,
-								CreateArchitectureDesignAction.class.getClassLoader());
+								CreateChoreographyAction.class.getClassLoader());
 						
 						java.io.ByteArrayInputStream bais=new java.io.ByteArrayInputStream(baos.toByteArray());
 						
@@ -243,38 +201,6 @@ public class CreateArchitectureDesignAction implements IObjectActionDelegate {
 		}
 	}
 
-	protected void deriveMessageTrace(IFile res,
-				java.util.Map<String,java.util.List<ProtocolModel>> messageTraces,
-						FeedbackHandler handler) {
-		try {
-			java.io.InputStream is=res.getContents();
-			
-			Scenario scn=org.savara.scenario.util.ScenarioModelUtil.deserialize(is);
-			
-			java.util.Set<ProtocolModel> mtmodels=PMG.generate(scn, handler);
-			
-			for (ProtocolModel pm : mtmodels) {
-				String roleName=pm.getProtocol().getLocatedRole().getName();
-				
-				java.util.List<ProtocolModel> roleModels=
-							messageTraces.get(roleName);
-				
-				if (roleModels == null) {
-					roleModels = new java.util.Vector<ProtocolModel>();
-					messageTraces.put(roleName, roleModels);
-				}
-				
-				roleModels.add(pm);
-			}
-			
-		} catch(Exception e) {
-			handler.error(MessageFormatter.format(java.util.PropertyResourceBundle.getBundle(
-						"org.savara.tools.bpmn2.Messages"), "SAVARA-BPMN2TOOLS-00004",
-						((IFile)res).getLocation().toString()), null);
-			Activator.logError("Failed to process scenario '"+((IFile)res).getLocation()+"'", e);
-		}
-	}
-	
 	/**
 	 * This method indicates that the selection has changed.
 	 * 
@@ -283,7 +209,7 @@ public class CreateArchitectureDesignAction implements IObjectActionDelegate {
 	 */
 	public void selectionChanged(IAction action,
             ISelection selection) {
-		m_selection = selection;
+		_selection = selection;
 	}
 
 	/**
@@ -294,7 +220,7 @@ public class CreateArchitectureDesignAction implements IObjectActionDelegate {
 	 */
 	public void setActivePart(IAction action,
             IWorkbenchPart targetPart) {
-		m_targetPart = targetPart;
+		_targetPart = targetPart;
 	}
 	
 	/**
@@ -304,7 +230,7 @@ public class CreateArchitectureDesignAction implements IObjectActionDelegate {
 	 */
 	public void warn(String mesg) {
 		
-		MessageBox mbox=new MessageBox(m_targetPart.getSite().getShell(),
+		MessageBox mbox=new MessageBox(_targetPart.getSite().getShell(),
 				SWT.ICON_WARNING|SWT.OK);
 		mbox.setMessage(mesg);
 		mbox.open();
