@@ -130,50 +130,6 @@
 				<enabled>true</enabled>
 			</releases>
 		</repository>
-		<repository>
-			<id>graphiti</id>
-			<url>http://download.eclipse.org/graphiti/updates/0.9.0/</url>
-			<layout>p2</layout>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
-		<repository>
-			<id>bpmn2model</id>
-			<url>http://download.eclipse.org/bpmn2-modeler/bpmn2/site/</url>
-			<layout>p2</layout>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
-		<repository>
-			<id>bpmn2editor</id>
-			<url>http://download.eclipse.org/bpmn2-modeler/site/</url>
-			<layout>p2</layout>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
-		<repository>
-			<id>bpeleditor</id>
-			<url>http://download.eclipse.org/bpel/site/</url>
-			<layout>p2</layout>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
 	</repositories>
 
 	<pluginRepositories>
