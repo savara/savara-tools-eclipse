@@ -30,7 +30,7 @@
 	<properties>
 		<BUILD_ALIAS>Final</BUILD_ALIAS>
 		<savara.core.version>2.1.0-SNAPSHOT</savara.core.version>
-		<scribble.version>2.1.0.20120522-M2</scribble.version>
+		<scribble.version>2.1.0-SNAPSHOT</scribble.version>
         	<jaxb.version>2.1</jaxb.version>
 		<tuscany.version>2.0-Beta2</tuscany.version>
 		<cxf.version>2.4.0</cxf.version>
