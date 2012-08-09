@@ -28,6 +28,17 @@
      </contentTypeBinding>
     </editor>
    </extension>
+   
+  <extension point="org.eclipse.debug.core.launchConfigurationTypes">
+    <launchConfigurationType
+       id="org.savara.tools.scenario.designer.simulate.ScenarioSimulationLauncher"
+       delegate="org.savara.tools.scenario.designer.simulate.ScenarioSimulationLauncher"
+       modes="run"
+       name="Scenario Simulation">
+      <fileExtension extension="scn" default="true"/>
+      <fileExtension extension="scenario" default="true"/>
+    </launchConfigurationType>
+  </extension>
 
   <extension point="org.eclipse.core.contenttype.contentTypes">
     <content-type

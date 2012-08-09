@@ -71,7 +71,7 @@ public class ScenarioPaletteRoot extends PaletteRoot {
                 "Creates a role",
                 new Role(),
                 new ModelCreationFactory(Role.class),
-                DesignerImages.getImageDescriptor("Role.gif"),
+                DesignerImages.getImageDescriptor("Role.png"),
                 null);
         drawer.add(entry);
 
@@ -80,7 +80,7 @@ public class ScenarioPaletteRoot extends PaletteRoot {
                 "Creates an event group",
                 new Group(),
                 new ModelCreationFactory(Group.class),
-                DesignerImages.getImageDescriptor("Group.gif"),
+                DesignerImages.getImageDescriptor("Group.png"),
                 null);
         drawer.add(entry);
 
@@ -92,7 +92,7 @@ public class ScenarioPaletteRoot extends PaletteRoot {
                 "Message Link",
                 "Creates a link between two message events",
                 new ModelCreationFactory(Link.class),
-                DesignerImages.getImageDescriptor("Link.gif"),
+                DesignerImages.getImageDescriptor("Link.png"),
 				null));
         
         drawer.add(new PaletteSeparator());
@@ -102,7 +102,7 @@ public class ScenarioPaletteRoot extends PaletteRoot {
                 "Creates a send",
                 new SendEvent(),
                 new ModelCreationFactory(SendEvent.class),
-                DesignerImages.getImageDescriptor("Send.gif"),
+                DesignerImages.getImageDescriptor("Send.png"),
                 null);
         drawer.add(entry);
 
@@ -115,7 +115,7 @@ public class ScenarioPaletteRoot extends PaletteRoot {
                 "Creates a receive",
                 new ReceiveEvent(),
                 new ModelCreationFactory(ReceiveEvent.class),
-                DesignerImages.getImageDescriptor("Receive.gif"),
+                DesignerImages.getImageDescriptor("Receive.png"),
                 null);
         drawer.add(entry);
 
@@ -124,7 +124,7 @@ public class ScenarioPaletteRoot extends PaletteRoot {
                 "Creates an elapsed time event",
                 new TimeElapsedEvent(),
                 new ModelCreationFactory(TimeElapsedEvent.class),
-                DesignerImages.getImageDescriptor("TimeElapsed.gif"),
+                DesignerImages.getImageDescriptor("TimeElapsed.png"),
                 null);
         drawer.add(entry);
 
@@ -135,7 +135,7 @@ public class ScenarioPaletteRoot extends PaletteRoot {
                 "Import another scenario",
                 new Import(),
                 new ModelCreationFactory(Import.class),
-                DesignerImages.getImageDescriptor("Import.gif"),
+                DesignerImages.getImageDescriptor("Import.png"),
                 null);
         drawer.add(entry);
     }

@@ -59,17 +59,17 @@ public class DesignerActionBarContributor extends ActionBarContributor {
         org.eclipse.ui.actions.RetargetAction act=
         	new org.eclipse.ui.actions.RetargetAction(
         		SimulateScenarioAction.ID, "Simulate Scenario");
-        act.setImageDescriptor(org.savara.tools.scenario.designer.DesignerImages.getImageDescriptor("Simulate.png"));
+        act.setImageDescriptor(org.savara.tools.scenario.designer.DesignerImages.getImageDescriptor("simulate.png"));
         addRetargetAction(act);
         
         act = new org.eclipse.ui.actions.RetargetAction(
         		ResetSimulationAction.ID, "Reset Simulation");
-        act.setImageDescriptor(org.savara.tools.scenario.designer.DesignerImages.getImageDescriptor("ResetSimulation.png"));
+        act.setImageDescriptor(org.savara.tools.scenario.designer.DesignerImages.getImageDescriptor("reset-simulation.png"));
         addRetargetAction(act);
         
         act = new org.eclipse.ui.actions.RetargetAction(
         		GenerateImageAction.ID, "Generate Image");
-        act.setImageDescriptor(org.savara.tools.scenario.designer.DesignerImages.getImageDescriptor("GenerateImage.gif"));
+        act.setImageDescriptor(org.savara.tools.scenario.designer.DesignerImages.getImageDescriptor("generate-image.png"));
         addRetargetAction(act);
     }
 

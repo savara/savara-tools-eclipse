@@ -84,7 +84,7 @@ public class ViewSupport {
 		
 		if (imageName != null) {
 			try {	
-				ret = DesignerImages.getImage(imageName+".gif");
+				ret = DesignerImages.getImage(imageName+".png");
 				
 			} catch(Exception e) {
 				logger.severe("Image for '"+imageName+

@@ -63,7 +63,7 @@ public class GenerateImageAction extends org.eclipse.gef.ui.actions.SelectionAct
 		setId(ID);
 		setText("Generate Image...");
 		
-		setImageDescriptor(org.savara.tools.scenario.designer.DesignerImages.getImageDescriptor("GenerateImage.gif"));
+		setImageDescriptor(org.savara.tools.scenario.designer.DesignerImages.getImageDescriptor("generate-image.png"));
 	}
 	
 	/**

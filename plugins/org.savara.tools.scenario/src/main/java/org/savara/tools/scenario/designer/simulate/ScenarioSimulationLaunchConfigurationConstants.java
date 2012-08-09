@@ -32,5 +32,5 @@ public interface ScenarioSimulationLaunchConfigurationConstants {
 	public static final String ATTR_SIMULATION_FILE="execute_services";
 	
 	public static final String LAUNCH_CONFIG_TYPE=
-			"org.pi4soa.scenario.eclipse.ScenarioTestLauncher";
+			"org.savara.tools.scenario.designer.simulate.ScenarioSimulationLauncher";
 }
