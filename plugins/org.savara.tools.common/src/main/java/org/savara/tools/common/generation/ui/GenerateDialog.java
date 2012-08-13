@@ -294,6 +294,10 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 						
 						String prjName=roles.get(i).getName();
 						
+						// Check whether project name contains any invalid
+						// characters
+						prjName = checkProjectName(prjName);
+						
 						if (m_protocolModel.getProtocol() != null) {
 							prjName = m_protocolModel.getProtocol().getName()+"-"+prjName;
 						}
@@ -397,6 +401,7 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 		try {
 			return(super.open());
 		} catch(RuntimeException e) {
+			logger.log(Level.SEVERE, "Failed to show dialog", e);
 			return(CANCEL);
 		}
 	}
@@ -442,6 +447,16 @@ public class GenerateDialog extends org.eclipse.jface.dialogs.Dialog {
 		} else {
 			getButton(IDialogConstants.OK_ID).setEnabled(true);
 		}
+	}
+	
+	protected String checkProjectName(String name) {
+		String ret=name;
+		
+		if (ret.indexOf(java.io.File.separatorChar) != -1) {
+			ret = ret.replace(java.io.File.separatorChar, '_');
+		}
+		
+		return(ret);
 	}
 	
 	protected boolean isProjectNameValid(String name) {
