@@ -440,6 +440,10 @@ public class ScenarioSimulationLauncher
 			e.printStackTrace();
 		}
 		
+		if (bundle.getSymbolicName().endsWith("switchyard")) {
+			System.out.println("SWITCHYARD");
+		}
+		
 		String baseLocation = local.getFile();
 
 		try {
@@ -473,11 +477,11 @@ public class ScenarioSimulationLauncher
 							path = jarPath;
 						} else {
 							if ((new File(baseLocation+"classes")).exists()) {
-								path = baseLocation+"classes";
+								path = baseLocation+"classes"+File.separatorChar+elements[i].getValue();
 							} else if ((new File(baseLocation+"target"+File.separatorChar+"classes")).exists()) {
-								path = baseLocation+"target"+File.separatorChar+"classes";
+								path = baseLocation+"target"+File.separatorChar+"classes"+File.separatorChar+elements[i].getValue();
 							} else if ((new File(baseLocation+"bin")).exists()) {
-								path = baseLocation+"bin";
+								path = baseLocation+"bin"+File.separatorChar+elements[i].getValue();
 							} else {
 								path = baseLocation;
 							}
