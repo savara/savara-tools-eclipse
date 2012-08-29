@@ -440,10 +440,6 @@ public class ScenarioSimulationLauncher
 			e.printStackTrace();
 		}
 		
-		if (bundle.getSymbolicName().endsWith("switchyard")) {
-			System.out.println("SWITCHYARD");
-		}
-		
 		String baseLocation = local.getFile();
 
 		try {
