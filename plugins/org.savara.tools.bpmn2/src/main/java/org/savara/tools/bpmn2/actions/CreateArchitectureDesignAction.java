@@ -37,6 +37,7 @@ import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.logging.MessageFormatter;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
+import org.savara.common.resources.DefaultResourceLocator;
 import org.savara.protocol.aggregator.ProtocolAggregatorFactory;
 import org.savara.scenario.model.Scenario;
 import org.savara.scenario.protocol.ProtocolModelGeneratorFactory;
@@ -251,7 +252,10 @@ public class CreateArchitectureDesignAction implements IObjectActionDelegate {
 			
 			Scenario scn=org.savara.scenario.util.ScenarioModelUtil.deserialize(is);
 			
-			java.util.Set<ProtocolModel> mtmodels=PMG.generate(scn, handler);
+			DefaultResourceLocator locator=
+					new DefaultResourceLocator(new java.io.File(res.getParent().getRawLocationURI()));
+			
+			java.util.Set<ProtocolModel> mtmodels=PMG.generate(scn, locator, handler);
 			
 			for (ProtocolModel pm : mtmodels) {
 				String roleName=pm.getProtocol().getLocatedRole().getName();
