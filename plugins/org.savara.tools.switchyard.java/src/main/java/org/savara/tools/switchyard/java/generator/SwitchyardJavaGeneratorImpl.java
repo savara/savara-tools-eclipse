@@ -64,6 +64,7 @@ import org.eclipse.core.runtime.*;
 public class SwitchyardJavaGeneratorImpl extends AbstractGenerator {
 
 	private static final String SWITCHYARD_COMPONENT_BEAN = "org.switchyard.components:switchyard-component-bean";
+	private static final String SWITCHYARD_COMPONENT_SOAP = "org.switchyard.components:switchyard-component-soap";
 	private static final String GENERATOR_NAME = "Java (Switchyard)";
 	private static final String SCHEMA_LOCATION_ATTR = "schemaLocation";
 	private static final String INCLUDE_ELEMENT = "include";
@@ -75,7 +76,7 @@ public class SwitchyardJavaGeneratorImpl extends AbstractGenerator {
 	private static final String WSDL_PATH = RESOURCE_PATH+WSDL_FOLDER;
 
     private static final String DEFAULT_PROJECT_VERSION = "0.0.1-SNAPSHOT";
-    private static final String DEFAULT_RUNTIME_VERSION = "0.4.0-SNAPSHOT"; // TODO: Need to get from switchyard config
+    private static final String DEFAULT_RUNTIME_VERSION = "0.6.0-SNAPSHOT"; // TODO: Need to get from switchyard config
 
     private static Logger logger = Logger.getLogger(SwitchyardJavaGeneratorImpl.class.getName());
     
@@ -462,6 +463,7 @@ public class SwitchyardJavaGeneratorImpl extends AbstractGenerator {
         		new java.util.Vector<ISwitchYardComponentExtension>();
         components.add(EXTENSION_MGR.getRuntimeComponentExtension());
         components.add(EXTENSION_MGR.getComponentExtension(SWITCHYARD_COMPONENT_BEAN));
+        components.add(EXTENSION_MGR.getComponentExtension(SWITCHYARD_COMPONENT_SOAP));
 
         projectMetaData.setComponents(components);
 
