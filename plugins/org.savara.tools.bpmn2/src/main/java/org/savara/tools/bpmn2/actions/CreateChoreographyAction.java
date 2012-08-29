@@ -131,7 +131,7 @@ public class CreateChoreographyAction implements IObjectActionDelegate {
 					String modelName=dialog.getValue();
 					
 					// If multiple local models
-					ProtocolModel globalModel=PA.aggregateGlobalModel(modelName,
+					ProtocolModel globalModel=PA.aggregateGlobalModel(modelName, null,
 										localModels, handler);
 					
 					if (globalModel != null) {

@@ -41,6 +41,7 @@ import org.savara.common.resources.DefaultResourceLocator;
 import org.savara.protocol.aggregator.ProtocolAggregatorFactory;
 import org.savara.scenario.model.Scenario;
 import org.savara.scenario.protocol.ProtocolModelGeneratorFactory;
+import org.savara.tools.bpmn2.dialogs.ArchitectureDesignDialog;
 import org.savara.tools.bpmn2.generator.BPMN2GeneratorImpl;
 import org.savara.tools.bpmn2.osgi.Activator;
 import org.savara.tools.common.logging.FeedbackHandlerDialog;
@@ -84,30 +85,26 @@ public class CreateArchitectureDesignAction implements IObjectActionDelegate {
 			
 			IContainer container=null;
 			
-			for (Object res : sel.toList()) {			
-				if (res instanceof IFile) {
-					if (container == null) {
-						container = ((IFile)res).getParent();
-					}
-					
-					deriveMessageTrace((IFile)res, messageTraces, handler);
-				}
-			}
+			ArchitectureDesignDialog d=new ArchitectureDesignDialog(m_targetPart.getSite().getShell());
 			
-			if (handler.hasErrors()) {
-				handler.show();
-			} else {
-				InputDialog dialog=new InputDialog(m_targetPart.getSite().getShell(),
-						"Architecture & Design Models", "Enter the model name",
-						null, null);
+			if (d.open() == InputDialog.OK) {
+				for (Object res : sel.toList()) {			
+					if (res instanceof IFile) {
+						if (container == null) {
+							container = ((IFile)res).getParent();
+						}
+						
+						deriveMessageTrace((IFile)res, messageTraces, handler, d.getNamespace());
+					}
+				}
 				
-				if (dialog.open() == InputDialog.OK) {
-					String modelName=dialog.getValue();
-					
+				if (handler.hasErrors()) {
+					handler.show();
+				} else {
 					java.util.List<ProtocolModel> localModels=new java.util.Vector<ProtocolModel>();
 					
 					for (String roleName : messageTraces.keySet()) {
-						ProtocolModel lm=PA.aggregateLocalModel(modelName, messageTraces.get(roleName),
+						ProtocolModel lm=PA.aggregateLocalModel(d.getModelName(), messageTraces.get(roleName),
 												handler);
 						
 						if (lm != null) {
@@ -122,7 +119,7 @@ public class CreateArchitectureDesignAction implements IObjectActionDelegate {
 					}
 					
 					// If multiple local models
-					ProtocolModel globalModel=PA.aggregateGlobalModel(modelName,
+					ProtocolModel globalModel=PA.aggregateGlobalModel(d.getModelName(), d.getNamespace(),
 										localModels, handler);
 					
 					if (globalModel != null) {
@@ -246,7 +243,7 @@ public class CreateArchitectureDesignAction implements IObjectActionDelegate {
 
 	protected void deriveMessageTrace(IFile res,
 				java.util.Map<String,java.util.List<ProtocolModel>> messageTraces,
-						FeedbackHandler handler) {
+						FeedbackHandler handler, String namespace) {
 		try {
 			java.io.InputStream is=res.getContents();
 			
@@ -255,7 +252,7 @@ public class CreateArchitectureDesignAction implements IObjectActionDelegate {
 			DefaultResourceLocator locator=
 					new DefaultResourceLocator(new java.io.File(res.getParent().getRawLocationURI()));
 			
-			java.util.Set<ProtocolModel> mtmodels=PMG.generate(scn, locator, handler);
+			java.util.Set<ProtocolModel> mtmodels=PMG.generate(scn, locator, handler, namespace);
 			
 			for (ProtocolModel pm : mtmodels) {
 				String roleName=pm.getProtocol().getLocatedRole().getName();
