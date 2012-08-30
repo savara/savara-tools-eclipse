@@ -338,15 +338,6 @@ public class SwitchyardJavaGeneratorImpl extends AbstractGenerator {
 		if (contract.getNamespaces().size() > 0) {
 			org.w3c.dom.Element defnElem=doc.getDocumentElement();
 			
-			// Added types node
-			org.w3c.dom.Element types=doc.createElementNS("http://schemas.xmlsoap.org/wsdl/",
-										"types");
-			
-			org.w3c.dom.Element schema=doc.createElementNS("http://www.w3.org/2001/XMLSchema",
-										"schema");
-			
-			types.appendChild(schema);		
-			
 			// Generate imports for specified message schema
 			for (Namespace ns : contract.getNamespaces()) {
 				
@@ -359,13 +350,13 @@ public class SwitchyardJavaGeneratorImpl extends AbstractGenerator {
 						String location=st.nextToken();
 						IFile file=resource.getParent().getFile(new Path(location));
 					
-						org.w3c.dom.Element imp=doc.createElementNS("http://www.w3.org/2001/XMLSchema",
+						org.w3c.dom.Element imp=doc.createElementNS("http://schemas.xmlsoap.org/wsdl/",
 										"import");
 						
 						imp.setAttribute("namespace", ns.getURI());
 						
 						if (file.exists()) {
-							imp.setAttribute("schemaLocation", file.getProjectRelativePath().toPortableString());
+							imp.setAttribute("location", file.getProjectRelativePath().toPortableString());
 
 							// Copy schema file into generated BPEL project
 							IPath artifactPath=bpelFolderPath.append(file.getProjectRelativePath());
@@ -374,15 +365,13 @@ public class SwitchyardJavaGeneratorImpl extends AbstractGenerator {
 
 							copySchema(file, artifactFile, bpelFolderPath);
 						} else {
-							imp.setAttribute("schemaLocation", location);
+							imp.setAttribute("location", location);
 						}
 						
-						schema.appendChild(imp);					
+						defnElem.insertBefore(imp, defnElem.getFirstChild());
 					}
 				}
 			}
-
-			defnElem.insertBefore(types, defnElem.getFirstChild());
 		}
 	}
 
