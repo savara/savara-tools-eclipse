@@ -194,7 +194,8 @@ public class SwitchyardJavaGeneratorImpl extends AbstractGenerator {
 
 					// Generate composite for role
 					gen.createServiceComposite(role, wsdlRoles, wsdlFile.getLocation().toOSString(),
-							refWsdlFilePaths, proj.getFolder(META_INF_PATH).getLocation().toOSString());
+							refWsdlFilePaths, proj.getFolder(META_INF_PATH).getLocation().toOSString(),
+							proj.getFolder(JAVA_PATH).getLocation().toOSString());
 				}
 				
 				proj.refreshLocal(IResource.DEPTH_INFINITE,
