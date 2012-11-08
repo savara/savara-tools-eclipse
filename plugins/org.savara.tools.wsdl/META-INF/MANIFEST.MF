@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SAVARA Tools WSDL Plug-in
 Bundle-SymbolicName: org.savara.tools.wsdl;singleton:=true
-Bundle-Version: 2.1.0.20121108-M2
+Bundle-Version: 2.1.0.qualifier
 Bundle-Activator: org.savara.tools.wsdl.osgi.Activator
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: Red Hat, Inc.
