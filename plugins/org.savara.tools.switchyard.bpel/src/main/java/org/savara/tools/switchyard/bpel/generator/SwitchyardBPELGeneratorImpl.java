@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.wsdl.xml.WSDLReader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -78,6 +79,8 @@ public class SwitchyardBPELGeneratorImpl extends AbstractGenerator {
 	private static final String BPEL_PATH = RESOURCE_PATH;
 	private static final String BPEL_DEPLOY_DESCRIPTOR_FILENAME = "deploy.xml";
 
+	private WSDLReader _reader=null;
+
 	private static Logger logger = Logger.getLogger(SwitchyardBPELGeneratorImpl.class.getName());
 
 	/**
@@ -86,6 +89,21 @@ public class SwitchyardBPELGeneratorImpl extends AbstractGenerator {
 	 */
 	public SwitchyardBPELGeneratorImpl() {
 		super(GENERATOR_NAME);
+
+		try {
+			_reader = javax.wsdl.factory.WSDLFactory.newInstance().newWSDLReader();
+		} catch(Exception e) {
+			logger.log(Level.SEVERE, "Failed to get WSDL reader", e);
+		}
+	}
+	
+	/**
+	 * This method returns a WSDL reader.
+	 * 
+	 * @return The WSDL reader
+	 */
+	protected WSDLReader getWSDLReader() {
+		return (_reader);
 	}
 	
 	/**
@@ -194,8 +212,13 @@ public class SwitchyardBPELGeneratorImpl extends AbstractGenerator {
 							}
 						}
 						
-						generateWSDL(model, role, proj, local, modelResource,
+						IFile wsdlFile=generateWSDL(model, role, proj, local, modelResource,
 												handler, wsdls);
+						javax.wsdl.Definition serviceWsdl=null;
+						
+						if (wsdlFile != null) {
+							serviceWsdl = getWSDLReader().readWSDL(wsdlFile.getLocation().toOSString());
+						}
 						
 						// Generate BPEL deployment descriptor
 						org.w3c.dom.Document deployDescriptor=
@@ -204,7 +227,8 @@ public class SwitchyardBPELGeneratorImpl extends AbstractGenerator {
 	
 						// Generate the switchyard descriptor
 						createSwitchyardDescriptor(proj, role.getName(),
-										deployDescriptor.getDocumentElement(), wsdls);
+										deployDescriptor.getDocumentElement(),
+										serviceWsdl, wsdls);
 						
 						proj.refreshLocal(IResource.DEPTH_INFINITE,
 											new NullProgressMonitor());
@@ -387,13 +411,13 @@ public class SwitchyardBPELGeneratorImpl extends AbstractGenerator {
 	}
 	
 	protected org.w3c.dom.Element createSwitchyardDescriptor(IProject proj, String name,
-			org.w3c.dom.Element descriptor, java.util.Map<String,javax.wsdl.Definition> wsdls)
-								throws Exception {
+			org.w3c.dom.Element descriptor, javax.wsdl.Definition serviceWsdl,
+				java.util.Map<String,javax.wsdl.Definition> wsdls) throws Exception {
 		SwitchyardBPELGenerator gen=new SwitchyardBPELGenerator();
 		
 		// Generate the switchyard descriptor
 		org.w3c.dom.Element swdesc=gen.createSwitchyardDescriptor(name,
-						descriptor, wsdls);
+						descriptor, serviceWsdl, wsdls);
 		
 		// Write partner link types to file
 		IPath deployDescPath=proj.getFullPath().append(
