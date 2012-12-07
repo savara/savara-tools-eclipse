@@ -8,27 +8,7 @@
 	<version>2.1.0-SNAPSHOT</version>
 	<name>Savara::Tools</name>
 
-	<!-- use JBoss Tools' trunk/build/parent/pom.xml - must be built locally first! 
-	     Then, build like this to suck in latest pi4soa + target-platform:
-	     	mvn3 clean install -U -B -e -fae -P jbosstools-nightly-trunk,helios-remote-target,\!helios
-	-->
-	<parent>
-		<groupId>org.jboss.tools</groupId>
-		<artifactId>parent</artifactId>
-		<version>3.3.0.Beta3-SNAPSHOT</version>
-		<relativePath>../build/parent/pom.xml</relativePath>
-	</parent>
-
-        <!-- Don't use Savara's own local parent-pom.xml. ~nickb
-        <parent>
-		<relativePath>parent-pom.xml</relativePath>
-		<groupId>org.savara.tools</groupId>
-		<artifactId>org.savara.tools.parent.pom</artifactId>
-		<version>1.2.0-SNAPSHOT</version>
-	</parent> -->
-
 	<properties>
-		<BUILD_ALIAS>Final</BUILD_ALIAS>
 		<cxf.version>2.4.0</cxf.version>
         	<jaxb.version>2.1</jaxb.version>
 		<savara.core.version>2.1.0-SNAPSHOT</savara.core.version>
@@ -44,126 +24,63 @@
 		<module>site</module>
 	</modules>
 
-  <profiles>
-    <profile>
-      <id>osx</id>
-      <activation>
-        <property>
-          <name>java.vendor.url</name>
-          <value>http://www.apple.com/</value>
-        </property>
-      </activation>
-      <properties>
-        <!-- THE FOLLOWING LINE MUST NOT BE BROKEN BY AUTOFORMATTING -->
-        <systemProperties combine.children="append"> -d32 -Dosgi.arch=x86 -XstartOnFirstThread </systemProperties>
-      </properties>
-    </profile>
+	<profiles>
+		<profile>
+			<id>osx</id>
+			<activation>
+				<property>
+					<name>java.vendor.url</name>
+					<value>http://www.apple.com/</value>
+				</property>
+			</activation>
+			<properties>
+				<!-- THE FOLLOWING LINE MUST NOT BE BROKEN BY AUTOFORMATTING -->
+				<systemProperties combine.children="append"> -d32 -Dosgi.arch=x86 -XstartOnFirstThread </systemProperties>
+			</properties>
+		</profile>
 
-    <profile>
-      <id>hudson</id>
-      <activation>
-        <property>
-          <name>BUILD_NUMBER</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.eclipse.tycho</groupId>
-            <artifactId>tycho-packaging-plugin</artifactId>
-            <version>${tycho-version}</version>
-            <configuration>
-              <format>'v'yyyyMMdd-HHmm'-H${BUILD_NUMBER}-${BUILD_ALIAS}'</format>
-              <archiveSite>true</archiveSite>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
+		<profile>
+			<id>hudson</id>
+			<activation>
+				<property>
+					<name>BUILD_NUMBER</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>tycho-packaging-plugin</artifactId>
+ 						<version>${tycho-version}</version>
+						<configuration>
+							<format>'v'yyyyMMdd-HHmm'-H${BUILD_NUMBER}-${BUILD_ALIAS}'</format>
+							<archiveSite>true</archiveSite>
+ 						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
-  <build>
-    <sourceDirectory>src</sourceDirectory>
-    <plugins>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-maven-plugin</artifactId>
-        <version>${tycho-version}</version>
-        <extensions>true</extensions>
-      </plugin>
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<extensions>true</extensions>
+			</plugin>
 
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>target-platform-configuration</artifactId>
-        <version>${tycho-version}</version>
-        <configuration>
-          <resolver>p2</resolver>
-					<ignoreTychoRepositories>true</ignoreTychoRepositories>
-         			<pomDependencies>consider</pomDependencies>
-          <environments>
-            <environment>
-              <os>linux</os>
-              <ws>gtk</ws>
-              <arch>x86</arch>
-            </environment>
-            <environment>
-              <os>linux</os>
-              <ws>gtk</ws>
-              <arch>x86_64</arch>
-            </environment>
-            <environment>
-              <os>win32</os>
-              <ws>win32</ws>
-              <arch>x86</arch>
-            </environment>
-            <environment>
-              <os>macosx</os>
-              <ws>cocoa</ws>
-              <arch>x86</arch>
-            </environment>
-          </environments>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-packaging-plugin</artifactId>
-        <version>${tycho-version}</version>
-        <configuration>
-          <format>'v'yyyyMMdd-HHmm'-LOCAL'</format>
-          <archiveSite>true</archiveSite>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-
-<!--
-  <build>
-    <plugins>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
-				<version>${tychoVersion}</version>
+				<version>${tycho-version}</version>
 				<configuration>
 					<resolver>p2</resolver>
 					<ignoreTychoRepositories>true</ignoreTychoRepositories>
-         			<pomDependencies>consider</pomDependencies>
+					<pomDependencies>consider</pomDependencies>
 					<environments>
-						<environment>
-							<os>macosx</os>
-							<ws>cocoa</ws>
-							<arch>x86</arch>
-						</environment>
-						<environment>
-							<os>macosx</os>
-							<ws>carbon</ws>
-							<arch>x86</arch>
-						</environment>
-						<environment>
-							<os>win32</os>
-							<ws>win32</ws>
-							<arch>x86</arch>
-						</environment>
 						<environment>
 							<os>linux</os>
 							<ws>gtk</ws>
@@ -174,49 +91,68 @@
 							<ws>gtk</ws>
 							<arch>x86_64</arch>
 						</environment>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86</arch>
+						</environment>
+  						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>x86</arch>
+						</environment>
 					</environments>
 				</configuration>
 			</plugin>
-    </plugins>
-  </build>
--->
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-packaging-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<format>'v'yyyyMMdd-HHmm'-LOCAL'</format>
+					<archiveSite>true</archiveSite>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 	<repositories>
-	    <repository>
-	        <id>jboss-developer-repository-group</id>
-	        <name>JBoss Developer Maven Repository Group</name>
-		<url>https://repository.jboss.org/nexus/content/groups/developer/</url>
-		<releases>
-		  <enabled>true</enabled>
-		  <updatePolicy>never</updatePolicy>
-		</releases>
-		<snapshots>
-		  <enabled>true</enabled>
-		  <updatePolicy>never</updatePolicy>
-		</snapshots>
-	    </repository>
-    <repository>
-      <id>jbosstools-target-site</id>
-      <url>http://download.jboss.org/jbosstools/updates/juno/SR1a/REPO/</url>
-      <layout>p2</layout>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-    </repository>
-    <repository>
-      <id>jbosstools-stable-indigo</id>
-      <url>http://download.jboss.org/jbosstools/updates/stable/indigo/</url>
-      <layout>p2</layout>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-    </repository>
+		<repository>
+			<id>jboss-developer-repository-group</id>
+			<name>JBoss Developer Maven Repository Group</name>
+			<url>https://repository.jboss.org/nexus/content/groups/developer/</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>jbosstools-target-site</id>
+			<url>http://download.jboss.org/jbosstools/updates/juno/SR1a/REPO/</url>
+			<layout>p2</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>jbosstools-stable-indigo</id>
+			<url>http://download.jboss.org/jbosstools/updates/stable/indigo/</url>
+			<layout>p2</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
 		<repository>
 			<id>pi4soa</id>
 			<url>http://download.jboss.org/jbosstools/builds/staging/pi4soa-3.1.x/all/repo/</url>
@@ -239,86 +175,6 @@
 				<enabled>true</enabled>
 			</releases>
 		</repository>
-    <repository>
-      <id>graphiti-update-site</id>
-      <url>http://download.eclipse.org/graphiti/updates/0.9.0/</url>
-      <layout>p2</layout>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-    </repository>
-    <repository>
-      <id>emf-compare-update-site</id>
-      <url>http://download.eclipse.org/modeling/emf/compare/updates/releases/1.2</url>
-      <layout>p2</layout>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-    </repository>
-    <!-- The following provide dependencies required by the bpmn2 plugin. -->
-    <repository>
-      <id>bpmn2-model-update-site</id>
-      <url>https://hudson.eclipse.org/hudson/job/bpmn2-nightly/lastSuccessfulBuild/artifact/org.eclipse.bpmn2.site/target/site/</url>
-      <layout>p2</layout>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-    </repository>
-    <repository>
-      <id>bpmn2-editor-update-site</id>
-      <url>http://download.eclipse.org/bpmn2-modeler/site/0.1.0</url>
-      <layout>p2</layout>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-    </repository>
-    <repository>
-      <id>bpel-editor-update-site</id>
-      <url>http://download.eclipse.org/bpel/site/</url>
-      <layout>p2</layout>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-    </repository>
-    <!-- provides ...emf.validation.ocl -->
-    <repository>
-      <id>emf-update-site</id>
-      <url>http://download.eclipse.org/modeling/emf/updates/releases/</url>
-      <layout>p2</layout>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-    </repository>
-    <!-- provides ..emf.ocl -->
-    <repository>
-      <id>mdt-ocl-update-site</id>
-      <url>http://download.eclipse.org/modeling/mdt/ocl/updates/</url>
-      <layout>p2</layout>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-    </repository>
 	</repositories>
 
 	<pluginRepositories>
