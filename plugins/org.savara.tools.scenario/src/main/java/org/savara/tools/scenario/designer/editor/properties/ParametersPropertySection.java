@@ -17,6 +17,7 @@
  */
 package org.savara.tools.scenario.designer.editor.properties;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.ui.views.properties.tabbed.AbstractPropertySection;
@@ -33,6 +34,7 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
+import org.savara.common.util.MessageUtils;
 import org.savara.scenario.model.Parameter;
 import org.savara.tools.scenario.designer.editor.ScenarioDesigner;
 
@@ -216,6 +218,8 @@ public class ParametersPropertySection extends AbstractPropertySection {
 					String filename=fd.open();
 					
 					if (filename != null) {
+						String fullPath=filename;
+						
 						// Find relative path
 						if (m_designer != null && m_designer.getFile() != null) {
 							Path p=new Path(filename);
@@ -225,6 +229,12 @@ public class ParametersPropertySection extends AbstractPropertySection {
 						}
 						
 						m_value.setText(filename);
+						
+						// If type has not been set, then see whether this
+						// can be obtained from the message content
+						if (m_type.getText() == null || m_type.getText().trim().length() == 0) {
+							m_type.setText(getMessageType(fullPath));
+						}
 					}
 				}
 				
@@ -325,5 +335,34 @@ public class ParametersPropertySection extends AbstractPropertySection {
 	    	
 	    	return(m_ok ? m_parameter : null);
 	    }
+	}
+	
+	/**
+	 * This method returns the message type associated with the
+	 * supplied file content.
+	 * 
+	 * @param filePath The file path
+	 * @return The message type, or null if it could not be determined
+	 */
+	protected String getMessageType(String filePath) {
+		String ret=null;
+		
+		try {
+			java.io.InputStream is=new java.io.FileInputStream(filePath);
+			
+			byte[] b=new byte[is.available()];
+			is.read(b);
+			
+			is.close();
+			
+			String content=new String(b);
+			
+			ret = MessageUtils.getMessageType(content);
+			
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "Failed to obtain message type from the content of file '"+filePath+"'", e);
+		}
+		
+		return (ret);
 	}
 }
