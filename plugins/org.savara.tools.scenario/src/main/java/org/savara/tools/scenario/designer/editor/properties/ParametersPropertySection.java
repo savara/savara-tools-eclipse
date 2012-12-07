@@ -21,6 +21,8 @@ import java.util.logging.Logger;
 
 import org.eclipse.ui.views.properties.tabbed.AbstractPropertySection;
 
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -32,12 +34,14 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.savara.scenario.model.Parameter;
+import org.savara.tools.scenario.designer.editor.ScenarioDesigner;
 
 public class ParametersPropertySection extends AbstractPropertySection {
 	
 	private ParameterListPropertySection m_parameters=
 		new ParameterListPropertySection("parameter",
 				"Parameters", "Parameters", 0, 100);
+	private ScenarioDesigner m_designer=null;
 
 	private static final Logger logger=Logger.getLogger(ParametersPropertySection.class.getName());
 	
@@ -73,6 +77,10 @@ public class ParametersPropertySection extends AbstractPropertySection {
         super.setInput(part, selection);
         
         m_parameters.setInput(part, selection);
+        
+        if (part instanceof ScenarioDesigner) {
+        	m_designer = (ScenarioDesigner)part;
+        }
     }
     
     public void refresh() {    	
@@ -163,16 +171,7 @@ public class ParametersPropertySection extends AbstractPropertySection {
 	    }
 	}
 	
-	public static void main(String[] args) {
-		Display display = new Display ();
-		Shell shell = new Shell(display);
-
-		ParameterEditor pe=new ParameterEditor(shell);
-		
-		pe.open();
-	}
-	
-	public static class ParameterEditor extends Dialog {
+	public class ParameterEditor extends Dialog {
 		private Parameter m_parameter=null;
 		private Combo m_type=null;
 		private Text m_value=null;
@@ -196,25 +195,51 @@ public class ParametersPropertySection extends AbstractPropertySection {
 	    	final Shell dialog = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 	    	dialog.setText(getText());
 	    	
-	    	//Shell dialog = new Shell (dialog, SWT.DIALOG_TRIM);
-	    	Label label1 = new Label (dialog, SWT.NONE);
-	    	label1.setText("Type");
-	    	
-	    	m_type = new Combo(dialog, SWT.NONE);
-	    	
-	    	if (m_parameter != null && m_parameter.getType() != null &&
-	    			m_parameter.getType().trim().length() > 0) {
-	    		m_type.setText(m_parameter.getType());
-	    	}
-	    	
-	    	Label label2 = new Label(dialog, SWT.NONE);
-	    	label2.setText("Value");
+	    	Button messageFileButton = new Button (dialog, SWT.PUSH);
+	    	messageFileButton.setText ("Value File Path:");
 	    	
 	    	m_value = new Text(dialog, SWT.NONE);
 
 	    	if (m_parameter != null && m_parameter.getValue() != null &&
 	    			m_parameter.getValue().trim().length() > 0) {
 	    		m_value.setText(m_parameter.getValue());
+	    	}
+	    	
+	    	messageFileButton.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
+				public void widgetSelected(SelectionEvent evt) {
+					FileDialog fd=new FileDialog(dialog);
+					
+					if (m_designer != null && m_designer.getFile() != null) {
+						fd.setFilterPath(m_designer.getFile().getParent().getRawLocation().toPortableString());
+					}
+
+					String filename=fd.open();
+					
+					if (filename != null) {
+						// Find relative path
+						if (m_designer != null && m_designer.getFile() != null) {
+							Path p=new Path(filename);
+							IPath relativePath=p.makeRelativeTo(m_designer.getFile().getParent().getLocation());
+							
+							filename = relativePath.toPortableString();
+						}
+						
+						m_value.setText(filename);
+					}
+				}
+				
+				public void widgetDefaultSelected(SelectionEvent evt) {					
+				}
+			});
+
+			Label typeLabel = new Label (dialog, SWT.NONE);
+	    	typeLabel.setText("Content Type:");
+	    	
+	    	m_type = new Combo(dialog, SWT.NONE);
+	    	
+	    	if (m_parameter != null && m_parameter.getType() != null &&
+	    			m_parameter.getType().trim().length() > 0) {
+	    		m_type.setText(m_parameter.getType());
 	    	}
 	    	
 	    	Button okButton = new Button (dialog, SWT.PUSH);
@@ -226,40 +251,40 @@ public class ParametersPropertySection extends AbstractPropertySection {
 	    	form.marginWidth = form.marginHeight = 8;
 	    	dialog.setLayout(form);
 	    	
-	    	FormData label1Data = new FormData();
-	    	label1Data.top = new FormAttachment(4);
-	    	label1Data.width = 40;
-	    	label1Data.height = 30;
-	    	label1.setLayoutData(label1Data);
+	    	FormData messageFileButtonData = new FormData();
+	    	messageFileButtonData.top = new FormAttachment(4);
+	    	messageFileButtonData.width = 120;
+	    	messageFileButtonData.height = 30;
+	    	messageFileButton.setLayoutData(messageFileButtonData);
+	    	
+	    	FormData valueData = new FormData();
+	    	valueData.left = new FormAttachment(messageFileButton, 8);
+	    	valueData.width = 400;
+	    	valueData.height = 30;
+	    	m_value.setLayoutData(valueData);
+	    	
+	    	FormData label2Data = new FormData();
+	    	label2Data.top = new FormAttachment(messageFileButton, 8);
+	    	label2Data.width = 120;
+	    	label2Data.height = 30;
+	    	typeLabel.setLayoutData(label2Data);
 	    	
 	    	FormData typeData = new FormData();
-	    	typeData.left = new FormAttachment(label1, 8);
+	    	typeData.left = new FormAttachment(typeLabel, 8);
+	    	typeData.top = new FormAttachment(m_value, 8);
 	    	typeData.width = 400;
 	    	typeData.height = 30;
 	    	m_type.setLayoutData(typeData);
 	    	
-	    	FormData label2Data = new FormData();
-	    	label2Data.top = new FormAttachment(label1, 8);
-	    	label2Data.width = 40;
-	    	label2Data.height = 30;
-	    	label2.setLayoutData(label2Data);
-	    	
-	    	FormData valueData = new FormData();
-	    	valueData.left = new FormAttachment(label2, 8);
-	    	valueData.top = new FormAttachment(m_type, 8);
-	    	valueData.width = 400;
-	    	valueData.height = 25;
-	    	m_value.setLayoutData(valueData);
-	    	
 	    	FormData okData = new FormData();
-	    	okData.top = new FormAttachment(m_value, 8);
+	    	okData.top = new FormAttachment(m_type, 8);
 	    	okData.left = new FormAttachment(0, 150);
 	    	okData.width = 80;
 	    	okButton.setLayoutData(okData);
 	    	
 	    	FormData cancelData = new FormData();
 	    	cancelData.left = new FormAttachment(okButton, 8);
-	    	cancelData.top = new FormAttachment(m_value, 8);
+	    	cancelData.top = new FormAttachment(m_type, 8);
 	    	cancelData.width = 80;
 	    	cancelButton.setLayoutData(cancelData);
 	    	
