@@ -24,11 +24,13 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -39,10 +41,14 @@ import org.eclipse.swt.widgets.Text;
  */
 public class ArchitectureDesignDialog extends TitleAreaDialog {
 
+	private static final String DEFAULT_FOLDER = "<Current Folder>";
 	private Text _modelNameField=null;
 	private String _modelName=null;
 	private Text _namespaceField=null;
 	private String _namespace=null;
+	private Button _folderField=null;
+	private java.io.File _folder=null;
+	private java.io.File _defaultFolder=null;
 	
 	private static final String DEFAULT_NAMESPACE_PREFIX="http://www.savara.org";
 
@@ -58,7 +64,7 @@ public class ArchitectureDesignDialog extends TitleAreaDialog {
 	}
 
 	@Override
-	protected Control createDialogArea(Composite parent) {
+	protected Control createDialogArea(final Composite parent) {
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
 		// layout.horizontalAlignment = GridData.FILL;
@@ -92,6 +98,49 @@ public class ArchitectureDesignDialog extends TitleAreaDialog {
 		_namespaceField = new Text(parent, SWT.BORDER);
 		_namespaceField.setLayoutData(gridData);
 		_namespaceField.setText(DEFAULT_NAMESPACE_PREFIX);
+		
+		Label folderLabel = new Label(parent, SWT.NONE);
+		folderLabel.setText("Folder");
+		
+		gridData = new GridData();
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.horizontalAlignment = GridData.FILL;
+		
+		_folderField = new Button(parent, SWT.BORDER);
+		_folderField.setLayoutData(gridData);
+		_folderField.setText(DEFAULT_FOLDER);
+		
+		_folderField.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent se) {
+				DirectoryDialog fd=new DirectoryDialog(parent.getShell());
+				
+				if (_folder != null) {
+					fd.setFilterPath(_folder.getAbsolutePath());
+				}
+
+				String filename=fd.open();
+				
+				if (filename != null) {
+					_folder = new java.io.File(filename);
+					
+					if (_folder.equals(_defaultFolder)) {
+						_folderField.setText(DEFAULT_FOLDER);
+					} else {
+						_folderField.setText(_folder.getAbsolutePath());
+					}
+				}	
+			}
+
+			@Override
+			public void widgetSelected(SelectionEvent se) {
+				widgetDefaultSelected(se);
+			}
+			
+		});
+		
+		_defaultFolder = _folder;
 		
 		return parent;
 	}
@@ -169,6 +218,11 @@ public class ArchitectureDesignDialog extends TitleAreaDialog {
 		// Cache the results
 	    _modelName = _modelNameField.getText();
 	    _namespace = _namespaceField.getText();
+	    
+	    if (!_folderField.getText().equals(DEFAULT_FOLDER)) {
+	    	_folder = new java.io.File(_folderField.getText());
+	    }
+	    
 	    super.okPressed();
 	}
 
@@ -178,5 +232,13 @@ public class ArchitectureDesignDialog extends TitleAreaDialog {
 
 	public String getNamespace() {
 		return _namespace;
+	}
+	
+	public java.io.File getFolder() {
+		return _folder;
+	}
+	
+	public void setFolder(java.io.File folder) {
+		_folder = folder;
 	}
 }

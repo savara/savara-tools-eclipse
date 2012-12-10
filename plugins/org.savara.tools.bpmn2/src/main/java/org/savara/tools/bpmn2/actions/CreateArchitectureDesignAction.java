@@ -17,10 +17,10 @@
  */
 package org.savara.tools.bpmn2.actions;
 
-import java.io.ByteArrayOutputStream;
-
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -83,15 +83,20 @@ public class CreateArchitectureDesignAction implements IObjectActionDelegate {
 			java.util.Map<String,java.util.List<ProtocolModel>> messageTraces=
 						new java.util.HashMap<String,java.util.List<ProtocolModel>>();
 			
-			IContainer container=null;
-			
 			ArchitectureDesignDialog d=new ArchitectureDesignDialog(m_targetPart.getSite().getShell());
 			
+			Object firstSelection=sel.toList().iterator().next();
+			if (firstSelection instanceof IFile) {
+				d.setFolder(((IFile)firstSelection).getParent().getLocation().toFile());
+			}
+			
 			if (d.open() == InputDialog.OK) {
+				java.io.File container=d.getFolder();
+				
 				for (Object res : sel.toList()) {			
 					if (res instanceof IFile) {
 						if (container == null) {
-							container = ((IFile)res).getParent();
+							container = ((IFile)res).getParent().getLocation().toFile();
 						}
 						
 						deriveMessageTrace((IFile)res, messageTraces, handler, d.getNamespace());
@@ -137,7 +142,7 @@ public class CreateArchitectureDesignAction implements IObjectActionDelegate {
 		}
 	}
 	
-	protected void generateBPMN2ProcessModel(IContainer container, ProtocolModel lm,
+	protected void generateBPMN2ProcessModel(java.io.File container, ProtocolModel lm,
 						FeedbackHandler handler) {
 		java.util.Map<String,Object> target=P2PMG.generate(lm, handler, null);
 		
@@ -151,10 +156,7 @@ public class CreateArchitectureDesignAction implements IObjectActionDelegate {
 					
 					try {
 						// Store BPMN2 process
-						IFile bpmn2File=container.getFile(new Path(modelName));
-						
-						bpmn2File.create(null, true,
-								new org.eclipse.core.runtime.NullProgressMonitor());
+						java.io.File bpmn2File=new java.io.File(container, modelName);
 						
 						// Obtain any namespace prefix map
 						java.util.Map<String, String> prefixes=
@@ -172,15 +174,20 @@ public class CreateArchitectureDesignAction implements IObjectActionDelegate {
 							}
 						}
 						
-						//String bpelText=XMLUtils.toText(bpelProcess.getDOMElement());
-						ByteArrayOutputStream os=new ByteArrayOutputStream();
+						java.io.FileOutputStream os=new java.io.FileOutputStream(bpmn2File);
+						
 						BPMN2ModelUtil.serialize(process, os, prefixes, BPMN2GeneratorImpl.class.getClassLoader());
 						
 						os.close();
 						
-						bpmn2File.setContents(new java.io.ByteArrayInputStream(
-									os.toByteArray()), true, false,
-									new org.eclipse.core.runtime.NullProgressMonitor());
+						// Check if can be refreshed
+						IFile f=ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(bpmn2File.getAbsolutePath()));
+						
+						if (f != null) {
+							f.refreshLocal(IResource.DEPTH_ONE,
+									new NullProgressMonitor());
+						}
+						
 					} catch(Exception e) {
 						handler.error("Failed to store BPMN2 process model", null);
 					}
@@ -189,7 +196,7 @@ public class CreateArchitectureDesignAction implements IObjectActionDelegate {
 		}
 	}
 
-	protected void generateBPMN2ChoreographyModel(IContainer container, ProtocolModel choreo,
+	protected void generateBPMN2ChoreographyModel(java.io.File container, ProtocolModel choreo,
 						FeedbackHandler handler) {
 		java.util.Map<String,Object> models=P2CMG.generate(choreo, handler, null);
 		
@@ -217,22 +224,23 @@ public class CreateArchitectureDesignAction implements IObjectActionDelegate {
 					}
 					
 					try {
-						java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
+						java.io.File modelFile=new java.io.File(container, modelName);
+						
+						java.io.FileOutputStream baos=new java.io.FileOutputStream(modelFile);
 						
 						BPMN2ModelUtil.serialize(defns, baos, prefixes,
 								CreateArchitectureDesignAction.class.getClassLoader());
 						
-						java.io.ByteArrayInputStream bais=new java.io.ByteArrayInputStream(baos.toByteArray());
+						baos.close();
 						
-						IFile modelFile=container.getFile(new Path(modelName));
+						// Check if can be refreshed
+						IFile f=ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(modelFile.getAbsolutePath()));
 						
-						if (!modelFile.exists()) {
-							modelFile.create(bais, false, null);
-						} else {
-							modelFile.setContents(bais, true, false, null);
+						if (f != null) {
+							f.refreshLocal(IResource.DEPTH_ONE,
+									new NullProgressMonitor());
 						}
 						
-						bais.close();
 					} catch(Exception e) {
 						handler.error("Failed to generate BPMN2 choreography model", null);
 					}
