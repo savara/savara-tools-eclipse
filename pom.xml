@@ -9,12 +9,19 @@
 	<name>Savara::Tools</name>
 
 	<properties>
-		<cxf.version>2.4.0</cxf.version>
+		<antlr.version>3.2</antlr.version>
+		<commons-collections.version>3.2.1</commons-collections.version>
+		<commons-lang.version>2.6</commons-lang.version>
+		<cxf.version>2.7.0</cxf.version>
         	<jaxb.version>2.1</jaxb.version>
+		<jaxbri.version>2.2.4-1</jaxbri.version>
 		<savara.core.version>2.1.0-SNAPSHOT</savara.core.version>
 		<scribble.version>2.1.0.20121108-M3</scribble.version>
+		<switchyard.version>0.6.0.Final</switchyard.version>
 		<tuscany.version>2.0-Beta2</tuscany.version>
 		<tycho-version>0.14.1</tycho-version>
+		<velocity.version>1.7</velocity.version>
+		<ws-schema.version>2.0.3</ws-schema.version>
 	</properties>
 
 	<modules>

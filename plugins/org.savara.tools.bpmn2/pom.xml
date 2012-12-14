@@ -22,28 +22,59 @@
 			<artifactId>org.savara.bpmn2</artifactId> 
 			<version>${savara.core.version}</version>
  		</dependency>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.common</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.scenario</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<!-- 
- 		<dependency>
- 			<groupId>org.scribble.bundles</groupId>
-			<artifactId>org.scribble.common</artifactId> 
-			<version>${scribble.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.scribble.bundles</groupId>
-			<artifactId>org.scribble.protocol</artifactId> 
-			<version>${scribble.core.version}</version>
- 		</dependency>
- 		-->
  	</dependencies>
   
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<stripVersion>true</stripVersion>
+							<outputDirectory>lib</outputDirectory>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.savara.bundles</groupId>
+									<artifactId>org.savara.bpmn2</artifactId>
+									<version>${project.version}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.savara.bundles</groupId>
+									<artifactId>org.savara.bpmn2.model</artifactId>
+									<version>${project.version}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.sun.xml.bind</groupId>
+									<artifactId>jaxb-impl</artifactId>
+									<version>${jaxbri.version}</version>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>lib</directory>
+							<includes>
+								<include>**/*</include>
+							</includes>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>

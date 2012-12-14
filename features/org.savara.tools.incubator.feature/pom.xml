@@ -18,124 +18,14 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 	</properties>
 
    	<dependencies>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.bpel</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.bpmn2.model</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.bpmn2</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.common</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.contract</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.monitor</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.pi4soa.cdm</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.protocol</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.sca.java</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.switchyard.bpel</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.scenario</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.scenario.simulator.cdm</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.scenario.simulator.sca</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.scenario.simulator.protocol</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.wsdl</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.scribble.bundles</groupId>
-			<artifactId>org.scribble.protocol.projection</artifactId> 
-			<version>${scribble.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.tools</groupId>
-			<artifactId>org.savara.tools.common</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.tools</groupId>
-			<artifactId>org.savara.tools.bpel</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.tools</groupId>
-			<artifactId>org.savara.tools.bpmn2</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
+		<dependency>
  			<groupId>org.savara.tools</groupId>
 			<artifactId>org.savara.tools.pi4soa.cdm</artifactId> 
 			<version>${savara.core.version}</version>
  		</dependency>
  		<dependency>
  			<groupId>org.savara.tools</groupId>
-			<artifactId>org.savara.tools.scenario</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.tools</groupId>
 			<artifactId>org.savara.tools.sca.java</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.tools</groupId>
-			<artifactId>org.savara.tools.switchyard.bpel</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.tools</groupId>
-			<artifactId>org.savara.tools.wsdl</artifactId> 
 			<version>${savara.core.version}</version>
  		</dependency>
  	</dependencies>

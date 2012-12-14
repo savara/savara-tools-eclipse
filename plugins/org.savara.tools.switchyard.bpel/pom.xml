@@ -13,45 +13,63 @@
 
    	<dependencies>
  		<dependency>
- 			<groupId>org.scribble.bundles</groupId>
-			<artifactId>org.scribble.protocol</artifactId> 
-			<version>${scribble.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.scribble.bundles</groupId>
-			<artifactId>org.scribble.protocol.parser</artifactId> 
-			<version>${scribble.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.contract</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.wsdl</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.bpel</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.common</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.protocol</artifactId>
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
  			<groupId>org.savara.bundles</groupId>
 			<artifactId>org.savara.switchyard.bpel</artifactId>
-			<version>${savara.core.version}</version>
+			<version>${project.version}</version>
+ 		</dependency>
+ 		<dependency>
+ 			<groupId>org.savara.bundles</groupId>
+			<artifactId>org.savara.bpel</artifactId>
+			<version>${project.version}</version>
  		</dependency>
  	</dependencies>
   
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<stripVersion>true</stripVersion>
+							<outputDirectory>lib</outputDirectory>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.savara.bundles</groupId>
+									<artifactId>org.savara.switchyard.bpel</artifactId>
+									<version>${project.version}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.savara.bundles</groupId>
+									<artifactId>org.savara.bpel</artifactId>
+									<version>${project.version}</version>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>lib</directory>
+							<includes>
+								<include>**/*</include>
+							</includes>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>

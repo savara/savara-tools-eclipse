@@ -7,6 +7,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.savara.bpel.parser.BPELProtocolParser;
+import org.scribble.protocol.parser.ProtocolParser;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -34,6 +36,17 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		
+		java.util.Dictionary<String,Object> props = new java.util.Hashtable<String,Object>();
+        
+		BPELProtocolParser pp=new BPELProtocolParser();
+        
+		context.registerService(ProtocolParser.class.getName(),
+							pp, props);
+
+		if (logger.isLoggable(Level.FINE)) {
+			logger.fine("BPEL Protocol Parser registered");
+		}
 	}
 
 	/*

@@ -1,9 +1,17 @@
 package org.savara.tools.scenario.osgi;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import org.osgi.util.tracker.ServiceTracker;
+import org.savara.scenario.simulation.DefaultScenarioSimulator;
+import org.savara.scenario.simulation.RoleSimulator;
+import org.savara.scenario.simulation.RoleSimulatorFactory;
+import org.savara.scenario.simulation.ScenarioSimulator;
+import org.savara.scenario.simulator.protocol.ProtocolRoleSimulator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
@@ -20,6 +28,8 @@ public class Activator extends AbstractUIPlugin {
 	
     private static Logger logger = Logger.getLogger(Activator.class.getName());
 
+    private org.osgi.util.tracker.ServiceTracker m_roleSimulatorTracker=null;
+    
     /**
 	 * The constructor
 	 */
@@ -37,6 +47,41 @@ public class Activator extends AbstractUIPlugin {
 		// Force the org.savara.tools.common plugin to be started
 		org.savara.tools.common.ArtifactType at=
 				org.savara.tools.common.ArtifactType.ServiceContract;
+		
+		java.util.Dictionary<String,Object> props = new java.util.Hashtable<String,Object>();
+        
+		ProtocolRoleSimulator rs=new ProtocolRoleSimulator();
+        
+		context.registerService(RoleSimulator.class.getName(),
+						rs, props);
+
+		if (logger.isLoggable(Level.FINE)) {
+			logger.fine("Protocol Role Simulator registered");
+		}
+		
+		ScenarioSimulator ssim=new DefaultScenarioSimulator();
+
+		context.registerService(ScenarioSimulator.class.getName(),
+					ssim, props);
+        
+		logger.info("Registered Scenario Simulator");
+
+		m_roleSimulatorTracker = new ServiceTracker(context,
+				RoleSimulator.class.getName(), null) {
+
+			public Object addingService(ServiceReference ref) {
+				Object ret=super.addingService(ref);
+
+				logger.fine("Role simulator being registered: "+ret);
+
+				RoleSimulatorFactory.register((RoleSimulator)ret);
+
+				return(ret);
+			}
+		};
+
+		m_roleSimulatorTracker.open();
+
 	}
 
 	/*

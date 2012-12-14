@@ -17,6 +17,7 @@
  */
 package org.savara.tools.common.osgi;
 
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,14 +35,31 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
-import org.savara.tools.common.Tools;
+import org.osgi.util.tracker.ServiceTracker;
+import org.savara.protocol.util.ProtocolServices;
 import org.savara.tools.common.logging.EclipseLogger;
 import org.savara.tools.common.properties.PropertyDefinitions;
+import org.scribble.common.logging.ConsoleJournal;
+import org.scribble.common.logging.Journal;
 import org.scribble.common.resource.FileContent;
 import org.scribble.protocol.DefaultProtocolContext;
+import org.scribble.protocol.export.DefaultProtocolExportManager;
+import org.scribble.protocol.export.ProtocolExportManager;
+import org.scribble.protocol.export.ProtocolExporter;
+import org.scribble.protocol.export.text.TextProtocolExporter;
+import org.scribble.protocol.export.text.TextProtocolExporterRule;
 import org.scribble.protocol.model.ProtocolModel;
+import org.scribble.protocol.parser.DefaultProtocolParserManager;
+import org.scribble.protocol.parser.ProtocolParser;
 import org.scribble.protocol.parser.ProtocolParserManager;
+import org.scribble.protocol.parser.antlr.ANTLRProtocolParser;
+import org.scribble.protocol.projection.ProtocolProjector;
+import org.scribble.protocol.projection.impl.ProjectorRule;
+import org.scribble.protocol.projection.impl.ProtocolProjectorImpl;
+import org.scribble.protocol.validation.DefaultProtocolValidationManager;
 import org.scribble.protocol.validation.ProtocolValidationManager;
+import org.scribble.protocol.validation.ProtocolValidator;
+import org.scribble.protocol.validation.rules.DefaultProtocolComponentValidator;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -56,7 +74,15 @@ public class Activator extends AbstractUIPlugin implements IStartup {
 	
 	private static final Logger LOG=Logger.getLogger(Activator.class.getName());
 	
-	/**
+    private org.osgi.util.tracker.ServiceTracker _protocolParserTracker=null;
+    private org.osgi.util.tracker.ServiceTracker _protocolValidatorTracker=null;
+    private org.osgi.util.tracker.ServiceTracker _protocolProjectorTracker=null;
+    private org.osgi.util.tracker.ServiceTracker _protocolExporterTracker=null;
+    private org.osgi.util.tracker.ServiceTracker _protocolTextExporterRuleTracker=null;
+    private org.osgi.util.tracker.ServiceTracker _protocolValidationManagerTracker=null;
+    private org.osgi.util.tracker.ServiceTracker _protocolProjectorRuleTracker=null;
+
+    /**
 	 * The constructor
 	 */
 	public Activator() {
@@ -69,6 +95,148 @@ public class Activator extends AbstractUIPlugin implements IStartup {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+
+        java.util.Hashtable<String,Object> props = new java.util.Hashtable<String,Object>();
+
+        // Register parser manager
+        final ProtocolParserManager pm=new DefaultProtocolParserManager();
+        
+        context.registerService(ProtocolParserManager.class.getName(), 
+                            pm, props);
+        
+        LOG.fine("Registered Parser Manager");
+        
+        _protocolParserTracker = new ServiceTracker(context,
+                org.scribble.protocol.parser.ProtocolParser.class.getName(),
+                        null) {
+            
+            public Object addingService(ServiceReference ref) {
+                Object ret=super.addingService(ref);
+                
+                LOG.fine("Parser has been added: "+ret);
+                
+                pm.getParsers().add((ProtocolParser)ret);
+                
+                return (ret);
+            }
+        };
+        
+        _protocolParserTracker.open();
+
+        // Register validation manager
+        final ProtocolValidationManager vm=new DefaultProtocolValidationManager();
+        
+        context.registerService(ProtocolValidationManager.class.getName(), 
+                            vm, props);
+        
+        LOG.fine("Registered Validation Manager");
+        
+        _protocolValidatorTracker = new ServiceTracker(context,
+                org.scribble.protocol.validation.ProtocolValidator.class.getName(),
+                        null) {
+            
+            public Object addingService(ServiceReference ref) {
+                Object ret=super.addingService(ref);
+                
+                LOG.fine("Validator has been added: "+ret);
+                
+                vm.getValidators().add((ProtocolValidator)ret);
+                
+                return (ret);
+            }
+        };
+        
+        _protocolValidatorTracker.open();
+
+        _protocolProjectorTracker = new ServiceTracker(context,
+                org.scribble.protocol.projection.ProtocolProjector.class.getName(),
+                        null) {
+            
+            public Object addingService(ServiceReference ref) {
+                Object ret=super.addingService(ref);
+                
+                LOG.fine("Projector has been added to validator manager: "+ret);
+                
+                vm.setProtocolProjector((ProtocolProjector)ret);
+                
+                return (ret);
+            }
+        };
+        
+        _protocolProjectorTracker.open();
+
+        // Register export manager
+        final ProtocolExportManager em=new DefaultProtocolExportManager();
+        
+        context.registerService(ProtocolExportManager.class.getName(), 
+                            em, props);
+        
+        LOG.fine("Registered Export Manager");
+        
+        _protocolExporterTracker = new ServiceTracker(context,
+                org.scribble.protocol.export.ProtocolExporter.class.getName(),
+                        null) {
+            
+            public Object addingService(ServiceReference ref) {
+                Object ret=super.addingService(ref);
+                
+                LOG.fine("Exporter has been added: "+ret);
+                
+                em.getExporters().add((ProtocolExporter)ret);
+                
+                return (ret);
+            }
+        };
+        
+        _protocolExporterTracker.open();
+
+        // Register console journal
+        context.registerService(Journal.class.getName(), 
+                new ConsoleJournal(), props);
+
+        // Register protocol validator
+        ProtocolValidator pv=new DefaultProtocolComponentValidator();
+        
+        context.registerService(ProtocolValidator.class.getName(), 
+        			pv, props);        
+
+        // Register text based exporter
+        final TextProtocolExporter tpe=new TextProtocolExporter();
+        
+        context.registerService(ProtocolExporter.class.getName(), 
+                new TextProtocolExporter(), props);        
+
+        LOG.fine("Registered Text Protocol Exporter");
+        
+        _protocolTextExporterRuleTracker = new ServiceTracker(context,
+                org.scribble.protocol.export.text.TextProtocolExporterRule.class.getName(),
+                        null) {
+            
+            public Object addingService(ServiceReference ref) {
+                Object ret=super.addingService(ref);
+                
+                LOG.fine("Text Exporter Rule has been added: "+ret);
+                
+                tpe.register((TextProtocolExporterRule)ret);
+                
+                return (ret);
+            }
+        };
+        
+        _protocolTextExporterRuleTracker.open();
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		// Make sure any bundles, associated with scribble and savara, are started (excluding
 		// the designer itself)
@@ -80,10 +248,8 @@ public class Activator extends AbstractUIPlugin implements IStartup {
 			Bundle bundle=bundles[i];
 			
 			if (bundle != null) {
-				if ((bundle.getSymbolicName().startsWith("org.scribble.") &&
-						bundle.getSymbolicName().endsWith("designer") == false) ||
-						(bundle.getSymbolicName().startsWith("org.savara.") &&
-						bundle.getSymbolicName().startsWith("org.savara.tools.") == false)) {
+				if (bundle.getSymbolicName().startsWith("org.savara.") &&
+						!bundle.getSymbolicName().startsWith("org.savara.tools.common")) {
 				
 					//if (bundle.getState() == Bundle.RESOLVED) {
 						LOG.fine("Pre-empt bundle start: "+bundle);
@@ -93,19 +259,60 @@ public class Activator extends AbstractUIPlugin implements IStartup {
 			}
 		}
 
-		// Locate protocol parser manager
-		ServiceReference<ProtocolParserManager> sref1=context.getServiceReference(ProtocolParserManager.class);
-		
-		if (sref1 != null) {
-			Tools.setProtocolParserManager(context.getService(sref1));
-		}
 
-		// Locate protocol validation manager
-		ServiceReference<ProtocolValidationManager> sref2=context.getServiceReference(ProtocolValidationManager.class);
-		
-		if (sref2 != null) {
-			Tools.setProtocolValidationManager(context.getService(sref2));
-		}
+        ANTLRProtocolParser pp=new ANTLRProtocolParser();
+        
+        context.registerService(ProtocolParser.class.getName(), 
+                pp, props);
+
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Protocol parser registered");
+        }
+
+        final ProtocolProjectorImpl ppj=new ProtocolProjectorImpl();
+        
+        context.registerService(ProtocolProjector.class.getName(), 
+        				ppj, props);
+        
+        // Detect protocol validation manager
+        _protocolValidationManagerTracker = new ServiceTracker(context,
+                org.scribble.protocol.validation.ProtocolValidationManager.class.getName(),
+                        null) {
+            
+            public Object addingService(ServiceReference ref) {
+                Object ret=super.addingService(ref);
+                
+                LOG.fine("Validation manager has been added to projector: "+ret);
+                
+                ppj.setProtocolValidationManager((org.scribble.protocol.validation.ProtocolValidationManager)ret);
+                
+                return (ret);
+            }
+        };
+        
+        _protocolValidationManagerTracker.open();
+
+        // Detect additional protocol projection rules
+        _protocolProjectorRuleTracker = new ServiceTracker(context,
+                org.scribble.protocol.projection.impl.ProjectorRule.class.getName(),
+                        null) {
+            
+            public Object addingService(ServiceReference ref) {
+                Object ret=super.addingService(ref);
+                
+                LOG.fine("Projection rule has been added: "+ret);
+                
+                ppj.getCustomRules().add((ProjectorRule)ret);
+                
+                return (ret);
+            }
+        };
+        
+        _protocolProjectorRuleTracker.open();
+
+        // Set the parser and validation managers
+        ProtocolServices.setParserManager(pm);
+        ProtocolServices.setValidationManager(vm);
 
 		// Register resource change listener
 		IResourceChangeListener rcl=
@@ -153,17 +360,17 @@ public class Activator extends AbstractUIPlugin implements IStartup {
         try {
              FileContent content=new FileContent(((IFile)res).getRawLocation().toFile());
              
-             if (Tools.getProtocolParserManager().isParserAvailable(content)) {
+             if (ProtocolServices.getParserManager().isParserAvailable(content)) {
 
                  DefaultProtocolContext context=new DefaultProtocolContext();
-                 context.setProtocolParserManager(Tools.getProtocolParserManager());
+                 context.setProtocolParserManager(ProtocolServices.getParserManager());
                  
                  EclipseLogger journal=new EclipseLogger((IFile)res);
 
-                 ProtocolModel pm=Tools.getProtocolParserManager().parse(context, content, journal);
+                 ProtocolModel pm=ProtocolServices.getParserManager().parse(context, content, journal);
             	 
                  if (!journal.hasErrorOccurred()) {
-                	 Tools.getProtocolValidationManager().validate(context, pm, journal);
+                	 ProtocolServices.getValidationManager().validate(context, pm, journal);
                  }
                  
                  journal.finished();

@@ -44,13 +44,6 @@ Raleigh NC 27606 USA.
    </requires>
 
    <plugin
-         id="org.savara.tools.bpel"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.savara.tools.pi4soa.cdm"
          download-size="0"
          install-size="0"
@@ -58,35 +51,7 @@ Raleigh NC 27606 USA.
          unpack="false"/>
 
    <plugin
-         id="org.savara.pi4soa.cdm"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.savara.scenario.simulator.cdm"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.savara.tools.sca.java"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.savara.sca.java"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.savara.scenario.simulator.sca"
          download-size="0"
          install-size="0"
          version="0.0.0"
