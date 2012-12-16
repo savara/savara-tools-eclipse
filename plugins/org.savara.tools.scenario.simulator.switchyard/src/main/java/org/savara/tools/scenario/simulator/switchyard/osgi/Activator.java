@@ -1,4 +1,4 @@
-package org.savara.tools.switchyard.java.osgi;
+package org.savara.tools.scenario.simulator.switchyard.osgi;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -7,6 +7,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.savara.scenario.simulation.RoleSimulator;
+import org.savara.scenario.simulator.switchyard.SwitchyardRoleSimulator;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -14,7 +16,7 @@ import org.osgi.framework.BundleContext;
 public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.savara.tools.switchyard.java";
+	public static final String PLUGIN_ID = "org.savara.tools.scenario.simulator.switchyard";
 
 	// The shared instance
 	private static Activator plugin;
@@ -34,6 +36,15 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		
+		SwitchyardRoleSimulator rs=new SwitchyardRoleSimulator();
+        
+		context.registerService(RoleSimulator.class.getName(),
+					rs, null);
+
+		if (logger.isLoggable(Level.FINE)) {
+			logger.fine("Switchyard Role Simulator registered");
+		}
 	}
 
 	/*

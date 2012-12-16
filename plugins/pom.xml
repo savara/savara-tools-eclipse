@@ -22,6 +22,7 @@
 		<module>org.savara.tools.switchyard.java</module>
 		<module>org.savara.tools.wsdl</module>
 		<module>org.savara.tools.scenario</module>
+		<module>org.savara.tools.scenario.simulator.switchyard</module>
 
 		<!-- Incubator plugins -->
 		<module>org.savara.tools.sca.java</module>
