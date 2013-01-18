@@ -7,10 +7,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.savara.pi4soa.cdm.parser.CDMProtocolParser;
-import org.savara.scenario.simulation.RoleSimulator;
-import org.savara.scenario.simulator.cdm.CDMRoleSimulator;
-import org.scribble.protocol.parser.ProtocolParser;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -37,24 +33,8 @@ public class Activator extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 		
-		java.util.Dictionary<String,Object> props = new java.util.Hashtable<String,Object>();
-        
-		CDMProtocolParser pp=new CDMProtocolParser();
-        
-		context.registerService(ProtocolParser.class.getName(),
-					pp, props);
-
 		if (logger.isLoggable(Level.FINE)) {
-			logger.fine("CDM Protocol Parser registered");
-		}
-		
-		CDMRoleSimulator rs=new CDMRoleSimulator();
-
-		context.registerService(RoleSimulator.class.getName(),
-					rs, props);
-
-		if (logger.isLoggable(Level.FINE)) {
-			logger.fine("CDM Role Simulator registered");
+			logger.fine("CDM tools started");
 		}
 	}
 

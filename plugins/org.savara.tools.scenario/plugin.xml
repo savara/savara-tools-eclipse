@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="org.savara.scenario.simulation.RoleSimulator"
+   			name="Savara Tools Role Simulator"
+   			schema="schema/RoleSimulator.exsd"/>
+
   <extension
     point = "org.eclipse.ui.newWizards">
     <category

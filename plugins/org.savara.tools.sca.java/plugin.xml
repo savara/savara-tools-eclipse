@@ -9,4 +9,12 @@
      </generator>
   </extension>
 
+   <extension
+         point="org.savara.scenario.simulation.RoleSimulator">
+      <simulator
+            class="org.savara.scenario.simulator.sca.SCARoleSimulator"
+            bundle="org.savara.tools.sca.java" >
+      </simulator>
+   </extension>
+
 </plugin>

@@ -9,4 +9,11 @@
      </generator>
   </extension>
 
+  <extension
+        point="org.scribble.protocol.parser.ProtocolParser">
+     <parser
+           class="org.savara.bpel.parser.BPELProtocolParser">
+     </parser>
+  </extension>
+
 </plugin>

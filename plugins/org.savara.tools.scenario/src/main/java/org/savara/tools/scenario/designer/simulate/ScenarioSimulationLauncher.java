@@ -376,6 +376,10 @@ public class ScenarioSimulationLauncher
 		if (bundle != null) {
 			getBundles(bundle, ret);
 		}
+		
+		for (Bundle b : RoleSimulatorBundleRegistry.getBundles()) {
+			getBundles(b, ret);
+		}
 
 		if (logger.isLoggable(Level.FINE)) {
 			logger.fine("Number of bundles is: "+ret.size());
@@ -386,7 +390,7 @@ public class ScenarioSimulationLauncher
 	
 	protected void getBundles(Bundle bundle, java.util.List<Bundle> list) {
 		
-		if (list.contains(bundle) == false) {
+		if (list.contains(bundle) == false && bundle.getSymbolicName().startsWith("org.savara")) {
 			list.add(bundle);
 			
 			// Check for role simulators

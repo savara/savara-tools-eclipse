@@ -9,6 +9,13 @@
      </generator>
   </extension>
 
+  <extension
+        point="org.scribble.protocol.parser.ProtocolParser">
+     <parser
+           class="org.savara.bpmn2.parser.choreo.BPMN2ChoreographyProtocolParser">
+     </parser>
+  </extension>
+
   <extension point="org.eclipse.ui.popupMenus"> 
 	<objectContribution 
       id="org.savara.tools.bpmn2.object.contribution"

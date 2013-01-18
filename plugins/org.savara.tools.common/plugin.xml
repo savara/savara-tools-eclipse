@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="org.savara.tools.common.generation.Generator" name="Savara Tools Generator" schema="schema/org.savara.tools.common.generation.Generator.exsd"/>
+   <extension-point id="org.savara.tools.common.generation.Generator"
+   			name="Savara Tools Generator"
+   			schema="schema/Generator.exsd"/>
+
+   <extension-point id="org.scribble.protocol.parser.ProtocolParser"
+   			name="Savara Tools Parser"
+   			schema="schema/ProtocolParser.exsd"/>
 
   <extension point="org.eclipse.ui.popupMenus"> 
 	<objectContribution 

@@ -7,8 +7,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.savara.scenario.simulation.RoleSimulator;
-import org.savara.scenario.simulator.sca.SCARoleSimulator;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -36,14 +34,9 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		
-		SCARoleSimulator rs=new SCARoleSimulator();
-
-		context.registerService(RoleSimulator.class.getName(),
-					rs, null);
 
 		if (logger.isLoggable(Level.FINE)) {
-			logger.fine("SCA Role Simulator registered");
+			logger.fine("SCA tools started");
 		}
 	}
 

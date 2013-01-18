@@ -4,15 +4,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
-import org.osgi.util.tracker.ServiceTracker;
-import org.savara.scenario.simulation.DefaultScenarioSimulator;
 import org.savara.scenario.simulation.RoleSimulator;
 import org.savara.scenario.simulation.RoleSimulatorFactory;
-import org.savara.scenario.simulation.ScenarioSimulator;
 import org.savara.scenario.simulator.protocol.ProtocolRoleSimulator;
+import org.savara.tools.scenario.designer.simulate.RoleSimulatorBundleRegistry;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 
 /**
@@ -26,10 +29,8 @@ public class Activator extends AbstractUIPlugin {
 	// The shared instance
 	private static Activator plugin;
 	
-    private static Logger logger = Logger.getLogger(Activator.class.getName());
+    private static Logger LOG = Logger.getLogger(Activator.class.getName());
 
-    private org.osgi.util.tracker.ServiceTracker m_roleSimulatorTracker=null;
-    
     /**
 	 * The constructor
 	 */
@@ -43,45 +44,54 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		
-		// Force the org.savara.tools.common plugin to be started
-		org.savara.tools.common.ArtifactType at=
-				org.savara.tools.common.ArtifactType.ServiceContract;
-		
-		java.util.Dictionary<String,Object> props = new java.util.Hashtable<String,Object>();
+
+		RoleSimulatorFactory.register(new ProtocolRoleSimulator());
         
-		ProtocolRoleSimulator rs=new ProtocolRoleSimulator();
-        
-		context.registerService(RoleSimulator.class.getName(),
-						rs, props);
+		try {
+			// Initialize list of generators
+			IExtensionRegistry registry = Platform.getExtensionRegistry();
+			IExtensionPoint point = registry.getExtensionPoint("org.savara.scenario.simulation.RoleSimulator");
+	
+			if (point != null) {
+				IExtension[] extensions = point.getExtensions();
+				
+				for (int i = 0; i < extensions.length; i++) {
+					for (int j=0; j < extensions[i].getConfigurationElements().length; j++) {
+						
+						if (extensions[i].getConfigurationElements()[j].getName().equals("simulator")) {
+							IConfigurationElement elem=extensions[i].getConfigurationElements()[j];
 
-		if (logger.isLoggable(Level.FINE)) {
-			logger.fine("Protocol Role Simulator registered");
-		}
-		
-		ScenarioSimulator ssim=new DefaultScenarioSimulator();
-
-		context.registerService(ScenarioSimulator.class.getName(),
-					ssim, props);
-        
-		logger.info("Registered Scenario Simulator");
-
-		m_roleSimulatorTracker = new ServiceTracker(context,
-				RoleSimulator.class.getName(), null) {
-
-			public Object addingService(ServiceReference ref) {
-				Object ret=super.addingService(ref);
-
-				logger.fine("Role simulator being registered: "+ret);
-
-				RoleSimulatorFactory.register((RoleSimulator)ret);
-
-				return(ret);
+							if (LOG.isLoggable(Level.FINE)) {
+								LOG.fine("Role simulator extension: "+elem.getAttribute("class"));
+							}
+							
+							try {
+								Object am=elem.createExecutableExtension("class");	
+								
+								if (am instanceof RoleSimulator) {
+									RoleSimulatorFactory.register((RoleSimulator)am);
+									
+									String bundleName=elem.getAttribute("bundle");
+									
+									Bundle bundle=Platform.getBundle(bundleName);
+									
+									if (bundle != null) {
+										RoleSimulatorBundleRegistry.register(bundle);
+									}
+									
+								} else {
+									LOG.severe("Failed to load role simulator: "+am);
+								}
+							} catch(Exception e) {
+								LOG.log(Level.SEVERE, "Failed to load role simulator", e);
+							}
+						}
+					}
+				}
 			}
-		};
-
-		m_roleSimulatorTracker.open();
-
+		} catch(Throwable t) {
+			// Ignore classes not found, so can be used outside Eclipse
+		}
 	}
 
 	/*
@@ -117,7 +127,7 @@ public class Activator extends AbstractUIPlugin {
 			getDefault().getLog().log(status);
 		}
 		
-		logger.severe("LOG ERROR: "+mesg+
+		LOG.severe("LOG ERROR: "+mesg+
 				(t == null ? "" : ": "+t));
 	}
 }
