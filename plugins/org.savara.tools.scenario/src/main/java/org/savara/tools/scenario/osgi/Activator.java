@@ -9,7 +9,7 @@ import org.osgi.framework.BundleContext;
 import org.savara.scenario.simulation.RoleSimulator;
 import org.savara.scenario.simulation.RoleSimulatorFactory;
 import org.savara.scenario.simulator.protocol.ProtocolRoleSimulator;
-import org.savara.tools.scenario.designer.simulate.RoleSimulatorBundleRegistry;
+import org.savara.tools.common.eclipse.BundleRegistry;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -48,7 +48,7 @@ public class Activator extends AbstractUIPlugin {
 		RoleSimulatorFactory.register(new ProtocolRoleSimulator());
         
 		try {
-			// Initialize list of generators
+			// Initialize list of role simulators
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
 			IExtensionPoint point = registry.getExtensionPoint("org.savara.scenario.simulation.RoleSimulator");
 	
@@ -76,7 +76,7 @@ public class Activator extends AbstractUIPlugin {
 									Bundle bundle=Platform.getBundle(bundleName);
 									
 									if (bundle != null) {
-										RoleSimulatorBundleRegistry.register(bundle);
+										BundleRegistry.register(bundle);
 									}
 									
 								} else {

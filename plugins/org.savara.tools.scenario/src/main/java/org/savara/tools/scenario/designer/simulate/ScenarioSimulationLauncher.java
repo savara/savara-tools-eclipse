@@ -51,6 +51,7 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.savara.scenario.simulation.ScenarioSimulatorMain;
+import org.savara.tools.common.eclipse.BundleRegistry;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -374,11 +375,11 @@ public class ScenarioSimulationLauncher
 		Bundle bundle=Platform.getBundle("org.savara.tools.scenario");
 		
 		if (bundle != null) {
-			getBundles(bundle, ret);
+			getBundles(bundle, ret, false);
 		}
 		
-		for (Bundle b : RoleSimulatorBundleRegistry.getBundles()) {
-			getBundles(b, ret);
+		for (Bundle b : BundleRegistry.getBundles()) {
+			getBundles(b, ret, false);
 		}
 
 		if (logger.isLoggable(Level.FINE)) {
@@ -388,48 +389,82 @@ public class ScenarioSimulationLauncher
 		return(ret);
 	}
 	
-	protected void getBundles(Bundle bundle, java.util.List<Bundle> list) {
+	protected boolean isBundleRelevant(Bundle bundle) {
+		if (bundle.getSymbolicName().startsWith("org.savara") ||
+				bundle.getSymbolicName().startsWith("org.pi4soa")) {
+			return (true);
+		}
+		return (false);
+	}
+	
+	/**
+	 * This method determines whether non-savara dependencies should
+	 * be considered relevant.
+	 * 
+	 * @param bundle The bundle
+	 * @return Whether transient non-savara dependencies should now be relevant
+	 */
+	protected boolean isTransientDependenciesRelevant(Bundle bundle) {
+		if (bundle.getSymbolicName().startsWith("org.pi4soa")) {
+			return (true);
+		}
+		return (false);
+	}
+	
+	protected void getBundles(Bundle bundle, java.util.List<Bundle> list, boolean transDepends) {
 		
-		if (list.contains(bundle) == false && bundle.getSymbolicName().startsWith("org.savara")) {
-			list.add(bundle);
-			
-			// Check for role simulators
-			ServiceReference<?>[] refs=bundle.getServicesInUse();
-			
-			if (refs != null) {
-				for (ServiceReference<?> ref : refs) {
-					if (logger.isLoggable(Level.FINER)) {
-						logger.finer("Bundle: "+bundle+" Referenced="+ref.getBundle());	
-					}
-					getBundles(ref.getBundle(), list);
-				}
-			}
+		if (list.contains(bundle)) {
+			return;
+		}
 
-			// Get required bundles
-			String required=bundle.getHeaders().get(Constants.REQUIRE_BUNDLE);
+		// If bundle is not relevant, and transient dependencies are
+		// not to be included, then return
+		if (!isBundleRelevant(bundle) && !transDepends) {
+			return;
+		}
+		
+		if (!transDepends && isTransientDependenciesRelevant(bundle)) {
+			transDepends = true;
+		}
+		
+		list.add(bundle);
 			
-			if (required != null) {
-				String[] bundles=required.split(",");
+		// Check for role simulators
+		ServiceReference<?>[] refs=bundle.getServicesInUse();
+		
+		if (refs != null) {
+			for (ServiceReference<?> ref : refs) {
+				if (logger.isLoggable(Level.FINER)) {
+					logger.finer("Bundle: "+bundle+" Referenced="+ref.getBundle());	
+				}
+				getBundles(ref.getBundle(), list, transDepends);
+			}
+		}
+
+		// Get required bundles
+		String required=bundle.getHeaders().get(Constants.REQUIRE_BUNDLE);
+		
+		if (required != null) {
+			String[] bundles=required.split(",");
+			
+			for (int i=0; i < bundles.length; i++) {
+				String bundleId=bundles[i];
 				
-				for (int i=0; i < bundles.length; i++) {
-					String bundleId=bundles[i];
-					
-					int index=0;
-					if ((index=bundleId.indexOf(';')) != -1) {
-						bundleId = bundleId.substring(0, index);
-					}
-					
-					Bundle other=Platform.getBundle(bundleId);
-					
-					if (logger.isLoggable(Level.FINER)) {
-						logger.finer("Bundle: "+bundle+" Required="+other);	
-					}
-					
-					if (other == null) {
-						logger.finest("Failed to find bundle '"+bundleId+"'");
-					} else {
-						getBundles(other, list);
-					}
+				int index=0;
+				if ((index=bundleId.indexOf(';')) != -1) {
+					bundleId = bundleId.substring(0, index);
+				}
+				
+				Bundle other=Platform.getBundle(bundleId);
+				
+				if (logger.isLoggable(Level.FINER)) {
+					logger.finer("Bundle: "+bundle+" Required="+other);	
+				}
+				
+				if (other == null) {
+					logger.finest("Failed to find bundle '"+bundleId+"'");
+				} else {
+					getBundles(other, list, transDepends);
 				}
 			}
 		}

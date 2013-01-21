@@ -12,6 +12,7 @@
   <extension
         point="org.scribble.protocol.parser.ProtocolParser">
      <parser
+     	   bundle="org.savara.tools.bpmn2"
            class="org.savara.bpmn2.parser.choreo.BPMN2ChoreographyProtocolParser">
      </parser>
   </extension>

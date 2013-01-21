@@ -4,6 +4,7 @@
   <extension
         point="org.scribble.protocol.parser.ProtocolParser">
      <parser
+     	   bundle="org.savara.tools.pi4soa.cdm"
            class="org.savara.pi4soa.cdm.parser.CDMProtocolParser">
      </parser>
   </extension>

@@ -36,8 +36,10 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.savara.protocol.util.ProtocolServices;
+import org.savara.tools.common.eclipse.BundleRegistry;
 import org.savara.tools.common.generation.Generator;
 import org.savara.tools.common.generation.ui.GenerateDialog;
 import org.savara.tools.common.logging.EclipseLogger;
@@ -191,6 +193,14 @@ public class Activator extends AbstractUIPlugin implements IStartup {
 								
 								if (am instanceof ProtocolParser) {
 									ProtocolServices.getParserManager().getParsers().add((ProtocolParser)am);
+
+									String bundleName=elem.getAttribute("bundle");
+									
+									Bundle bundle=Platform.getBundle(bundleName);
+									
+									if (bundle != null) {
+										BundleRegistry.register(bundle);
+									}
 								} else {
 									LOG.severe("Failed to load protocol parser: "+am);
 								}

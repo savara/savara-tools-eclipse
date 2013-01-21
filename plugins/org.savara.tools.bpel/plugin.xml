@@ -12,6 +12,7 @@
   <extension
         point="org.scribble.protocol.parser.ProtocolParser">
      <parser
+     	   bundle="org.savara.tools.bpel"
            class="org.savara.bpel.parser.BPELProtocolParser">
      </parser>
   </extension>

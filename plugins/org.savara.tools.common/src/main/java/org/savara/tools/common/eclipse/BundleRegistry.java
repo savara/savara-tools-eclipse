@@ -15,17 +15,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.tools.scenario.designer.simulate;
+package org.savara.tools.common.eclipse;
 
 import org.osgi.framework.Bundle;
 
-public class RoleSimulatorBundleRegistry {
+public class BundleRegistry {
 
 	private static java.util.List<Bundle> _bundles=new java.util.ArrayList<Bundle>();
 	
 	/**
-	 * This method returns the bundles for the registered role
-	 * simulators.
+	 * This method returns the bundles relevant to the
+	 * simulator.
 	 * 
 	 * @return The bundles
 	 */
