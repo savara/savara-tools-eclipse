@@ -91,6 +91,7 @@ public class Activator extends AbstractUIPlugin implements IStartup {
         ProtocolServices.setProtocolProjector(new ProtocolProjectorImpl());
         
         ProtocolServices.setValidationManager(new DefaultProtocolValidationManager());
+        ProtocolServices.getValidationManager().setProtocolProjector(ProtocolServices.getProtocolProjector());
         ProtocolServices.getValidationManager().getValidators().add(new DefaultProtocolComponentValidator());
         
         ProtocolServices.setProtocolExportManager(new DefaultProtocolExportManager());
@@ -235,7 +236,7 @@ public class Activator extends AbstractUIPlugin implements IStartup {
 
                  ProtocolModel pm=ProtocolServices.getParserManager().parse(context, content, journal);
             	 
-                 if (!journal.hasErrorOccurred()) {
+                 if (pm != null && !journal.hasErrorOccurred()) {
                 	 ProtocolServices.getValidationManager().validate(context, pm, journal);
                  }
                  
@@ -243,7 +244,7 @@ public class Activator extends AbstractUIPlugin implements IStartup {
              }
             
         } catch (Exception e) {
-            Activator.logError("Failed to record validation issue on resource '"+res+"'", e);
+            Activator.logError("Failed to validate model for resource '"+res+"'", e);
         }
 	}
 	
