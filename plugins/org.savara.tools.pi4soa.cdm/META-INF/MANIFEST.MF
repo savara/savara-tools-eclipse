@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SAVARA Tools pi4soa CDM Plug-in
 Bundle-SymbolicName: org.savara.tools.pi4soa.cdm;singleton:=true
-Bundle-Version: 2.2.0.qualifier
+Bundle-Version: 2.1.2.Final
 Bundle-Activator: org.savara.tools.pi4soa.cdm.osgi.Activator
 Bundle-Vendor: Red Hat, Inc.
 Require-Bundle: org.eclipse.ui,
