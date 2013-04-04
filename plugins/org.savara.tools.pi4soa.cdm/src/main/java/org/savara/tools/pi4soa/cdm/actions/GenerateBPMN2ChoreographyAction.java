@@ -29,9 +29,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.savara.bpmn2.model.TDefinitions;
-import org.savara.bpmn2.util.BPMN2ModelUtil;
-import org.savara.common.model.annotation.Annotation;
-import org.savara.common.model.annotation.AnnotationDefinitions;
+import org.savara.bpmn2.model.util.BPMN2ModelUtil;
 import org.savara.pi4soa.cdm.parser.CDMProtocolParser;
 import org.savara.protocol.util.JournalProxy;
 import org.savara.tools.common.logging.FeedbackHandlerDialog;
@@ -89,25 +87,9 @@ public class GenerateBPMN2ChoreographyAction implements IObjectActionDelegate {
 		    				if (model instanceof TDefinitions) {
 		    					TDefinitions defns=(TDefinitions)model;
 		    					
-								// Obtain any namespace prefix map
-								java.util.Map<String, String> prefixes=
-										new java.util.HashMap<String, String>();
-								
-								java.util.List<Annotation> list=
-										AnnotationDefinitions.getAnnotations(pm.getProtocol().getAnnotations(),
-												AnnotationDefinitions.TYPE);
-									
-								for (Annotation annotation : list) {
-									if (annotation.getProperties().containsKey(AnnotationDefinitions.NAMESPACE_PROPERTY) &&
-											annotation.getProperties().containsKey(AnnotationDefinitions.PREFIX_PROPERTY)) {
-										prefixes.put((String)annotation.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY),
-												(String)annotation.getProperties().get(AnnotationDefinitions.PREFIX_PROPERTY));
-									}
-								}
-								
 								java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
 								
-								BPMN2ModelUtil.serialize(defns, baos, prefixes,
+								BPMN2ModelUtil.serialize(defns, baos,
 										GenerateBPMN2ChoreographyAction.class.getClassLoader());
 								
 								java.io.ByteArrayInputStream bais=new java.io.ByteArrayInputStream(baos.toByteArray());

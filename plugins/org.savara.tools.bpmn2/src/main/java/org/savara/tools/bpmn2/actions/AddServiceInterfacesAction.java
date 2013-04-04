@@ -75,7 +75,7 @@ public class AddServiceInterfacesAction implements IObjectActionDelegate {
 						
 						java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
 						
-						BPMN2ModelUtil.serialize(defns, baos, null,
+						BPMN2ModelUtil.serialize(defns, baos,
 								AddServiceInterfacesAction.class.getClassLoader());
 						
 						java.io.ByteArrayInputStream bais=new java.io.ByteArrayInputStream(baos.toByteArray());

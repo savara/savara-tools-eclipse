@@ -35,8 +35,6 @@ import org.savara.bpmn2.model.TDefinitions;
 import org.savara.bpmn2.model.util.BPMN2ModelUtil;
 import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.logging.MessageFormatter;
-import org.savara.common.model.annotation.Annotation;
-import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.common.resources.DefaultResourceLocator;
 import org.savara.protocol.aggregator.ProtocolAggregatorFactory;
 import org.savara.scenario.model.Scenario;
@@ -158,25 +156,9 @@ public class CreateArchitectureDesignAction implements IObjectActionDelegate {
 						// Store BPMN2 process
 						java.io.File bpmn2File=new java.io.File(container, modelName);
 						
-						// Obtain any namespace prefix map
-						java.util.Map<String, String> prefixes=
-								new java.util.HashMap<String, String>();
-						
-						java.util.List<Annotation> list=
-							AnnotationDefinitions.getAnnotations(lm.getProtocol().getAnnotations(),
-									AnnotationDefinitions.TYPE);
-						
-						for (Annotation annotation : list) {
-							if (annotation.getProperties().containsKey(AnnotationDefinitions.NAMESPACE_PROPERTY) &&
-									annotation.getProperties().containsKey(AnnotationDefinitions.PREFIX_PROPERTY)) {
-								prefixes.put((String)annotation.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY),
-										(String)annotation.getProperties().get(AnnotationDefinitions.PREFIX_PROPERTY));
-							}
-						}
-						
 						java.io.FileOutputStream os=new java.io.FileOutputStream(bpmn2File);
 						
-						BPMN2ModelUtil.serialize(process, os, prefixes, BPMN2GeneratorImpl.class.getClassLoader());
+						BPMN2ModelUtil.serialize(process, os, BPMN2GeneratorImpl.class.getClassLoader());
 						
 						os.close();
 						
@@ -207,28 +189,12 @@ public class CreateArchitectureDesignAction implements IObjectActionDelegate {
 				if (model instanceof TDefinitions) {
 					TDefinitions defns=(TDefinitions)model;
 					
-					// Obtain any namespace prefix map
-					java.util.Map<String, String> prefixes=
-							new java.util.HashMap<String, String>();
-					
-					java.util.List<Annotation> list=
-							AnnotationDefinitions.getAnnotations(choreo.getProtocol().getAnnotations(),
-									AnnotationDefinitions.TYPE);
-						
-					for (Annotation annotation : list) {
-						if (annotation.getProperties().containsKey(AnnotationDefinitions.NAMESPACE_PROPERTY) &&
-								annotation.getProperties().containsKey(AnnotationDefinitions.PREFIX_PROPERTY)) {
-							prefixes.put((String)annotation.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY),
-									(String)annotation.getProperties().get(AnnotationDefinitions.PREFIX_PROPERTY));
-						}
-					}
-					
 					try {
 						java.io.File modelFile=new java.io.File(container, modelName);
 						
 						java.io.FileOutputStream baos=new java.io.FileOutputStream(modelFile);
 						
-						BPMN2ModelUtil.serialize(defns, baos, prefixes,
+						BPMN2ModelUtil.serialize(defns, baos,
 								CreateArchitectureDesignAction.class.getClassLoader());
 						
 						baos.close();

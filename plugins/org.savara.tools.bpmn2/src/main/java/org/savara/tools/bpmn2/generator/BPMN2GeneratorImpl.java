@@ -29,8 +29,6 @@ import org.savara.bpmn2.model.TDefinitions;
 import org.savara.bpmn2.model.util.BPMN2ModelUtil;
 import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.logging.MessageFormatter;
-import org.savara.common.model.annotation.Annotation;
-import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.tools.bpmn2.properties.BPMN2Properties;
 import org.savara.tools.common.ArtifactType;
 import org.savara.tools.common.generation.AbstractGenerator;
@@ -144,25 +142,9 @@ public class BPMN2GeneratorImpl extends AbstractGenerator {
 					bpmn2File.create(null, true,
 							new org.eclipse.core.runtime.NullProgressMonitor());
 					
-					// Obtain any namespace prefix map
-					java.util.Map<String, String> prefixes=
-							new java.util.HashMap<String, String>();
-					
-					java.util.List<Annotation> list=
-						AnnotationDefinitions.getAnnotations(localcm.getProtocol().getAnnotations(),
-								AnnotationDefinitions.TYPE);
-					
-					for (Annotation annotation : list) {
-						if (annotation.getProperties().containsKey(AnnotationDefinitions.NAMESPACE_PROPERTY) &&
-								annotation.getProperties().containsKey(AnnotationDefinitions.PREFIX_PROPERTY)) {
-							prefixes.put((String)annotation.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY),
-									(String)annotation.getProperties().get(AnnotationDefinitions.PREFIX_PROPERTY));
-						}
-					}
-					
 					//String bpelText=XMLUtils.toText(bpelProcess.getDOMElement());
 					ByteArrayOutputStream os=new ByteArrayOutputStream();
-					BPMN2ModelUtil.serialize(process, os, prefixes, BPMN2GeneratorImpl.class.getClassLoader());
+					BPMN2ModelUtil.serialize(process, os, BPMN2GeneratorImpl.class.getClassLoader());
 					
 					os.close();
 					
