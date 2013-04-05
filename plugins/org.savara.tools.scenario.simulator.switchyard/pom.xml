@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>org.savara.tools</groupId>
 		<artifactId>plugins</artifactId>
-		<version>2.1.2.Final</version>
+		<version>2.1.2-SNAPSHOT</version>
 	</parent>
 
    	<dependencies>

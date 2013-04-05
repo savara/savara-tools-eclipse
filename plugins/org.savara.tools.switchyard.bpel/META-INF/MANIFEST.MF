@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Savara::Tools::Plugins::ToolsSwitchyardBPEL
 Bundle-SymbolicName: org.savara.tools.switchyard.bpel;singleton:=true
-Bundle-Version: 2.1.2.Final
+Bundle-Version: 2.1.2.qualifier
 Bundle-Activator: org.savara.tools.switchyard.bpel.osgi.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
