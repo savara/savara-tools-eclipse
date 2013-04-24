@@ -2,7 +2,7 @@
 <feature
       id="org.savara.tools.incubator.feature"
       label="SAVARA Tools Incubator Feature"
-      version="2.1.2.qualifier"
+      version="2.1.2.Final"
       provider-name="Red Hat, Inc.">
 
    <description>
