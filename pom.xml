@@ -138,19 +138,6 @@
 			</snapshots>
 		</repository>
 		<repository>
-			<id>jboss-developer-repository-group-staging</id>
-			<name>JBoss Developer Maven Repository Group Staging</name>
-			<url>https://repository.jboss.org/nexus/content/repositories/jboss_thirdparty_releases_staging_profile-1033/</url>
-			<releases>
-				<enabled>true</enabled>
-				<updatePolicy>never</updatePolicy>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>never</updatePolicy>
-			</snapshots>
-		</repository>
-		<repository>
 			<id>jbosstools-target-site</id>
 			<url>http://download.jboss.org/jbosstools/updates/juno/SR1a/REPO/</url>
 			<layout>p2</layout>
