@@ -76,7 +76,7 @@ public class SwitchyardJavaGeneratorImpl extends AbstractGenerator {
 	private static final String WSDL_PATH = RESOURCE_PATH+WSDL_FOLDER;
 
     private static final String DEFAULT_PROJECT_VERSION = "0.0.1-SNAPSHOT";
-    private static final String DEFAULT_RUNTIME_VERSION = "0.7.0.Final"; // TODO: Need to get from switchyard config (SAVARA-371)
+    private static final String DEFAULT_RUNTIME_VERSION = "1.0.0.Final"; // TODO: Need to get from switchyard config (SAVARA-371)
 
     private static Logger logger = Logger.getLogger(SwitchyardJavaGeneratorImpl.class.getName());
     
