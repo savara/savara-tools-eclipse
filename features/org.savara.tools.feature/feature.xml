@@ -2,7 +2,7 @@
 <feature
       id="org.savara.tools.feature"
       label="SAVARA Tools Feature"
-      version="2.2.0.qualifier"
+      version="2.2.0.Final"
       provider-name="Red Hat, Inc.">
 
    <description>

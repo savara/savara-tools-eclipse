@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Savara::Tools::Plugins::ToolsScenarioSimulatorSwitchyard
 Bundle-SymbolicName: org.savara.tools.scenario.simulator.switchyard;singleton:=true
-Bundle-Version: 2.2.0.qualifier
+Bundle-Version: 2.2.0.Final
 Bundle-Activator: org.savara.tools.scenario.simulator.switchyard.osgi.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -50,9 +50,12 @@ Bundle-ClassPath: .,
  lib/switchyard-bus-camel.jar,
  lib/switchyard-common.jar,
  lib/switchyard-common-camel.jar,
+ lib/switchyard-common-cdi.jar,
  lib/switchyard-component-bean.jar,
+ lib/switchyard-component-common.jar,
  lib/switchyard-config.jar,
  lib/switchyard-deploy.jar,
+ lib/switchyard-extensions-java.jar,
  lib/switchyard-extensions-wsdl.jar,
  lib/switchyard-runtime.jar,
  lib/switchyard-security.jar,
