@@ -83,6 +83,26 @@
 									<version>${savara.core.version}</version>
 								</artifactItem>
 								<artifactItem>
+									<groupId>org.savara.bundles</groupId>
+									<artifactId>org.savara.bpel</artifactId>
+									<version>${savara.core.version}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.savara.bundles</groupId>
+									<artifactId>org.savara.bpmn2</artifactId>
+									<version>${savara.core.version}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.savara.bundles</groupId>
+									<artifactId>org.savara.bpmn2.model</artifactId>
+									<version>${savara.core.version}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.sun.xml.bind</groupId>
+									<artifactId>jaxb-impl</artifactId>
+									<version>${jaxbri.version}</version>
+								</artifactItem>
+								<artifactItem>
 									<groupId>org.antlr</groupId>
 									<artifactId>antlr</artifactId>
 									<version>${antlr.version}</version>

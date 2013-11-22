@@ -21,7 +21,4 @@ Require-Bundle: org.eclipse.ui,
  org.savara.tools.common
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-ClassPath: .,
- lib/org.savara.bpmn2.jar,
- lib/org.savara.bpmn2.model.jar,
- lib/jaxb-impl.jar
+Bundle-ClassPath: .

@@ -21,5 +21,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: Red Hat, Inc.
 Scribble-Extensions: org.savara.tools.bpel.editor.BPELEditorManager
-Bundle-ClassPath: .,
- lib/org.savara.bpel.jar
+Bundle-ClassPath: .
