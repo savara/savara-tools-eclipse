@@ -45,11 +45,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
  		</dependency>
  		<dependency>
  			<groupId>org.savara.tools</groupId>
-			<artifactId>org.savara.tools.sca.java</artifactId> 
-			<version>${project.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.tools</groupId>
 			<artifactId>org.savara.tools.switchyard.bpel</artifactId> 
 			<version>${project.version}</version>
  		</dependency>
