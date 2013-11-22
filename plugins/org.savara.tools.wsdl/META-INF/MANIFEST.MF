@@ -12,6 +12,7 @@ Require-Bundle: javax.wsdl;visibility:=reexport,
  org.eclipse.jface,
  org.eclipse.ui,
  org.eclipse.core.runtime,
+ org.savara.tools.dependencies,
  org.savara.tools.common
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,

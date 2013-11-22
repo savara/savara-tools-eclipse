@@ -1,8 +1,0 @@
-<annotations>
-	<annotation type="validator" component="org.pi4soa.cdl.ExchangeDetails" >
-		<template url="cdl/validator.template"
-				processor="org.pi4soa.common.annotations.impl.DefaultTemplateProcessor" />
-		<presentation url="cdl/validator.presentation"
-				processor="org.pi4soa.common.annotations.impl.XSLTPresentationProcessor" />
-	</annotation>
-</annotations>

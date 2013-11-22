@@ -15,6 +15,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jst.common.frameworks,
  org.eclipse.wst.common.frameworks,
  org.eclipse.wst.common.project.facet.core,
+ org.savara.tools.dependencies,
  org.savara.tools.common
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -1,5 +1,0 @@
-<validator>
-	<destination name="{{Destination;The URI for the destination;string;;}}"
-		type="{{Type;The type of destination;enum;endpoint address,service name;endpoint address}}" />
-		dynamicReplyTo="{{Dynamic ReplyTo;Whether the replyTo destination is dynamic;boolean;;false}}" />
-</validator>
