@@ -16,6 +16,4 @@ Require-Bundle: org.eclipse.ui,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: Red Hat, Inc.
-Bundle-ClassPath: .,
- lib/org.savara.switchyard.bpel.jar,
- lib/org.savara.bpel.jar
+Bundle-ClassPath: .
