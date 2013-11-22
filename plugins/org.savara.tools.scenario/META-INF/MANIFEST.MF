@@ -23,11 +23,5 @@ Require-Bundle: org.eclipse.ui,
  org.junit
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: .,
- lib/org.savara.scenario.jar,
- lib/org.savara.scenario.simulator.protocol.jar
-Export-Package: org.savara.scenario.model,
- org.savara.scenario.protocol,
- org.savara.scenario.simulation,
- org.savara.scenario.simulation.model,
- org.savara.scenario.util
+Bundle-ClassPath: .
+
