@@ -7,7 +7,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.junit,
  org.apache.commons.logging,
- org.eclipse.core.resources
+ org.eclipse.core.resources,
+ javax.wsdl
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: Red Hat, Inc.
 Export-Package: org.savara.common.config,
@@ -85,8 +86,8 @@ Bundle-ClassPath: .,
  lib/cxf-rt-bindings-soap.jar,
  lib/cxf-tools-wsdlto-databinding-jaxb.jar,
  lib/cxf-tools-wsdlto-frontend-jaxws.jar,
- lib/jaxb-xjc.jar,
  lib/jaxb-impl.jar,
+ lib/jaxb-xjc.jar,
  lib/org.scribble.command.jar,
  lib/org.scribble.common.jar,
  lib/org.scribble.protocol.jar,
@@ -107,7 +108,6 @@ Bundle-ClassPath: .,
  lib/org.savara.switchyard.bpel.jar,
  lib/org.savara.switchyard.java.jar,
  lib/org.savara.wsdl.jar,
- lib/jaxb-impl.jar,
  lib/stringtemplate.jar,
  lib/velocity.jar,
  lib/xmlschema-core.jar

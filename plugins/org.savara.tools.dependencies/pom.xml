@@ -133,12 +133,6 @@
 									<version>${savara.core.version}</version>
 								</artifactItem>
 
-
-								<artifactItem>
-									<groupId>com.sun.xml.bind</groupId>
-									<artifactId>jaxb-impl</artifactId>
-									<version>${jaxbri.version}</version>
-								</artifactItem>
 								<artifactItem>
 									<groupId>org.antlr</groupId>
 									<artifactId>antlr</artifactId>
@@ -219,12 +213,12 @@
 						 		</artifactItem>
 						 		<artifactItem>
 						 			<groupId>com.sun.xml.bind</groupId>
-									<artifactId>jaxb-xjc</artifactId> 
+									<artifactId>jaxb-impl</artifactId> 
 									<version>${jaxbri.version}</version>
 						 		</artifactItem>
 						 		<artifactItem>
 						 			<groupId>com.sun.xml.bind</groupId>
-									<artifactId>jaxb-impl</artifactId> 
+									<artifactId>jaxb-xjc</artifactId> 
 									<version>${jaxbri.version}</version>
 						 		</artifactItem>
 							</artifactItems>
