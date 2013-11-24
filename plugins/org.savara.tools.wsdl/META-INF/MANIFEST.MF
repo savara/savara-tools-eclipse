@@ -12,8 +12,11 @@ Require-Bundle: javax.wsdl;visibility:=reexport,
  org.eclipse.jface,
  org.eclipse.ui,
  org.eclipse.core.runtime,
- org.savara.tools.dependencies,
  org.savara.tools.common
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: .
-
+Bundle-ClassPath: .,
+ lib/org.savara.wsdl.jar
+Export-Package: org.savara.tools.wsdl.generator,
+ org.savara.wsdl.generator,
+ org.savara.wsdl.generator.soap,
+ org.savara.wsdl.util

@@ -21,9 +21,6 @@
 		<tycho-version>0.18.1</tycho-version>
 		<velocity.version>1.7</velocity.version>
 		<ws-schema.version>2.0.3</ws-schema.version>
-
-		<jbtis.target-platform.version>4.1.5.Beta2</jbtis.target-platform.version>
-
 	</properties>
 
 	<modules>
@@ -87,15 +84,8 @@
 				<version>${tycho-version}</version>
 				<configuration>
 					<resolver>p2</resolver>
-					<target>
-						<artifact>
-							<groupId>org.jboss.tools.integration-stack</groupId>
-							<artifactId>target-platform</artifactId>
-							<version>${jbtis.target-platform.version}</version>
-							<type>target</type>
-							<classifier>base</classifier>
-						</artifact>
-					</target>
+					<ignoreTychoRepositories>true</ignoreTychoRepositories>
+					<pomDependencies>consider</pomDependencies>
 					<environments>
 						<environment>
 							<os>linux</os>
@@ -112,7 +102,7 @@
 							<ws>win32</ws>
 							<arch>x86</arch>
 						</environment>
-						<environment>
+  						<environment>
 							<os>macosx</os>
 							<ws>cocoa</ws>
 							<arch>x86</arch>
@@ -128,13 +118,6 @@
 				<configuration>
 					<format>'v'yyyyMMdd-HHmm'-LOCAL'</format>
 					<archiveSite>true</archiveSite>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<configuration>
-					<excludes>**/Messages.java</excludes>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -153,6 +136,39 @@
 				<enabled>true</enabled>
 				<updatePolicy>never</updatePolicy>
 			</snapshots>
+		</repository>
+		<repository>
+			<id>jbosstools-target-site</id>
+			<url>http://download.jboss.org/jbosstools/updates/juno/SR1a/REPO/</url>
+			<layout>p2</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>jbosstools-stable-indigo</id>
+			<url>http://download.jboss.org/jbosstools/updates/stable/indigo/</url>
+			<layout>p2</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>pi4soa</id>
+			<url>http://download.jboss.org/jbosstools/builds/staging/savara-pi4soa-3.1.x/all/repo/</url>
+			<layout>p2</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
 		</repository>
 		<repository>
 			<id>SwitchYard-Tools</id>

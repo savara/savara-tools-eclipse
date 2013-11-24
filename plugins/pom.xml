@@ -15,17 +15,13 @@
 	</parent>
 
 	<modules>
-		<!-- Core plugins -->
-		<module>org.savara.tools.dependencies</module>
 		<module>org.savara.tools.common</module>
 		<module>org.savara.tools.bpel</module>
 		<module>org.savara.tools.bpmn2</module>
-		<module>org.savara.tools.wsdl</module>
-		<module>org.savara.tools.scenario</module>
-
-		<!-- SwitchYard specific plugins -->
 		<module>org.savara.tools.switchyard.bpel</module>
 		<module>org.savara.tools.switchyard.java</module>
+		<module>org.savara.tools.wsdl</module>
+		<module>org.savara.tools.scenario</module>
 		<module>org.savara.tools.scenario.simulator.switchyard</module>
 	</modules>
 

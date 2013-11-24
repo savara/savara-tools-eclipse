@@ -18,10 +18,15 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide,
  org.eclipse.ui.views.properties.tabbed,
  org.eclipse.jdt.debug.ui,
- org.savara.tools.dependencies,
  org.savara.tools.common,
  org.junit
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: .
-
+Bundle-ClassPath: .,
+ lib/org.savara.scenario.jar,
+ lib/org.savara.scenario.simulator.protocol.jar
+Export-Package: org.savara.scenario.model,
+ org.savara.scenario.protocol,
+ org.savara.scenario.simulation,
+ org.savara.scenario.simulation.model,
+ org.savara.scenario.util

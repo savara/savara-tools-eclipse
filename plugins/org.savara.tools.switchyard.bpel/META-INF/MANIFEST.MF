@@ -10,10 +10,11 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.core,
  org.junit,
  org.apache.commons.logging,
- org.savara.tools.dependencies,
  org.savara.tools.common,
  org.savara.tools.wsdl
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: Red Hat, Inc.
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ lib/org.savara.switchyard.bpel.jar,
+ lib/org.savara.bpel.jar

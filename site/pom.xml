@@ -31,11 +31,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
  		</dependency>
  		<dependency>
  			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.sca.java</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
 			<artifactId>org.savara.switchyard.bpel</artifactId> 
 			<version>${savara.core.version}</version>
  		</dependency>
@@ -47,16 +42,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
  		<dependency>
  			<groupId>org.savara.bundles</groupId>
 			<artifactId>org.savara.scenario</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.scenario.simulator.cdm</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.scenario.simulator.sca</artifactId> 
 			<version>${savara.core.version}</version>
  		</dependency>
  		<dependency>
@@ -97,11 +82,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
  		<dependency>
  			<groupId>org.savara.bundles</groupId>
 			<artifactId>org.savara.contract</artifactId> 
-			<version>${savara.core.version}</version>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.pi4soa.cdm</artifactId> 
 			<version>${savara.core.version}</version>
  		</dependency>
 		<dependency>
