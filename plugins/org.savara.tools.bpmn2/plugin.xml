@@ -107,4 +107,19 @@
             id="org.savara.tools.bpmn2.properties.BPMN2PropertyPage"/>
     </extension>
 
+  <extension
+        id="org.savara.tools.bpmn2.validator"
+        name="Savara BPMN2 Validator"
+        point="org.eclipse.wst.validation.validatorV2">
+     <validator
+           class="org.savara.tools.common.eclipse.Validator">
+         <include>
+            <rules>
+               <fileext ext="bpmn"/>
+               <fileext ext="bpmn2"/>
+            </rules>
+         </include>
+     </validator>
+  </extension>
+
 </plugin>

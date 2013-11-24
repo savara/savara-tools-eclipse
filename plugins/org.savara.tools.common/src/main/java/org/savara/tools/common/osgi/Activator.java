@@ -20,13 +20,6 @@ package org.savara.tools.common.osgi;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.IResourceDeltaVisitor;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -41,12 +34,7 @@ import org.savara.protocol.util.ProtocolServices;
 import org.savara.tools.common.eclipse.BundleRegistry;
 import org.savara.tools.common.generation.Generator;
 import org.savara.tools.common.generation.ui.GenerateDialog;
-import org.savara.tools.common.logging.EclipseLogger;
-import org.savara.tools.common.properties.PropertyDefinitions;
-import org.scribble.common.resource.FileContent;
-import org.scribble.protocol.DefaultProtocolContext;
 import org.scribble.protocol.export.DefaultProtocolExportManager;
-import org.scribble.protocol.model.ProtocolModel;
 import org.scribble.protocol.parser.DefaultProtocolParserManager;
 import org.scribble.protocol.parser.ProtocolParser;
 import org.scribble.protocol.parser.antlr.ANTLRProtocolParser;
@@ -99,40 +87,6 @@ public class Activator extends AbstractUIPlugin {
         ProtocolServices.getProtocolExportManager().getExporters().add(
         		new org.scribble.protocol.export.monitor.MonitorProtocolExporter());
         
-		// Register resource change listener
-		IResourceChangeListener rcl=
-				new IResourceChangeListener() {
-		
-			public void resourceChanged(IResourceChangeEvent evt) {
-	
-				try {
-					evt.getDelta().accept(new IResourceDeltaVisitor() {
-						
-				        public boolean visit(IResourceDelta delta) {
-				        	boolean ret=true;
-				        	IResource res = delta.getResource();
-				        	
-							// Determine if the change is relevant
-							if (isChangeRelevant(res,
-										delta)) {
-								
-								// Validate the resource
-								validateResource(res);
-							}
-							
-				        	return(ret);
-				        }
-				 	});
-				} catch(Exception e) {
-					LOG.log(Level.SEVERE, "Failed to process resource change event", e);
-				}
-			}
-		};
-	
-		// Register the resource change listener
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(rcl,
-				IResourceChangeEvent.POST_CHANGE);		
-
 		try {
 			// Initialize list of generators
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -214,57 +168,6 @@ public class Activator extends AbstractUIPlugin {
 		} catch(Throwable t) {
 			// Ignore classes not found, so can be used outside Eclipse
 		}
-	}
-
-	/**
-	 * This method validates the supplied resource.
-	 * 
-	 * @param res The resource
-	 */
-	protected void validateResource(IResource res) {
-		
-        try {
-             FileContent content=new FileContent(((IFile)res).getRawLocation().toFile());
-             
-             if (ProtocolServices.getParserManager().isParserAvailable(content)) {
-
-                 DefaultProtocolContext context=new DefaultProtocolContext();
-                 context.setProtocolParserManager(ProtocolServices.getParserManager());
-                 
-                 EclipseLogger journal=new EclipseLogger((IFile)res);
-
-                 ProtocolModel pm=ProtocolServices.getParserManager().parse(context, content, journal);
-            	 
-                 if (pm != null && !journal.hasErrorOccurred()) {
-                	 ProtocolServices.getValidationManager().validate(context, pm, journal);
-                 }
-                 
-                 journal.finished();
-             }
-            
-        } catch (Exception e) {
-            Activator.logError("Failed to validate model for resource '"+res+"'", e);
-        }
-	}
-	
-	/**
-	 * This method determines whether the supplied resource
-	 * change event is relevant.
-	 * 
-	 * @param res The resource
-	 * @param deltaFlags The flags
-	 * @return Whether the change is relevant
-	 */
-	protected boolean isChangeRelevant(IResource res, IResourceDelta delta) {
-		boolean ret=false;
-
-		if (res != null && PropertyDefinitions.isValidationEnabled(res) &&
-				(((delta.getFlags() & IResourceDelta.CONTENT) != 0) ||
-				delta.getKind() == IResourceDelta.ADDED)) {
-			ret = true;
-		}
-
-		return(ret);
 	}
 
 	/*

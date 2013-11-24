@@ -17,4 +17,18 @@
      </parser>
   </extension>
 
+  <extension
+        id="org.savara.tools.bpel.validator"
+        name="Savara BPEL Validator"
+        point="org.eclipse.wst.validation.validatorV2">
+     <validator
+           class="org.savara.tools.common.eclipse.Validator">
+         <include>
+            <rules>
+               <fileext ext="bpel"/>
+            </rules>
+         </include>
+     </validator>
+  </extension>
+
 </plugin>
